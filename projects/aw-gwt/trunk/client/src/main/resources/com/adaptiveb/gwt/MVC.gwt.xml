@@ -1,0 +1,4 @@
+<module>
+	<inherits name="com.adpatiweb.gwt.Widgets"/>
+	<source path="mvc"/>
+</module>
