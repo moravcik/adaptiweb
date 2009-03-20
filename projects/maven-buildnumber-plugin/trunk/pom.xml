@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.adaptiweb</groupId>
+		<artifactId>adaptiweb-pom</artifactId>
+		<version>1.0</version>
+	</parent>
 
 	<groupId>com.adaptiweb.mojo</groupId>
 	<artifactId>maven-buildnumber-plugin</artifactId>
@@ -58,15 +64,6 @@
 					<tagBase>https://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/tags</tagBase>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -109,24 +106,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-	<distributionManagement>
-		<site>
-			<id>local</id>
-			<name>Site on file system</name>
-			<url>file://${env.PROJECT_SITE_BASEDIR}/${project.artifactId}</url>
-		</site>
-		<repository>
-			<id>adaptiweb.googlecode.com</id>
-			<name>Adaptiweb releases repository</name>
-			<url>dav:https://adaptiweb.googlecode.com/svn/repository</url>
-		</repository>
-		<snapshotRepository>
-			<id>maven</id>
-			<name>Adaptiweb snapshot repository</name>
-			<url>dav:http://maven/nexus/content/repositories/snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
 
 </project>
