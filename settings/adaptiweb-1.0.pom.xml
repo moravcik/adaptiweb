@@ -22,7 +22,7 @@
 		<name>Adaptiweb</name>
 		<url>http://code.google.com/p/adaptiweb/</url>
 	</organization>
-
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -93,27 +93,6 @@
 		</plugins>
 	</build>
 	
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<quiet>true</quiet>
-					<encoding>UTF-8</encoding>
-					<linksource>true</linksource>
-					<links>
-						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-						<link>http://maven.apache.org/ref/current/maven-plugin-api/apidocs/</link>
-						<link>http://plexus.codehaus.org/plexus-utils/apidocs/</link>
-						<link>http://svnkit.com/javadoc/</link>
-					</links>
-					<stylesheet>maven</stylesheet>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
-
 	<issueManagement>
 		<system>Issues</system>
 		<url>http://code.google.com/p/adaptiweb/issues/list</url>
@@ -139,4 +118,3 @@
 	</distributionManagement>
 
 </project>
-
