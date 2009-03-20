@@ -1,0 +1,106 @@
+ ------
+ Usage
+ ------
+
+Usage
+
+ You must include it in your pom:
+
++------------------------------------------+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+        	<!-- Here you can change property name for build number.
+        	     If you don't want this property, let parameter value empty. -->
+        	<buildNumberProperty>buildNumber</buildNumberProperty>
+        	
+        	<!-- Property name for timestamp. -->
+        	<timestampProperty>buildTimestamp</timestampProperty>
+        	<!-- Default timestamp format is Y-m-d H:M:S. -->
+        	<timestampFormat>m/d/Y H:M</timestampFormat>
+        	
+        	<!-- Property name for revision number. -->
+        	<revisionNumberProperty>revisionNumber</revisionNumberProperty>
+        	
+        	<!-- Property name for last commited revision number. -->
+        	<lastCommittedRevisionProperty>commitedRevisionNumber</lastCommittedRevisionProperty>
+        	
+        	<!-- Mojo set properties only if they don't exists.
+        	     If you want change this behavior uncomment next line. -->     
+        	<!-- <overwriteProperties>true</overwriteProperties> -->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
++------------------------------------------+
+
+ <Note:> You can set even more parameters which are described {{{create-mojo.html}here}}.
+ 
+ Now you can use exported properties in other places:
+
+* Set build number and revision number to artifact file name. 
+
++------------------------------------------+
+  <build>
+    <finalName>$\{project.artifactId\}-${buildNumber}-r${revisionNumber}</finalName>
+  </build>
++------------------------------------------+
+
+* Place informations in the manifest (META-INF/MANIFEST.mf) of your jar:
+
++------------------------------------------+
+  <build>
+    ...
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Revision-Number>${revisionNumber} (${commitedRevisionNumber})</Revision-Number>
+              <Build-Timestamp>${buildTimestamp}</Build-Timestamp>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
++------------------------------------------+
+
+* Or place informations in the manifest (META-INF/MANIFEST.mf) of your war:
+
++------------------------------------------+
+  <build>
+    ...
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+              <Revision-Number>${revisionNumber} (${commitedRevisionNumber})</Revision-Number>
+              <Build-Timestamp>${buildTimestamp}</Build-Timestamp>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
++------------------------------------------+

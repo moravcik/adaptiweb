@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.adaptiweb.mojo</groupId>
+	<artifactId>maven-buildnumber-plugin</artifactId>
+	<packaging>maven-plugin</packaging>
+	<version>0.1-SNAPSHOT</version>
+
+	<name>BuildNumber Maven Plugin</name>
+	<url>http://adaptiweb.googlecode.com/svn/site/maven-buildnumber-plugin</url>
+
+	<description>
+		This plugin provide some dynamic information in build time thru project properties.
+	</description>
+
+	<properties>
+		<mavenApiVersion>2.0.9</mavenApiVersion>
+		<svnkitVersion>1.2.1.5297</svnkitVersion>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>${mavenApiVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.tmatesoft.svnkit</groupId>
+			<artifactId>svnkit</artifactId>
+			<version>${svnkitVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>1.5.6</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.5</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</developerConnection>
+		<url>http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</url>
+	</scm>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<tagBase>https://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/tags</tagBase>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<quiet>true</quiet>
+					<encoding>UTF-8</encoding>
+					<linksource>true</linksource>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+						<link>http://maven.apache.org/ref/current/maven-plugin-api/apidocs/</link>
+						<link>http://plexus.codehaus.org/plexus-utils/apidocs/</link>
+						<link>http://svnkit.com/javadoc/</link>
+					</links>
+					<stylesheet>maven</stylesheet>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<configuration>
+					<inputEncoding>UTF-8</inputEncoding>
+					<outputEncoding>UTF-8</outputEncoding>
+					<linkJavadoc>true</linkJavadoc>
+					<javadocDir>${project.reporting.outputDirectory}/apidocs</javadocDir>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<distributionManagement>
+		<site>
+			<id>local</id>
+			<name>Site on file system</name>
+			<url>file://${env.PROJECT_SITE_BASEDIR}/${project.artifactId}</url>
+		</site>
+		<repository>
+			<id>adaptiweb.googlecode.com</id>
+			<name>Adaptiweb releases repository</name>
+			<url>dav:https://adaptiweb.googlecode.com/svn/repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven</id>
+			<name>Adaptiweb snapshot repository</name>
+			<url>dav:http://maven/nexus/content/repositories/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>
