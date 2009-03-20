@@ -1,0 +1,32 @@
+ ------
+ Introduction
+ ------
+
+Introduction
+
+ This Maven plugin (mojo) provided some dynamic information about project at build time.
+ These information can be used to create a unique build number. Informations are passed to project
+ properties. Right now are supported these four informations:
+  
+*--------------------------------*-----------------------------------------*----------------------------------------*
+| <<Iformation>>                 | <<Default Property Name>>               | <<Note>>
+|                                | <<Configuration Tag>>                   |
+*--------------------------------*-----------------------------------------*----------------------------------------*
+| Build Number                   | buildNumber                             | If project version is SNAPSHOT then SNAPSHOT is preplaced by timestamp. 
+| (derived from project version) | <<<\<buildNumberProperty\>>>>           | <Example: 1.0-20090118134045>
+*--------------------------------*-----------------------------------------*----------------------------------------*
+| Time-Stamp                     | <not set>                               | Default timestamp format is <<<'Y-m-d H:M:S'>>> 
+|                                | <<<\<timestampProperty\>>>>             | and can be changed by property <<<\<timestampFormat\>>>>.                                      
+*--------------------------------*-----------------------------------------*----------------------------------------*
+| Revision Number                | <not set>                               | Only if project has Subversion as SCM.
+|                                | <<<\<revisionNumberProperty\>>>>        | 
+*--------------------------------*-----------------------------------------*----------------------------------------*
+| Commited Revision Number       | <not set>			                   | Only if project has Subversion as SCM.
+|                                | <<<\<lastCommittedRevisionProperty\>>>> | 
+*--------------------------------*-----------------------------------------*----------------------------------------*
+ 
+ The mojo also controls status of working copy files. This can be disabled by setting property <<<\<doCheck\>>>>.
+ 
+ Detailed description about mojo parameter are available {{{create-mojo.html}here}}.
+
+ Instructions on how to use mojo can be found on the {{{usage.html}usage page}}.
