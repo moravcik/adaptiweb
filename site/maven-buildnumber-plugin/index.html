@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>BuildNumber Maven Plugin - Introduction</title>
+    <style type="text/css" media="all">
+      @import url("./css/maven-base.css");
+      @import url("./css/maven-theme.css");
+      @import url("./css/site.css");
+    </style>
+    <link rel="stylesheet" href="./css/print.css" type="text/css" media="print" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+      </head>
+  <body class="composite">
+    <div id="banner">
+                    <span id="bannerLeft">
+    
+            BuildNumber Maven Plugin
+    
+            </span>
+                    <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="breadcrumbs">
+          
+  
+
+  
+    
+  
+  
+    
+            <div class="xleft">
+        Last Published: 2009-03-20
+                      </div>
+            <div class="xright">      
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+    <div id="leftColumn">
+      <div id="navcolumn">
+           
+  
+
+  
+    
+  
+  
+    
+                   <h5>Overview</h5>
+            <ul>
+              
+    <li class="none">
+              <strong>Introduction</strong>
+        </li>
+              
+    <li class="none">
+                    <a href="usage.html">Usage</a>
+          </li>
+          </ul>
+              <h5>Project Documentation</h5>
+            <ul>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-info.html">Project Information</a>
+                </li>
+              
+                
+              
+      
+            
+      
+            
+      
+            
+      
+              
+        <li class="collapsed">
+                    <a href="project-reports.html">Project Reports</a>
+                </li>
+          </ul>
+                                           <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
+            <img alt="Built by Maven" src="./images/logos/maven-feather.png"></img>
+          </a>
+                       
+  
+
+  
+    
+  
+  
+    
+        </div>
+    </div>
+    <div id="bodyColumn">
+      <div id="contentBox">
+        <div class="section"><h2>Introduction</h2>
+<p>This Maven plugin (mojo) provided some dynamic information about project at build time. These information can be used to create a unique build number. Informations are passed to project properties. Right now are supported these four informations:</p>
+<table class="bodyTable"><tbody><tr class="a"><td align="center"><b>Iformation</b>
+</td>
+<td align="center"><b>Default Property Name</b>
+<br />
+<b>Configuration Tag</b>
+</td>
+<td align="center"><b>Note</b>
+</td>
+</tr>
+<tr class="b"><td align="center">Build Number<br />
+(derived from project version)</td>
+<td align="center">buildNumber<br />
+<tt>&lt;buildNumberProperty&gt;</tt>
+</td>
+<td align="center">If project version is SNAPSHOT then SNAPSHOT is preplaced by timestamp.<br />
+<i>Example: 1.0-20090118134045</i>
+</td>
+</tr>
+<tr class="a"><td align="center">Time-Stamp</td>
+<td align="center"><i>not set</i>
+<br />
+<tt>&lt;timestampProperty&gt;</tt>
+</td>
+<td align="center">Default timestamp format is <tt>'Y-m-d H:M:S'</tt>
+<br />
+and can be changed by property <tt>&lt;timestampFormat&gt;</tt>
+.</td>
+</tr>
+<tr class="b"><td align="center">Revision Number</td>
+<td align="center"><i>not set</i>
+<br />
+<tt>&lt;revisionNumberProperty&gt;</tt>
+</td>
+<td align="center">Only if project has Subversion as SCM.</td>
+</tr>
+<tr class="a"><td align="center">Commited Revision Number</td>
+<td align="center"><i>not set</i>
+<br />
+<tt>&lt;lastCommittedRevisionProperty&gt;</tt>
+</td>
+<td align="center">Only if project has Subversion as SCM.</td>
+</tr>
+</tbody>
+</table>
+<p>The mojo also controls status of working copy files. This can be disabled by setting property <tt>&lt;doCheck&gt;</tt>
+.</p>
+<p>Detailed description about mojo parameter are available <a href="create-mojo.html">here</a>
+.</p>
+<p>Instructions on how to use mojo can be found on the <a href="usage.html">usage page</a>
+.</p>
+</div>
+
+      </div>
+    </div>
+    <div class="clear">
+      <hr/>
+    </div>
+    <div id="footer">
+      <div class="xright">&#169;  
+          2009
+    
+          
+  
+
+  
+    
+  
+  
+    
+  </div>
+      <div class="clear">
+        <hr/>
+      </div>
+    </div>
+  </body>
+</html>
