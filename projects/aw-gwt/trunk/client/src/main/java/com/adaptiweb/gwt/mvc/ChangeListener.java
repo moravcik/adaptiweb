@@ -1,4 +1,4 @@
-package com.adaptiveb.gwt.mvc;
+package com.adaptiweb.gwt.mvc;
 
 import com.google.gwt.user.client.ui.Widget;
 

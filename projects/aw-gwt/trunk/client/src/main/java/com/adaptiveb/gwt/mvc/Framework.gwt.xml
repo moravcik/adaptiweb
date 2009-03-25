@@ -1,4 +1,0 @@
-<module>
-	<source path="framework"/>
-	<inherits name='sk.dvsk.common.gwt.Components'/>
-</module> 

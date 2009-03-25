@@ -11,6 +11,10 @@
 	
 	<artifactId>aw-gwt-client</artifactId>
 	<name>Adaptiweb GWT client</name>
+	
+	<properties>
+		<gwtModule>com.adaptiweb.gwt.Demo</gwtModule>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -18,6 +22,137 @@
 			<artifactId>gwt-user</artifactId>
 			<version>${gwtVersion}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>aw-gwt-server</artifactId>
+			<version>${version}</version>
+		</dependency>
 	</dependencies>
+	
+	<profiles>
+		<profile>
+			<id>mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-dev-mac</artifactId>
+					<version>${gwtVersion}</version>
+					<optional>true</optional>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>linux</id>
+			<activation>
+				<os>
+					<family>unix</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-dev-linux</artifactId>
+					<version>${gwtVersion}</version>
+					<optional>true</optional>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.google.gwt</groupId>
+					<artifactId>gwt-dev-windows</artifactId>
+					<version>${gwtVersion}</version>
+					<optional>true</optional>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.gif</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.gif</exclude>
+					<exclude>**/.*</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>GWTCompiler</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<property name="gwt.classpath" refid="maven.compile.classpath" />
+								<echo message="GWT compilation classpath: ${gwt.classpath}" />
+
+								<java fork="true" failonerror="true" classname="com.google.gwt.dev.GWTCompiler" classpathref="maven.compile.classpath">
+									<jvmarg value="-Xmx768m" />
+									<arg value="-out" />
+									<arg value="${basedir}/target/gwt-out" />
+									<!-- uncomment this to see proper JS -->
+									<!-- <arg value="-style" /><arg value="DETAILED" /> -->
+									<arg value="-gen" />
+									<arg value="${basedir}/target/gwt-gen" />
+									<arg value="${gwtModule}" />
+								</java>
+								<echo message="GWT compilation done." />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>				
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/zip.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id><!-- this is used for inheritance merges -->
+						<phase>package</phase><!-- append to the packaging phase. -->
+						<goals>
+							<goal>attached</goal><!-- goals == mojos -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+ 		</plugins>
+	</build>
+	
 </project>
