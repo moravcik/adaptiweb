@@ -3,6 +3,7 @@ package com.adaptiweb.gwt.widget;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -59,8 +60,8 @@ public class DynamicWidget extends Widget {
 
 	private boolean firedToEnclosedWidget(Event event) {
 		
-		if(enclosedWidgets != null && enclosedWidgets.size() > 0) {			
-			Element currentTarget = event.getCurrentTarget().cast();
+		if(enclosedWidgets != null && enclosedWidgets.size() > 0) {
+			Element currentTarget = event.getEventTarget().cast();
 			
 			if(getElement() != currentTarget) {
 				Widget enclosed = enclosedWidgets.get(currentTarget);
