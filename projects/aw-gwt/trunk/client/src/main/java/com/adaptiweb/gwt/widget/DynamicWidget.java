@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -143,6 +144,7 @@ public class DynamicWidget extends Widget {
 			onMouseScroll(event);
 			break;
 		}
+	    DomEvent.fireNativeEvent(event, this, this.getElement());
 	}
 
 	protected void onMouseScroll(Event event) {}

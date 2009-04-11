@@ -1,5 +1,9 @@
 package com.adaptiweb.gwt.widget;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -15,12 +19,11 @@ import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 
-public class FireWidget extends DynamicWidget implements HasFocus, SourcesClickEvents, SourcesMouseEvents {
+public class FireWidget extends DynamicWidget {
 
 	private static final FocusImpl impl = FocusImpl.getFocusImplForWidget();
 	private FocusListenerCollection focusListeners;
 	private KeyboardListenerCollection keyboardListeners;
-	private ClickListenerCollection clickListeners;
 	private MouseListenerCollection mouseListeners;
 
 	public FireWidget(Element element, boolean focusable) {
@@ -74,18 +77,10 @@ public class FireWidget extends DynamicWidget implements HasFocus, SourcesClickE
 		if (keyboardListeners != null) keyboardListeners.remove(listener);
 	}
 
-	public void addClickListener(ClickListener listener) {
-		if (clickListeners == null) {
-			clickListeners = new ClickListenerCollection();
-			sinkEvents(Event.ONCLICK);
-		}
-		clickListeners.add(listener);
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+	    return addDomHandler(handler, ClickEvent.getType());
 	}
-
-	public void removeClickListener(ClickListener listener) {
-		if (clickListeners != null) clickListeners.remove(listener);
-	}
-
+	
 	public void addMouseListener(MouseListener listener) {
 		if (mouseListeners == null) {
 			mouseListeners = new MouseListenerCollection();
@@ -96,11 +91,6 @@ public class FireWidget extends DynamicWidget implements HasFocus, SourcesClickE
 
 	public void removeMouseListener(MouseListener listener) {
 		if (mouseListeners != null) mouseListeners.remove(listener);
-	}
-
-	@Override
-	protected void onClick(Event event) {
-		if (clickListeners != null) clickListeners.fireClick(this);
 	}
 
 	@Override
