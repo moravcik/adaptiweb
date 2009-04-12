@@ -3,11 +3,11 @@ package com.adaptiweb.gwt.mvc;
 import java.util.ArrayList;
 
 
-public class Listeners<L, E extends FireableEvent<L>> {
+public class Listeners<L> {
 
     ArrayList<L> listeners;
 
-	public void fireEvent(E event) {
+	public void fireEvent(FireableEvent<L> event) {
         for (L listener : listeners)
         	event.fireOnListener(listener);
     }

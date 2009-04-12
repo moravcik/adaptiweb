@@ -5,7 +5,7 @@
 
 	<groupId>com.adaptiweb</groupId>
 	<artifactId>adaptiweb-pom</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 	<packaging>pom</packaging>
 
 	<name>Parent POM for Adaptiweb projects</name>
@@ -48,8 +48,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

@@ -1,11 +1,19 @@
 package com.adaptiweb.gwt.widget;
 
 import com.adaptiweb.gwt.util.ConcatUtils;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 
 
-public class InteractiveWidget extends FireWidget {
+public class InteractiveWidget extends DynamicWidget {
 
 	private String enterStyle;
 	private String leaveStyle;
@@ -15,7 +23,32 @@ public class InteractiveWidget extends FireWidget {
 	private boolean focus;
 
 	public InteractiveWidget(Element element, boolean focusable) {
-		super(element, focusable);
+		setElement(element);
+		
+		addMouseOverHandler(new MouseOverHandler() {
+			public void onMouseOver(MouseOverEvent event) {
+				over = true;
+				updateStyle();
+			}
+		});
+		addMouseOutHandler(new MouseOutHandler() {
+			public void onMouseOut(MouseOutEvent event) {
+				over = false;
+				updateStyle();
+			}
+		});
+		addFocusHandler(new FocusHandler() {
+			public void onFocus(FocusEvent event) {
+				focus = true;
+				updateStyle();
+			}
+		});
+		addBlurHandler(new BlurHandler() {
+			public void onBlur(BlurEvent event) {
+				focus = true;
+				updateStyle();
+			}
+		});
 	}
 
 	@Override
@@ -48,33 +81,6 @@ public class InteractiveWidget extends FireWidget {
 		this.highlightedStyle = highlightedStyle;
 		this.standardStyle = standardStyle;
 		updateStyle();
-	}
-
-	@Override
-	protected void onMouseOver(Event event) {
-		over = true;
-		updateStyle();
-		super.onMouseOver(event);
-	}
-	
-	@Override
-	protected void onMouseOut(Event event) {
-		over = false;
-		updateStyle();
-		super.onMouseOut(event);
-	}
-	
-	@Override
-	protected void onFocus(Event event) {
-		focus = true;
-		super.onFocus(event);
-	}
-	
-	@Override
-	protected void onBlur(Event event) {
-		focus = false;
-		updateStyle();
-		super.onBlur(event);
 	}
 	
 	protected void updateStyle() {
