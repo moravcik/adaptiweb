@@ -2,9 +2,6 @@ package com.adaptiweb.exeptions;
 
 /**
  * Any error caused by user which should be propagated back to user. 
- *
- * @author <a href="mailto:milan.skuhra@anasoft.sk">Milan Skuhra</a>
- *
  */
 public class UserFaultException extends RuntimeException {
 

@@ -3,9 +3,6 @@ package com.adaptiweb.exeptions;
 /**
  * Meant for wrapping Exceptions which logically can't occur.
  * Better to be safe than sorry.
- *
- * @author <a href="mailto:milan.skuhra@anasoft.sk">Milan Skuhra</a>
- *
  */
 public class UnexpectedException extends RuntimeException {
 

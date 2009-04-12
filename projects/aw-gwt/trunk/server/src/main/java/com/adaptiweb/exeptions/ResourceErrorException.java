@@ -3,9 +3,6 @@ package com.adaptiweb.exeptions;
 /**
  * Exception used when resource load exception occurs.
  * Usually wrap {@link java.io.IOException} when accessing resources.
- *
- * @author <a href="mailto:milan.skuhra@anasoft.sk">Milan Skuhra</a>
- *
  */
 public class ResourceErrorException extends RuntimeException {
 
