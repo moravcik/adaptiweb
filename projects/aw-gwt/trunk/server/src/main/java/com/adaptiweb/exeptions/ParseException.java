@@ -2,9 +2,6 @@ package com.adaptiweb.exeptions;
 
 /**
  * Exception used when parse error occurs.
- *
- * @author <a href="mailto:milan.skuhra@anasoft.sk">Milan Skuhra</a>
- *
  */
 public class ParseException extends UserFaultException {
 
