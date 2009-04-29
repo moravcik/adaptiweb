@@ -18,7 +18,7 @@
 	<url>http://adaptiweb.googlecode.com/svn/site/maven-gwt-plugin/index.html</url>
 	
 	<properties>
-		<gwtVersion>1.5.3</gwtVersion>
+		<gwtVersion>1.6.3</gwtVersion>
 	</properties>
 
 	<dependencies>
@@ -31,6 +31,13 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<version>${gwtVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<version>${gwtVersion}</version>
+			<classifier>${platform}</classifier>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -61,49 +68,37 @@
 
 	<profiles>
 		<profile>
-			<id>mac</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.google.gwt</groupId>
-					<artifactId>gwt-dev-mac</artifactId>
-					<version>${gwtVersion}</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>linux</id>
-			<activation>
-				<os>
-					<family>unix</family>
-				</os>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.google.gwt</groupId>
-					<artifactId>gwt-dev-linux</artifactId>
-					<version>${gwtVersion}</version>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>windows</id>
+			<id>gwt-dev-windows</id>
 			<activation>
 				<os>
 					<family>windows</family>
 				</os>
 			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.google.gwt</groupId>
-					<artifactId>gwt-dev-windows</artifactId>
-					<version>${gwtVersion}</version>
-				</dependency>
-			</dependencies>
+			<properties>
+				<platform>windows</platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>gwt-dev-mac</id>
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<platform>mac</platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>gwt-dev-linux</id>
+			<activation>
+				<os>
+					<name>linux</name>
+				</os>
+			</activation>
+			<properties>
+				<platform>linux</platform>
+			</properties>
 		</profile>
 	</profiles>
 </project>
