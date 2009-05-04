@@ -99,7 +99,7 @@ public class I18NSyncMojo extends AbstractMojo {
 					if(resource.getDirectory() != null) {
 						File f = new File(new File(resource.getDirectory()), name);
 						if(f.exists()) try {
-							return f.toURL();
+							return f.toURI().toURL();
 						} catch (MalformedURLException e) {
 							throw new RuntimeException(e);
 						}
