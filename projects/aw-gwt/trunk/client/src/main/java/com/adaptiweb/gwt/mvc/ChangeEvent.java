@@ -1,19 +1,17 @@
 package com.adaptiweb.gwt.mvc;
 
-import com.adaptiweb.gwt.mvc.FireableEvent;
-import com.google.gwt.user.client.ui.Widget;
 
 
-public class ChangeEvent<T extends Widget> implements FireableEvent<ChangeListener<T>> {
+public class ChangeEvent<T> implements FireableEvent<ChangeListener<T>> {
 	
-	private final T widget;
+	private final T source;
 	
-	public ChangeEvent(T widget) {
-		this.widget = widget;
+	public ChangeEvent(T source) {
+		this.source = source;
 	}
 
 	public void fireOnListener(ChangeListener<T> listener) {
-		listener.onChange(widget);
+		listener.onChange(source);
 	}
 	
 }

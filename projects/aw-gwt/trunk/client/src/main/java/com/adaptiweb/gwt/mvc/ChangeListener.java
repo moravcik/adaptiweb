@@ -1,9 +1,8 @@
 package com.adaptiweb.gwt.mvc;
 
-import com.google.gwt.user.client.ui.Widget;
 
 
-public interface ChangeListener<T extends Widget> {
+public interface ChangeListener<T> {
 	
-	void onChange(T widget);
+	void onChange(T source);
 }
