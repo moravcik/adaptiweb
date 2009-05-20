@@ -76,8 +76,13 @@ public class GwtResourceFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		context = filterConfig.getServletContext();
 		gwtModule = filterConfig.getInitParameter(GWT_MODULE);
-		if(gwtModule == null) throw new ServletException("Missing init parameter " 
-				+ GWT_MODULE + " for filter " + filterConfig.getFilterName() + "!");
+		
+		if(gwtModule == null)
+			gwtModule = context.getInitParameter(GWT_MODULE);
+		
+		if(gwtModule == null)
+			throw new ServletException(
+				"Missing '" + GWT_MODULE + "' - context-param or filter-param for filter " + filterConfig.getFilterName() + "!");
 	}
 
 }
