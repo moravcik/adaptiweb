@@ -12,7 +12,7 @@ import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
-import com.adaptiweb.utils.Properties;
+import com.adaptiweb.utils.commons.Properties;
 import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 

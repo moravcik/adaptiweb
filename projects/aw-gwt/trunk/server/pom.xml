@@ -19,6 +19,11 @@
 			<version>${gwtVersion}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.adaptiweb.utils</groupId>
+			<artifactId>commons-utils</artifactId>
+			<version>${awUtilsVersion}</version>
+		</dependency>
+		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.4.GA</version>

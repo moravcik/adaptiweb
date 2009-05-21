@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.adaptiweb.utils.XmlEntityCoder;
+import com.adaptiweb.utils.commons.XmlEntityCoder;
 
 
 public class XmlParser  {
