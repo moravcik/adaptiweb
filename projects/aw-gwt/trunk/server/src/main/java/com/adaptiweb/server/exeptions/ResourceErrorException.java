@@ -1,4 +1,4 @@
-package com.adaptiweb.exeptions;
+package com.adaptiweb.server.exeptions;
 
 /**
  * Exception used when resource load exception occurs.

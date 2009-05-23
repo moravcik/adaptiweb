@@ -1,4 +1,4 @@
-package com.adaptiweb.exeptions;
+package com.adaptiweb.server.exeptions;
 
 /**
  * Any error caused by user which should be propagated back to user. 

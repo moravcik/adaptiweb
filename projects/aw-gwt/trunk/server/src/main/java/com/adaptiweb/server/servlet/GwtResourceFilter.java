@@ -1,4 +1,4 @@
-package com.adaptiweb.servlet;
+package com.adaptiweb.server.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.adaptiweb.exeptions;
+package com.adaptiweb.server.exeptions;
 
 /**
  * Exception used when parse error occurs.

@@ -1,4 +1,4 @@
-package com.adaptiweb.i18n;
+package com.adaptiweb.server.i18n;
 
 import java.util.HashMap;
 import java.util.Map;

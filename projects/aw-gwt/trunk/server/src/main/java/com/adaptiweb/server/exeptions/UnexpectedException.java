@@ -1,4 +1,4 @@
-package com.adaptiweb.exeptions;
+package com.adaptiweb.server.exeptions;
 
 /**
  * Meant for wrapping Exceptions which logically can't occur.
