@@ -14,10 +14,30 @@ class CollectionTypeAnalysis implements TypeAnalysis {
 	
 	private final Class<?> raw;
 	private final Type component;
-	private final ParameterizedType type;
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (raw == null ? 0 : raw.hashCode());
+		result = prime * result + (component == null ? 0 : component.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) return true;
+		if(obj instanceof CollectionTypeAnalysis == false) return false;
+		CollectionTypeAnalysis other = (CollectionTypeAnalysis) obj;
+		return this.raw.equals(other.raw)
+			&& this.component.equals(other.component);
+	}
 
 	public CollectionTypeAnalysis(ParameterizedType type) {
-		this.type = type;
+		this(type, type.getActualTypeArguments()[0]);
+	}
+	
+	public CollectionTypeAnalysis(ParameterizedType type, Type component) {
 		Class<?> raw = (Class<?>) type.getRawType();  
 		if(raw.isInterface()) {
 			if(raw.isAssignableFrom(List.class)) raw = ArrayList.class;
@@ -26,7 +46,12 @@ class CollectionTypeAnalysis implements TypeAnalysis {
 			else throw new UnsupportedOperationException();
 		}
 		this.raw = raw;
-		this.component = type.getActualTypeArguments()[0];
+		this.component = component;
+	}
+	
+	public CollectionTypeAnalysis(Class<?> raw, Type component) {
+		this.raw = raw;
+		this.component = component;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -59,8 +84,8 @@ class CollectionTypeAnalysis implements TypeAnalysis {
 		return TypeNature.MULTIPLE;
 	}
 
-	public Type getType() {
-		return type;
+	public Class<?> getType() {
+		return raw;
 	}
 
 	public Object parse(String data) {

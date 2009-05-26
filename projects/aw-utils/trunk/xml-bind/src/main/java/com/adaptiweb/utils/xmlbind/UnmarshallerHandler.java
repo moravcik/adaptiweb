@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adaptiweb.utils.typeanalyzer.TypeAnalysis;
+
 public class UnmarshallerHandler implements XmlHandler {
 	private final UnmarshallMapper mapper;
 	private Element root = null;
 	private Element current = null;
 	
-	public UnmarshallerHandler(Class<?> type) {
+	public UnmarshallerHandler(TypeAnalysis type) {
 		mapper = UnmarshallMapper.getInstance(type);
 	}
 

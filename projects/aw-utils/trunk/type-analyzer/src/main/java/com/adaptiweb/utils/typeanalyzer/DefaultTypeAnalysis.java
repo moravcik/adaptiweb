@@ -7,8 +7,21 @@ class DefaultTypeAnalysis implements TypeAnalysis {
 	
 	private final Class<?> type;
 
-	public DefaultTypeAnalysis(final Class<?> type) {
+	public DefaultTypeAnalysis(Class<?> type) {
 		this.type = type;
+	}
+	
+	@Override
+	public int hashCode() {
+		return type.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) return true;
+		if(obj instanceof DefaultTypeAnalysis == false) return false;
+		DefaultTypeAnalysis other = (DefaultTypeAnalysis) obj;
+		return this.type.equals(other.type);
 	}
 
 	public Object createInstance() {
@@ -23,7 +36,7 @@ class DefaultTypeAnalysis implements TypeAnalysis {
 		}
 	}
 
-	public Type getType() {
+	public Class<?> getType() {
 		return type;
 	}
 

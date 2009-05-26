@@ -19,4 +19,6 @@ public @interface BindElement {
 	public String tagName() default "";
 
 	public String itemTag() default "";
+
+	public Class<?> targetClass() default void.class;
 }

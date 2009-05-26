@@ -3,18 +3,29 @@ package com.adaptiweb.utils.typeanalyzer;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 
 class AtomicTypeAnalysis implements TypeAnalysis {
 
-	private static final Class<?>[] parameterMask = {String.class};
 	private final Constructor<?> constructor;
 	
+	@Override
+	public int hashCode() {
+		return constructor.getDeclaringClass().hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this) return true;
+		if (obj instanceof AtomicTypeAnalysis == false) return false;
+		AtomicTypeAnalysis other = (AtomicTypeAnalysis) obj;
+		return constructor.getDeclaringClass().equals(other.constructor.getDeclaringClass());
+	}
+	
 	AtomicTypeAnalysis(Constructor<?> constructor) {
-		if(!Arrays.equals(parameterMask, constructor.getParameterTypes()))
-			throw new IllegalArgumentException("Constructor must have 1 parameter (String)");
+		assert constructor.getParameterTypes().length == 1 : "Constructor must have 1 parameter (String)";
+		assert String.class.equals(constructor.getParameterTypes()[0]): "Constructor must have 1 parameter (String)";
 		this.constructor = constructor;
 	}
 
@@ -42,7 +53,7 @@ class AtomicTypeAnalysis implements TypeAnalysis {
 		return null;
 	}
 
-	public Type getType() {
+	public Class<?> getType() {
 		return constructor.getDeclaringClass();
 	}
 

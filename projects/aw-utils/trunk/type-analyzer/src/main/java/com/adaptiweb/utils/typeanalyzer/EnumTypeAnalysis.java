@@ -7,6 +7,19 @@ class EnumTypeAnalysis implements TypeAnalysis {
 	
 	private final Class<?> type;
 	
+	@Override
+	public int hashCode() {
+		return type.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) return true;
+		if(obj instanceof EnumTypeAnalysis == false) return false;
+		EnumTypeAnalysis other = (EnumTypeAnalysis) obj;
+		return this.type.equals(other.type);
+	}
+
 	EnumTypeAnalysis(final Class<?> type) {
 		this.type = type;
 	}
@@ -27,7 +40,7 @@ class EnumTypeAnalysis implements TypeAnalysis {
 		return TypeNature.ATOMIC;
 	}
 
-	public Type getType() {
+	public Class<?> getType() {
 		return type;
 	}
 

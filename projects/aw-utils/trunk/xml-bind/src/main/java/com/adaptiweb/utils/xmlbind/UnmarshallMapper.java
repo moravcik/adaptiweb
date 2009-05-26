@@ -12,27 +12,30 @@ import java.util.Map.Entry;
 
 import com.adaptiweb.utils.typeanalyzer.TypeAnalysis;
 import com.adaptiweb.utils.typeanalyzer.TypeAnalyzer;
+import com.adaptiweb.utils.xmlbind.annotation.BindAttribute;
+import com.adaptiweb.utils.xmlbind.annotation.BindElement;
 
 public class UnmarshallMapper {
 	
-	private static final Map<Type, UnmarshallMapper> cache = 
-		Collections.synchronizedMap(new HashMap<Type, UnmarshallMapper>()); 
+	private static final Map<TypeAnalysis, UnmarshallMapper> cache = 
+		Collections.synchronizedMap(new HashMap<TypeAnalysis, UnmarshallMapper>()); 
 	
-	public static final UnmarshallMapper getInstance(Type type) {
-		if(!cache.containsKey(type)) {
+	public static final UnmarshallMapper getInstance(TypeAnalysis analysis) {
+		if(!cache.containsKey(analysis)) {
 			synchronized (cache) {
-				if(!cache.containsKey(type)) {
-					UnmarshallMapper newInstance = new UnmarshallMapper(type);
-					cache.put(type, newInstance);
+				if(!cache.containsKey(analysis)) {
+					UnmarshallMapper newInstance = new UnmarshallMapper(analysis);
+					cache.put(analysis, newInstance);
 					newInstance.inicialize();
 				}
 			}
 		}
-		return cache.get(type); //TODO
+		return cache.get(analysis); //TODO
 	}
 	
 	private static class MappingPart {
 		private final Method setter;
+		private final String xmlName;
 		private final UnmarshallMapper mapper;
 		private final boolean isPrimitiveType;
 		
@@ -40,6 +43,16 @@ public class UnmarshallMapper {
 			this.setter = setter;
 			this.mapper = mapper;
 			this.isPrimitiveType = setter.getParameterTypes()[0].isPrimitive();
+			
+			String result = "";
+			
+			if(setter.isAnnotationPresent(BindAttribute.class))
+				result = setter.getAnnotation(BindAttribute.class).name();
+			
+			if(setter.isAnnotationPresent(BindElement.class))
+				result = setter.getAnnotation(BindElement.class).tagName();
+			
+			xmlName = result.length() == 0 ? BindUtils.toXmlName(setter.getName().substring(3)) : result;
 		}
 
 		public void apply(Object object, Object value) {
@@ -55,17 +68,18 @@ public class UnmarshallMapper {
 				e.printStackTrace();
 			} 
 		}
+
+		public String getXmlName() {
+			return xmlName;
+		}
 	}
 	
 	private final Map<String,MappingPart> parts = new HashMap<String,MappingPart>(); 
 	private final TypeAnalysis analysis; 
-	private final Class<?> type;
 	private UnmarshallMapper component = null;
 	
-	private UnmarshallMapper(Type type) {
-		this.type = (Class<?>) (type instanceof ParameterizedType ? 
-				((ParameterizedType) type).getRawType() : type);
-		this.analysis = TypeAnalyzer.forGenericType(type);
+	private UnmarshallMapper(TypeAnalysis analysis) {
+		this.analysis = analysis;
 	}
 	
 	/**
@@ -77,16 +91,23 @@ public class UnmarshallMapper {
 		
 		switch(analysis.getNature()) {
 		case MULTIPLE:
-			component = UnmarshallMapper.getInstance(analysis.getComponent());
+			component = UnmarshallMapper.getInstance(TypeAnalyzer.forGenericType(analysis.getComponent()));
 			break;
 		case STUCTURE:
-			for(Method m : type.getMethods()) {
+			for(Method m : analysis.getType().getMethods()) {
 				if(m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
+					
 					TypeAnalysis analysis = TypeAnalyzer.forSetMethod(m);
-					if(analysis != null)
-						parts.put(
-								BindUtils.toXmlName(m.getName().substring(3)), 
-								new MappingPart(m, UnmarshallMapper.getInstance(analysis.getType())));
+					if(analysis != null) {
+						if (m.isAnnotationPresent(BindElement.class)) {
+							Class<?> type = m.getAnnotation(BindElement.class).targetClass();
+							if(type != void.class)
+								analysis = TypeAnalyzer.withCustomComponent(analysis, type);
+						}
+						
+						MappingPart part = new MappingPart(m, UnmarshallMapper.getInstance(analysis));
+						parts.put(part.getXmlName(), part);
+					}
 				}
 			}
 			break;
@@ -105,7 +126,7 @@ public class UnmarshallMapper {
 			} while(source != null);
 			return analysis.composite(list);
 		case STUCTURE:
-			Object result = analysis.createInstance();
+			Object result = getTargetIntance();
 			if(result == null) return null;
 			for(XmlSource child : source.getChildren()) {
 				MappingPart part = parts.get(child.getName());
@@ -125,5 +146,9 @@ public class UnmarshallMapper {
 		default:
 			return null;
 		}
+	}
+
+	private Object getTargetIntance() {
+		return analysis.createInstance();
 	}
 }

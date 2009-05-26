@@ -167,9 +167,8 @@ public class Marshaller {
 				result = method.invoke(obj);
 			} catch (InvocationTargetException ignore) {}
 
-			String tag = annotation.tagName().length() == 0 ? 
-				BindUtils.toXmlName(method.getName().substring(method.getName().startsWith("is") ? 2 : 3)) :
-				annotation.tagName();
+			String tag = annotation.tagName().length() != 0 ? annotation.tagName() : 
+				BindUtils.toXmlName(method.getName().substring(method.getName().startsWith("is") ? 2 : 3));
 						
 			if(Iterable.class.isAssignableFrom(type) || type.isArray()) {
 				if(result == null) continue;
@@ -212,7 +211,9 @@ public class Marshaller {
 			Class<?> type = method.getReturnType();
 			BindAttribute annotation = method.getAnnotation(BindAttribute.class);
 
-			String name = BindUtils.toXmlName(method.getName().substring(method.getName().startsWith("is") ? 2 : 3));
+			String name = annotation.name().length() != 0 ? annotation.name() :
+				BindUtils.toXmlName(method.getName().substring(method.getName().startsWith("is") ? 2 : 3));
+				
 			String value = null;
 			
 			if(Iterable.class.isAssignableFrom(type) || type.isArray()) {

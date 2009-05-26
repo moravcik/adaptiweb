@@ -60,8 +60,8 @@ public class TypeAnalyzer {
 			
 			if(type.isPrimitive()) return null;
 		}
-		if(type == Boolean.class) return new BooleanTypeAnalysis();
-		if(type == Character.class) return new CharacterTypeAnalysis();
+		if(type == Boolean.class) return BooleanTypeAnalysis.INSTANCE;
+		if(type == Character.class) return CharacterTypeAnalysis.INSTANCE;
 		try {
 			return new AtomicTypeAnalysis(type.getConstructor(String.class));
 		} catch (SecurityException e) {
@@ -83,5 +83,15 @@ public class TypeAnalyzer {
 
 	private static TypeAnalysis examineGenericArrayType(GenericArrayType type) {
 		throw new UnsupportedOperationException("not implemented yet");
+	}
+
+	public static TypeAnalysis withCustomComponent(TypeAnalysis analysis, Class<?> type) {
+		if (analysis instanceof ArrayTypeAnalysis)
+			return new ArrayTypeAnalysis(analysis.getType(), type);
+		if (analysis instanceof CollectionTypeAnalysis)
+			return new CollectionTypeAnalysis(analysis.getType(), type);
+		if (analysis instanceof DefaultTypeAnalysis)
+			return examineType(type);
+		throw new UnsupportedOperationException();
 	}
 }

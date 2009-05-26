@@ -9,6 +9,8 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.adaptiweb.utils.typeanalyzer.TypeAnalyzer;
+
 public abstract class BindUtils {
 
 	private final static Pattern xmlNamePattern = Pattern.compile("-([a-z])");
@@ -39,15 +41,16 @@ public abstract class BindUtils {
 	}
 	
 	public static <T> T unmarshal(InputStream is, String characterSetName, Class<T> targetType) throws IOException {
-		return targetType.cast(XmlParser.parse(new InputStreamReader(is, characterSetName), new UnmarshallerHandler(targetType)));
+		return unmarshal(new InputStreamReader(is, characterSetName), targetType);
 	}
 
 	public static <T> T unmarshal(Reader reader, Class<T> targetType) throws IOException {
-		return targetType.cast(XmlParser.parse(reader, new UnmarshallerHandler(targetType)));
+		UnmarshallerHandler handler = new UnmarshallerHandler(TypeAnalyzer.examineType(targetType));
+		return targetType.cast(XmlParser.parse(reader, handler));
 	}
 	
 	public static <T> T unmarshal(String xmlFragment, Class<T> targetType) throws IOException {
-		return targetType.cast(XmlParser.parse(new StringReader(xmlFragment), new UnmarshallerHandler(targetType)));
+		return unmarshal(new StringReader(xmlFragment), targetType);
 	}
 
 	public static String marshall(Object source) {

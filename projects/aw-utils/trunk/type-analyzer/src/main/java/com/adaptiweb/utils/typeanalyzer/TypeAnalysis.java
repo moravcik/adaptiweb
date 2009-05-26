@@ -11,7 +11,7 @@ public interface TypeAnalysis {
 	/**
 	 * @return Described type.
 	 */
-	public Type getType();
+	public Class<?> getType();
 	
 	/**
 	 * Delegated method. 
@@ -43,4 +43,5 @@ public interface TypeAnalysis {
 	 * or <code>null</code> if Type can't be created from string. 
 	 */
 	public Object parse(String data);
+
 }

@@ -5,6 +5,10 @@ import java.util.LinkedList;
 
 class CharacterTypeAnalysis implements TypeAnalysis {
 
+	public static final TypeAnalysis INSTANCE = new CharacterTypeAnalysis();
+	
+	private CharacterTypeAnalysis() {}
+	
 	public Object parse(String data) {
 		if(data == null) return null;
 		if(data.length() == 0) return null;
@@ -13,7 +17,7 @@ class CharacterTypeAnalysis implements TypeAnalysis {
 		return data.charAt(0);
 	}
 
-	public Type getType() {
+	public Class<?> getType() {
 		return Character.class;
 	}
 

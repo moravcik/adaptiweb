@@ -5,6 +5,10 @@ import java.util.LinkedList;
 
 class BooleanTypeAnalysis implements TypeAnalysis {
 	
+	public static final TypeAnalysis INSTANCE = new BooleanTypeAnalysis();
+	
+	private BooleanTypeAnalysis() {}
+	
 	public Object parse(String data) {
 		return "1".equals(data)
 			|| "true".equalsIgnoreCase(data)
@@ -13,7 +17,7 @@ class BooleanTypeAnalysis implements TypeAnalysis {
 			|| "A".equalsIgnoreCase(data);
 	}
 
-	public Type getType() {
+	public Class<?> getType() {
 		return Boolean.class;
 	}
 

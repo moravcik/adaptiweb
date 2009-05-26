@@ -98,9 +98,31 @@ public class XmlParser  {
 		}
 	};
 	
+	private final State COMMENT_STATE = new State() {
+
+		private final char[] end = "-->".toCharArray();
+		public int status;
+		
+		@Override
+		void enter(State any) {
+			status = 0;
+		}
+
+		@Override
+		State next(char c) throws XmlParserException {
+			if(c == end[status]) status++;
+			else status = 0;
+			return status == end.length ? CONTENT_STATE : this;
+		}
+		
+	};
+	
 	private final State TAG_STATE = new State() {
 		State next(char c) {
-			if(c == '>') {
+			if(c == '!' && buffer.length() == 0) {
+				return COMMENT_STATE;
+			}
+			else if(c == '>') {
 				return CONTENT_STATE;
 			}
 			else if(c == '/') {
@@ -129,7 +151,7 @@ public class XmlParser  {
 					throw error("No matching end element (%s)", tagName);
 				handler.endElement(tagName);
 			}
-			else {
+			else if(nextState != COMMENT_STATE) {
 				stack.addFirst(new Tag(buffer.toString()));
 				if(nextState == CONTENT_STATE) element();
 			}
