@@ -11,7 +11,7 @@
 	<groupId>com.adaptiweb.utils</groupId>
 	<artifactId>aw-utils</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>AdaptiWeb Utils</name>
 	
 	<url>http://adaptiweb.googlecode.com/svn/site/aw-utils/index.html</url>
@@ -114,8 +114,8 @@
 	</reporting>
 
 	<scm>
-		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/aw-utils/tags/1.1</connection>
-		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/aw-utils/tags/1.1</developerConnection>
-		<url>http://adaptiweb.googlecode.com/svn/projects/aw-utils/tags/1.1</url>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/aw-utils/trunk</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/aw-utils/trunk</developerConnection>
+		<url>http://adaptiweb.googlecode.com/svn/projects/aw-utils/trunk</url>
 	</scm>
 </project>
