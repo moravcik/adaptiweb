@@ -8,8 +8,9 @@ public class Listeners<L> {
     ArrayList<L> listeners;
 
 	public void fireEvent(FireableEvent<L> event) {
-        for (L listener : listeners)
-        	event.fireOnListener(listener);
+		if (listeners != null)
+	        for (L listener : listeners)
+	        	event.fireOnListener(listener);
     }
 	
 	public void addListener(L l) {
