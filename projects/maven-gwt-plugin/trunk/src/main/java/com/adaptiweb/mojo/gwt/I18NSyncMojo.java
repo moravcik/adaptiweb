@@ -26,6 +26,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import com.google.gwt.i18n.tools.I18NSync;
+import com.google.gwt.util.tools.Utility;
 
 /**
  * @goal i18n
@@ -72,6 +73,7 @@ public class I18NSyncMojo extends AbstractMojo {
 			if(messages != null) for(String message : messages) {
 				if(!isSynchronized(message)) {
 					params[params.length - 1] = message;
+					workaroundIssue2007();
 					I18NSync.main(params);
 					getLog().info("GWT i18n synchronizing Messages '" + message + "' done.");
 				}
@@ -88,6 +90,21 @@ public class I18NSyncMojo extends AbstractMojo {
 			}
 		} finally {
 			currentThread.setContextClassLoader(currentThread.getContextClassLoader().getParent());
+		}
+	}
+
+	/**
+	 * http://code.google.com/p/google-web-toolkit/issues/detail?id=2007
+	 * SUPER BIG HACK, the gwt-dev-windows.jar doesn't support paths with spaces in it
+	 * but it does allow you to override the location.
+	 */
+	private void workaroundIssue2007() {
+		String partialPath = Utility.class.getName().replace('.', '/').concat(".class");
+		URL url = Utility.class.getClassLoader().getResource(partialPath);
+		if (url != null && "jar".equals(url.getProtocol())) {
+			String path = url.toString();
+			String jarPath = path.substring(path.indexOf("file:"), path.lastIndexOf('!'));
+			System.setProperty("gwt.devjar", jarPath.replaceAll(" ", "%20"));
 		}
 	}
 
