@@ -31,7 +31,7 @@
 	
 	<properties>
 		<gwtVersion>1.6.3</gwtVersion>
-		<awUtilsVersion>1.1-SNAPSHOT</awUtilsVersion>
+		<awUtilsVersion>1.2-SNAPSHOT</awUtilsVersion>
 	</properties>
 
 	<dependencies>
