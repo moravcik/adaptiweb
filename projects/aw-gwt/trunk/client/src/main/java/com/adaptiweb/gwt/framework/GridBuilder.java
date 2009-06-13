@@ -136,6 +136,22 @@ public class GridBuilder {
 	protected interface Cell {
 		void apply(int r, int c, Grid grid);
 	}
+
+	public static Style colspan(final int span) {
+		return new Style() {
+			public void apply(Element td) {
+				td.setAttribute("colspan", String.valueOf(span));
+			}
+		};
+	}
+
+	public static Style rowspan(final int span) {
+		return new Style() {
+			public void apply(Element td) {
+				td.setAttribute("rowspan", String.valueOf(span));
+			}
+		};
+	}
 }
 
 final class Coordinates {
