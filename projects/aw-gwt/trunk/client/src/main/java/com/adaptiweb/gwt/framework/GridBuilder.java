@@ -152,6 +152,14 @@ public class GridBuilder {
 			}
 		};
 	}
+
+	public static Style width(final String width) {
+		return new Style() {
+			public void apply(Element td) {
+				td.setAttribute("width", width);
+			}
+		};
+	}
 }
 
 final class Coordinates {

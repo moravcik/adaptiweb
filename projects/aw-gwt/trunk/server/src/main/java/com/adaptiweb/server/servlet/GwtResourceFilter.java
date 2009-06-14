@@ -26,7 +26,7 @@ public class GwtResourceFilter implements Filter {
 	//TODO make configurable url pattern matching
 	//TODO better is ant-like pattern 
 	private static final Pattern SUPPORTED_EXTENSIONS = Pattern.compile(
-			".*\\.(css|js|html|png|gif)", Pattern.CASE_INSENSITIVE);
+			".*\\.(css|js|html|png|gif|jpg)", Pattern.CASE_INSENSITIVE);
 	
 	private ServletContext context;
 

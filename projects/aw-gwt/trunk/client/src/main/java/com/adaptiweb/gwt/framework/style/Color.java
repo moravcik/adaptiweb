@@ -21,7 +21,7 @@ import com.google.gwt.user.client.Element;
  * 
  * @author <a href="mailto:milan.skuhra@anasoft.sk">Milan Skuhra</a>
  */
-public enum Color implements ColorType {
+public enum Color implements ColorType, Style {
 	/**
 	 * <table border="0">
 	 * <tr><td class="label">Color Name</td><td>AliceBlue</td></tr>
@@ -1244,5 +1244,10 @@ public enum Color implements ColorType {
 
 	public String colorValue() {
 		return name().toLowerCase();
+	}
+
+	@Override
+	public void apply(Element element) {
+		element.getStyle().setProperty("color", colorValue());
 	}
 }

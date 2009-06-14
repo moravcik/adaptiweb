@@ -2,6 +2,8 @@ package com.adaptiweb.server.i18n;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javassist.CannotCompileException;
 import javassist.ClassClassPath;
@@ -64,10 +66,22 @@ public final class I18NSupport {
 		return subst(result, params);
 	}
 	
+	private static Pattern PARAM_FORMAT = Pattern.compile("\\{(\\d+)\\}");
+	
 	public static String subst(String format, Object[] params) {
 		if(params.length == 0 || format == null) return format;
-		//TODO object parameters are not applied
-		return format;
+		
+		Matcher m = PARAM_FORMAT.matcher(format);
+		StringBuffer result = new StringBuffer();
+		
+		while (m.find()) {
+			int paramIndex = Integer.parseInt(m.group(1));
+			m.appendReplacement(result, paramIndex <= params.length ? 
+					String.valueOf(params[paramIndex]) : m.group());
+		}
+		
+		m.appendTail(result);
+		return result.toString();
 	}
 
 	protected Properties getProperties() {
