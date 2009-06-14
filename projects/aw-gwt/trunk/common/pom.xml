@@ -20,4 +20,23 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  	<build>
+		<finalName>${project.artifactId}</finalName>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/.*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>**/.*</exclude>
+				</excludes>
+			</resource>
+		</resources>
+	</build>
 </project>
