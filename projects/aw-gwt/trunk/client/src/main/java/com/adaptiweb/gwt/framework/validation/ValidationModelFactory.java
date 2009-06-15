@@ -104,7 +104,7 @@ public final class ValidationModelFactory {
 		return new AbstractLogicValidationModelSet(models) {
 			@Override
 			protected boolean validate() {
-				return validCounter == 0;
+				return validCounter > 0;
 			}
 		};
 	}
