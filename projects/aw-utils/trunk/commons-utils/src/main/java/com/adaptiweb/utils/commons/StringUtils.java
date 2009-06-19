@@ -56,4 +56,29 @@ public final class StringUtils {
 		Arrays.sort(tc);
 		return tc;
 	}
+
+	public static long parseIP(String ip) {
+		long result = 0;
+		int aux = 0;
+		
+		for (char c : ip.toCharArray()) {
+			if (c == '.') {
+				result = result << 8 | aux & 0xFF;
+				aux = 0;
+			}
+			else {
+				aux *= 10;
+				aux += c - '0';
+			}
+		}
+		
+		return result << 8 | aux & 0xFF;
+	}
+	
+	public static String formatIP(long ip) {
+		return (ip >> 24) + "."
+			+ (ip >> 16 & 0xFF) + "."
+			+ (ip >> 8 & 0xFF) + "."
+			+ (ip & 0xFF);
+	}
 }
