@@ -3,9 +3,9 @@ package com.adaptiweb.gwt.framework.style;
 import com.google.gwt.user.client.Element;
 
 public enum Font implements Style {
-	BOLD("font-weight"),
-	ITALIC("font-style"),
-	UNDERLINE("text-decoration");
+	BOLD("fontWeight"),
+	ITALIC("fontStyle"),
+	UNDERLINE("textDecoration");
 	
 	private final String style;
 
