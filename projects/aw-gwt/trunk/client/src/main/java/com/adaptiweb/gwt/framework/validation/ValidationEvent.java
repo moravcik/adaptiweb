@@ -4,29 +4,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class ValidationEvent extends GwtEvent<ValidationHandler> {
 
-	/**
-	 * Handler type.
-	 */
 	private static Type<ValidationHandler> TYPE;
 
-	public static void fire(HasValidationHandlers source, boolean value) {
-		if (TYPE != null) {
-			ValidationEvent event = new ValidationEvent(value);
-			source.fireEvent(event);
-		}
+	public static void fire(ValidationModel model) {
+		if (TYPE != null) model.fireEvent(new ValidationEvent(model));
 	}
 
 	public static Type<ValidationHandler> getType() {
-		if (TYPE == null) {
-			TYPE = new Type<ValidationHandler>();
-		}
+		if (TYPE == null) TYPE = new Type<ValidationHandler>();
 		return TYPE;
 	}
 
-	private final boolean value;
+	private final boolean valid;
+	private final ValidationModel model;
 
-	protected ValidationEvent(boolean value) {
-		this.value = value;
+	protected ValidationEvent(ValidationModel model) {
+		this.valid = model.isValid();
+		this.model = model;
 	}
 
 	@Override
@@ -35,7 +29,18 @@ public class ValidationEvent extends GwtEvent<ValidationHandler> {
 	}
 
 	public boolean isValid() {
-		return value;
+		return valid;
+	}
+	
+	public ValidationModel getModel() {
+		return model;
+	}
+
+	@Override
+	public String toDebugString() {
+		return super.toDebugString()
+			+ " valid=" + isValid()
+			+ ", model.valid=" + getModel().isValid();
 	}
 
 	@Override

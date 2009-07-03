@@ -39,7 +39,7 @@ public class EqualValidationModel extends AbstractValidationModel {
 		setValid(a == null ? b == null : a.equals(b));
 	}
 
-	public static ValidationModel equal(final TextBoxBase a, final TextBoxBase b) {
+	public static ValidationModel create(final TextBoxBase a, final TextBoxBase b) {
 		final EqualValidationModel validator = new EqualValidationModel(
 				new TextBoxBaseSource(a),
 				new TextBoxBaseSource(b));

@@ -18,4 +18,8 @@ public class GwtGoodies {
             GWT.log("element with id:" + id + "("+id.getElementId()+") not found!", null);
         return elementById;
     }
+    
+    public static boolean areEquals(Object original, Object actual) {
+    	return original == null ? actual == null : original.equals(actual);
+    }
 }

@@ -1,31 +1,32 @@
 package com.adaptiweb.gwt.framework.validation;
 
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
+import com.adaptiweb.gwt.framework.AbstractHasHandlers;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class AbstractValidationModel implements ValidationModel {
+public abstract class AbstractValidationModel extends AbstractHasHandlers implements ValidationModel {
 	
-	private final HandlerManager handlers = new HandlerManager(this);
-	private boolean value;
+	private boolean valid;
+	
+	protected AbstractValidationModel() {}
+	
+	protected AbstractValidationModel(boolean initialValidStatus) {
+		valid = initialValidStatus;
+	}
+
+	protected void setValid(boolean value) {
+		if (this.valid == value) return;
+		this.valid = value;
+		ValidationEvent.fire(this);
+	}
+
+	@Override
+	public boolean isValid() {
+		return valid;
+	}
 
 	@Override
 	public HandlerRegistration addValidationHandler(ValidationHandler handler) {
 		return handlers.addHandler(ValidationEvent.getType(), handler);
-	}
-
-	@Override
-	public void fireEvent(GwtEvent<?> event) {
-		handlers.fireEvent(event);
-	}
-	
-	public boolean isValid() {
-		return value;
-	}
-	
-	protected void setValid(boolean value) {
-		if (this.value == value) return;
-		ValidationEvent.fire(this, this.value = value);
 	}
 
 }

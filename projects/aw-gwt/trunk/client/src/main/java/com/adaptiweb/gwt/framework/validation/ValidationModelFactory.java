@@ -67,7 +67,8 @@ public final class ValidationModelFactory {
 		protected int validCounter = 0;
 		
 		public AbstractLogicValidationModelSet(ValidationModel... models) {
-			super(models);
+			super();
+			add(models);
 		}
 
 		@Override
