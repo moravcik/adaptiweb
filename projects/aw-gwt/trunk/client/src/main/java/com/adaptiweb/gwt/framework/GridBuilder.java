@@ -15,13 +15,29 @@ public class GridBuilder {
 	private int rows = 0;
 	private int columns = 0;
 	
-	private final Map<Coordinates, Cell> cells = new HashMap<Coordinates, Cell>(); 
+	private final Map<Coordinates, Cell> cells = new HashMap<Coordinates, Cell>();
+	
+	private static class BuilderGrid extends Grid {
+		public BuilderGrid(int rows, int columns) {
+			super(rows, columns);
+		}
+		@Override
+		public void removeCell(int row, int column) {
+			super.removeCell(row, column);
+		}
+	}
 
 	public Grid build() {
-		Grid grid = new Grid(rows, columns);
-		for(int r = 0; r < rows; r++) for(int c = 0; c < columns; c++) {
+		BuilderGrid grid = new BuilderGrid(rows, columns) {
+			@Override
+			public void removeCell(int row, int column) {
+				super.removeCell(row, column);
+			}
+		};
+		for(int r = 0; r < rows; r++) for(int c = columns - 1; c >= 0; c--) {
 			Cell cell = cells.get(new Coordinates(r, c));
 			if(cell != null) cell.apply(r, c, grid);
+			else grid.removeCell(r, c);
 		}
 
 		return grid;
@@ -104,7 +120,12 @@ public class GridBuilder {
 	}
 
 	protected Cell cell() {
-		return null;
+		return new Cell() {
+			@Override
+			public void apply(int r, int c, Grid grid) {
+				//nothing to do
+			}
+		};
 	}
 
 	protected Cell cell(final String text, final Style...styles) {

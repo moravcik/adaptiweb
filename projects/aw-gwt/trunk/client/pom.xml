@@ -44,42 +44,6 @@
 		</dependency>
 	</dependencies>
 	
-	<profiles>
-		<profile>
-			<id>gwt-dev-windows</id>
-			<activation>
-				<os>
-					<family>windows</family>
-				</os>
-			</activation>
-			<properties>
-				<platform>windows</platform>
-			</properties>
-		</profile>
-		<profile>
-			<id>gwt-dev-mac</id>
-			<activation>
-				<os>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<platform>mac</platform>
-			</properties>
-		</profile>
-		<profile>
-			<id>gwt-dev-linux</id>
-			<activation>
-				<os>
-					<name>linux</name>
-				</os>
-			</activation>
-			<properties>
-				<platform>linux</platform>
-			</properties>
-		</profile>
-	</profiles>
-
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
