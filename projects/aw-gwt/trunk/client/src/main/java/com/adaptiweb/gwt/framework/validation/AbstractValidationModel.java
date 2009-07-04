@@ -1,9 +1,11 @@
 package com.adaptiweb.gwt.framework.validation;
 
 import com.adaptiweb.gwt.framework.AbstractHasHandlers;
+import com.adaptiweb.gwt.framework.GwtGoodies;
+import com.adaptiweb.gwt.framework.HasDebugInfo;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class AbstractValidationModel extends AbstractHasHandlers implements ValidationModel {
+public abstract class AbstractValidationModel extends AbstractHasHandlers implements ValidationModel, HasDebugInfo {
 	
 	private boolean valid;
 	
@@ -26,7 +28,16 @@ public abstract class AbstractValidationModel extends AbstractHasHandlers implem
 
 	@Override
 	public HandlerRegistration addValidationHandler(ValidationHandler handler) {
+		new ValidationEvent(this).dispatch(handler);
 		return handlers.addHandler(ValidationEvent.getType(), handler);
 	}
 
+	@Override
+	public String toDebugString() {
+		return toDebugString(GwtGoodies.simpleClassName(getClass().getName()));
+	}
+
+	protected String toDebugString(String type) {
+		return type + ":[" + isValid() + "]";
+	}
 }

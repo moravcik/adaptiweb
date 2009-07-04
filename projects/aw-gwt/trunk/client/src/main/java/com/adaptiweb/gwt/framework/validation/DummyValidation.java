@@ -1,11 +1,11 @@
 package com.adaptiweb.gwt.framework.validation;
 
 
-public class DummyValidationModel extends AbstractValidationModel {
+public class DummyValidation extends AbstractValidationModel {
 
-	public DummyValidationModel() {}
+	public DummyValidation() {}
 
-	public DummyValidationModel(boolean initialValidStatus) {
+	public DummyValidation(boolean initialValidStatus) {
 		super(initialValidStatus);
 	}
 

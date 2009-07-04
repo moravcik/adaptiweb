@@ -9,9 +9,9 @@ public class ValidationModelFactoryTest {
 
 	@Test
 	public void testAnd() {
-		DummyValidationModel a = new DummyValidationModel(true);
-		DummyValidationModel b = new DummyValidationModel(true);
-		DummyValidationModel c = new DummyValidationModel(true);
+		DummyValidation a = new DummyValidation(true);
+		DummyValidation b = new DummyValidation(true);
+		DummyValidation c = new DummyValidation(true);
 		ValidationModel and = ValidationModelFactory.and(a, b, c);
 		assertTrue(and.isValid());
 		c.setValid(false);
@@ -20,9 +20,9 @@ public class ValidationModelFactoryTest {
 
 	@Test
 	public void testAdvancedAnd() {
-		DummyValidationModel a = new DummyValidationModel(true);
-		DummyValidationModel b = new DummyValidationModel(true);
-		final DummyValidationModel c = new DummyValidationModel(true);
+		DummyValidation a = new DummyValidation(true);
+		DummyValidation b = new DummyValidation(true);
+		final DummyValidation c = new DummyValidation(true);
 		c.addValidationHandler(new ValidationHandler() {
 			@Override
 			public void onValidationChange(ValidationEvent event) {
