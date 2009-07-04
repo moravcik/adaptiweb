@@ -56,7 +56,7 @@ public class FormComponent extends Composite {
 		registrations.discard();
 	}
 
-	public void enbaleValidationDebug() {
+	public void enbaleValidationDebuging() {
 		registrations.add(validation.addValidationHandler(new ValidationHandler() {
 			@Override
 			public void onValidationChange(ValidationEvent event) {

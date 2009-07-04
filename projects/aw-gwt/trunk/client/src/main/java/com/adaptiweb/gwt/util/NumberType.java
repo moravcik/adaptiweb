@@ -37,7 +37,7 @@ public interface NumberType<N extends Number> {
 		}
 	};
 
-	public static final NumberType<Float> FLOAT = new AbstractNumberType<Float>("#,#") {
+	public static final NumberType<Float> FLOAT = new AbstractNumberType<Float>("#.#") {
 		@Override
 		public Float convert(Number number) {
 			return number.floatValue();
