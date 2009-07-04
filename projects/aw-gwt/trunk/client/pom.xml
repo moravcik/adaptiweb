@@ -12,10 +12,6 @@
 	<artifactId>aw-gwt-client</artifactId>
 	<name>Adaptiweb GWT client</name>
 	
-	<properties>
-		<gwtModule>com.adaptiweb.gwt.Demo</gwtModule>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -49,9 +45,13 @@
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/.*</exclude>
+				</excludes>
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
 				<includes>
 					<include>**/*.gif</include>
 				</includes>
@@ -65,84 +65,6 @@
 				</excludes>
 			</resource>
 		</resources>
-		
-		<plugins>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>GWTCompiler</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<property name="gwt.classpath" refid="maven.compile.classpath" />
-								<echo message="GWT compilation classpath: ${gwt.classpath}" />
-
-								<java fork="true" failonerror="true" classname="com.google.gwt.dev.Compiler" classpathref="maven.compile.classpath">
-									<jvmarg value="-Xmx768m" />
-									<arg value="-war" />
-									<arg value="${basedir}/target/gwt-out" />
-									<!-- uncomment this to see proper JS -->
-									<!-- <arg value="-style" /><arg value="DETAILED" /> -->
-									<arg value="-extra" />
-									<arg value="${basedir}/target/gwt-gen" />
-									<arg value="${gwtModule}" />
-								</java>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>				
-			</plugin>
-			
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/zip.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id><!-- this is used for inheritance merges -->
-						<phase>package</phase><!-- append to the packaging phase. -->
-						<goals>
-							<goal>attached</goal><!-- goals == mojos -->
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.0</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>package</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>com.google.gwt</groupId>
-									<artifactId>gwt-dev</artifactId>
-									<version>${gwtVersion}</version>
-									<classifier>${platform}-libs</classifier>
-									<type>zip</type>
-									<overWrite>false</overWrite>
-									<outputDirectory>${settings.localRepository}/com/google/gwt/gwt-dev/${gwtVersion}</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
- 		</plugins>
 	</build>
 	
 </project>
