@@ -1,11 +1,14 @@
 package com.adaptiweb.gwt.framework.table;
 
+import org.junit.Ignore;
+
 import com.adaptiweb.gwt.framework.table.ArrayTableRecord;
 import com.adaptiweb.gwt.framework.table.CellRenderer;
 import com.adaptiweb.gwt.framework.table.CellRendererFactory;
 import com.adaptiweb.gwt.framework.table.DataTable;
 
 
+@Ignore
 public class DataTableTest {
 
 	public void testDefineTable() {
