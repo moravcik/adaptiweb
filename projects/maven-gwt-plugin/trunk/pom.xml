@@ -18,7 +18,7 @@
 	<url>http://adaptiweb.googlecode.com/svn/site/maven-gwt-plugin/index.html</url>
 	
 	<properties>
-		<gwtVersion>1.6.3</gwtVersion>
+		<gwtVersion>1.7.0</gwtVersion>
 	</properties>
 
 	<dependencies>
