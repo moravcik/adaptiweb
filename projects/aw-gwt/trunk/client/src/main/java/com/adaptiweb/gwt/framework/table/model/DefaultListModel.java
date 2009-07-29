@@ -45,7 +45,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 		
 		if (position == -1) item.addAll(item);
 		else item.addAll(index, item);
-		
+
 		return removed;
 	}
 

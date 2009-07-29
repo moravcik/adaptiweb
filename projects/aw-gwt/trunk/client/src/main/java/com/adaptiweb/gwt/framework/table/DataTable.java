@@ -8,9 +8,7 @@ import com.adaptiweb.gwt.framework.table.model.ListChangeHandler;
 import com.adaptiweb.gwt.framework.table.model.ListModel;
 import com.adaptiweb.gwt.framework.table.model.ListRefreshHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.impl.ElementMapperImpl;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Widget;
 
 public class DataTable<R extends DataTableRecord> extends Composite implements ListModel<R> {
 	
