@@ -9,12 +9,11 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Composite;
 
 
-public class InteractiveWidget extends DynamicWidget {
-
+public abstract class InteractiveWidget extends Composite {
+	
 	private String enterStyle;
 	private String leaveStyle;
 	private String highlightedStyle;
@@ -22,33 +21,34 @@ public class InteractiveWidget extends DynamicWidget {
 	private boolean over;
 	private boolean focus;
 
-	public InteractiveWidget(Element element, boolean focusable) {
-		setElement(element);
-		
-		addMouseOverHandler(new MouseOverHandler() {
+	// dont forget to call initWidget in constructor
+	public InteractiveWidget(boolean focusable) {		
+		addDomHandler(new MouseOverHandler() {
 			public void onMouseOver(MouseOverEvent event) {
 				over = true;
 				updateStyle();
 			}
-		});
-		addMouseOutHandler(new MouseOutHandler() {
+		}, MouseOverEvent.getType());
+		addDomHandler(new MouseOutHandler() {
 			public void onMouseOut(MouseOutEvent event) {
 				over = false;
 				updateStyle();
 			}
-		});
-		addFocusHandler(new FocusHandler() {
-			public void onFocus(FocusEvent event) {
-				focus = true;
-				updateStyle();
-			}
-		});
-		addBlurHandler(new BlurHandler() {
-			public void onBlur(BlurEvent event) {
-				focus = true;
-				updateStyle();
-			}
-		});
+		}, MouseOutEvent.getType());
+		if (focusable) {
+			addDomHandler(new FocusHandler() {
+				public void onFocus(FocusEvent event) {
+					focus = true;
+					updateStyle();
+				}
+			}, FocusEvent.getType());
+			addDomHandler(new BlurHandler() {
+				public void onBlur(BlurEvent event) {
+					focus = true;
+					updateStyle();
+				}
+			}, BlurEvent.getType());
+		}
 	}
 
 	@Override
@@ -69,7 +69,6 @@ public class InteractiveWidget extends DynamicWidget {
 		this.enterStyle = enterStyle;
 		this.leaveStyle = leaveStyle;
 		updateStyle();
-		sinkEvents(Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.FOCUSEVENTS);
 	}
 	
 	public void setHighlightedStyle(String highlightedStyle) {
@@ -87,7 +86,7 @@ public class InteractiveWidget extends DynamicWidget {
 		if(enterStyle != null || highlightedStyle != null) {
 			String majorStyle = highlightedStyle != null && isHighlighted() ? highlightedStyle : standardStyle;
 			String minorStyle = enterStyle != null && isEntered() ? enterStyle : leaveStyle;
-			super.setStyleName(ConcatUtils.concat(" ", majorStyle, minorStyle));
+			getWidget().setStyleName(ConcatUtils.concat(" ", majorStyle, minorStyle));
 		}
 	}
 	
@@ -97,6 +96,14 @@ public class InteractiveWidget extends DynamicWidget {
 
 	protected boolean isHighlighted() {
 		return false;
+	}
+	
+	public void addMouseOverHandler(MouseOverHandler handler) {
+		addDomHandler(handler, MouseOverEvent.getType());
+	}
+	
+	public void addMouseOutHandler(MouseOutHandler handler) {
+		addDomHandler(handler, MouseOutEvent.getType());
 	}
 
 }

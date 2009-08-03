@@ -27,19 +27,19 @@ public class GwtServiceRegister extends GenericServlet {
 	@Autowired
 	public GwtServiceRegister(Map<String, RemoteServiceServlet> gwtServices) {
 		this.gwtServices = gwtServices;
-		for(Map.Entry<String, RemoteServiceServlet> entry : gwtServices.entrySet())
-			if(!entry.getKey().startsWith("gwt") || !entry.getKey().endsWith("Service"))
+		for (Map.Entry<String, RemoteServiceServlet> entry : gwtServices.entrySet())
+			if (!entry.getKey().startsWith("gwt") || !entry.getKey().endsWith("Service"))
 				throw new IllegalArgumentException("Illecal service name '" + entry.getKey()
 						+ "'! (" + entry.getValue() + ")");
 	}
 
 	public void init(ServletConfig servletConfig) throws ServletException {
-		for(RemoteServiceServlet service : gwtServices.values())
+		for (RemoteServiceServlet service : gwtServices.values())
 			service.init(servletConfig);
 	}
 
 	public void destroy() {
-		for(RemoteServiceServlet service : gwtServices.values())
+		for (RemoteServiceServlet service : gwtServices.values())
 			service.destroy();
 	}
 
@@ -47,7 +47,7 @@ public class GwtServiceRegister extends GenericServlet {
 	public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
 		String serviceName = getServiceBeanName((HttpServletRequest) request);
 
-		if(!gwtServices.containsKey(serviceName))
+		if (!gwtServices.containsKey(serviceName))
 			throw new ServletException("Unknown service " +  serviceName + "!");
 		
 		gwtServices.get(serviceName).service(request, response);
