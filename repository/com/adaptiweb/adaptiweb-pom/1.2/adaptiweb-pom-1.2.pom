@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.adaptiweb</groupId>
+	<artifactId>adaptiweb-pom</artifactId>
+	<version>1.2</version>
+	<packaging>pom</packaging>
+
+	<name>Parent POM for Adaptiweb projects</name>
+
+	<description>
+		Global settings for Adaptiweb projects.
+	</description>
+	
+	<properties>
+		<projectSiteBasedir>${env.PROJECT_SITE_BASEDIR}</projectSiteBasedir>
+		<projectRepositoryBasedir>${env.PROJECT_REPOSITORY_BASEDIR}</projectRepositoryBasedir>
+		<aw.siteRepository>file://${projectSiteBasedir}/${project.artifactId}</aw.siteRepository>
+		<aw.releaseRepository>file://${projectRepositoryBasedir}</aw.releaseRepository>
+		<aw.snapshotRepository>dav:http://maven/nexus/content/repositories/snapshots</aw.snapshotRepository>
+	</properties>
+
+	<organization>
+		<name>Adaptiweb</name>
+		<url>http://code.google.com/p/adaptiweb/</url>
+	</organization>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.adaptiweb.mojo</groupId>
+				<artifactId>maven-buildnumber-plugin</artifactId>
+				<version>0.1-beta</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<ignoreUnversioned>true</ignoreUnversioned>
+					<buildNumberProperty>build.number</buildNumberProperty>
+					<timestampProperty>build.timestamp</timestampProperty>
+					<revisionNumberProperty>build.revision</revisionNumberProperty>
+					<lastCommittedRevisionProperty>build.commitRevision</lastCommittedRevisionProperty>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Build-Number>${build.number}</Build-Number>
+							<Build-Timestamp>${build.timestamp}</Build-Timestamp>
+							<Organization>${organization.name} (${organization.url})</Organization>
+							<Project-Page>${project.url}</Project-Page>
+							<Revision-Number>${build.revision} (last changed ${build.commitRevision})</Revision-Number>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Build-Number>${build.number}</Build-Number>
+							<Build-Timestamp>${build.timestamp}</Build-Timestamp>
+							<Organization>${organization.name} (${organization.url})</Organization>
+							<Project-Page>${project.url}</Project-Page>
+							<Revision-Number>${build.revision} (last changed ${build.commitRevision})</Revision-Number>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<issueManagement>
+		<system>Issues</system>
+		<url>http://code.google.com/p/adaptiweb/issues/list</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<site>
+			<id>local</id>
+			<name>Site on file system</name>
+			<url>${aw.siteRepository}</url>
+		</site>
+		<repository>
+			<id>adaptiweb.googlecode.com</id>
+			<name>Adaptiweb releases repository</name>
+			<url>${aw.releaseRepository}</url>
+		</repository>
+		<snapshotRepository>
+			<id>maven</id>
+			<name>Adaptiweb snapshot repository</name>
+			<url>${aw.snapshotRepository}</url>
+			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>
