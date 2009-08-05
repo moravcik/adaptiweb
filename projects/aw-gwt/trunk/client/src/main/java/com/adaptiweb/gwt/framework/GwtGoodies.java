@@ -3,6 +3,7 @@ package com.adaptiweb.gwt.framework;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Widget;
 
 public class GwtGoodies {
     
@@ -39,5 +40,12 @@ public class GwtGoodies {
 	public static String simpleClassName(String name) {
 		int index = name.lastIndexOf('.');
 		return index == -1 ? name : name.substring(index + 1);
+	}
+
+	public static boolean isOver(Widget widget, int clientX, int clientY) {
+		return widget.getAbsoluteLeft() <= clientX 
+			&& widget.getAbsoluteLeft() + widget.getOffsetWidth() >= clientX
+			&& widget.getAbsoluteTop() <= clientY 
+			&& widget.getAbsoluteTop() + widget.getOffsetHeight() >= clientY;
 	}
 }
