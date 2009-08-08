@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
@@ -20,6 +21,15 @@ public class Dialog {
 	final private PopupPanel glass = constructPopupGlass();
 	final private SimplePanel contentPanel = new SimplePanel();
 	final private HorizontalPanel buttonPanel = new HorizontalPanel();
+	final private Timer showTimer = new Timer() {
+			@Override
+			public void run() {
+		        dialogBox.center();
+		        dialogBox.hide();
+		        dialogBox.setVisible(true);
+		        dialogBox.show();
+			}
+	    };
 	private boolean inicialized = false;
 
 	final private ClickHandler closeHandler = new ClickHandler() {
@@ -43,8 +53,9 @@ public class Dialog {
         else cleanUp();
         
         glass.show();
-        dialogBox.center();
+        dialogBox.setVisible(false);
         dialogBox.show();
+        showTimer.schedule(1);
 	}
 	
 	protected void cleanUp() {
@@ -52,7 +63,6 @@ public class Dialog {
 
 	public Dialog(String title) {
 		dialogBox.setText(title);
-		dialogBox.setAnimationEnabled(true);
 		VerticalPanel verticalPanel = new VerticalPanel();
 		verticalPanel.add(contentPanel);
 		verticalPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
@@ -112,7 +122,6 @@ public class Dialog {
         
         popupPanel.setPopupPosition(0, 0);
         popupPanel.setStyleName("glass");
-        popupPanel.setAnimationEnabled(true);
         
         return popupPanel;
 	}
