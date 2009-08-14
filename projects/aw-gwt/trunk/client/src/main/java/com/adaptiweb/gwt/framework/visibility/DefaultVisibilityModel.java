@@ -5,17 +5,17 @@ import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.adaptiweb.gwt.framework.HasDebugInfo;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class AbstractVisibilityModel extends AbstractHasHandlers implements VisibilityModel, HasDebugInfo {
+public class DefaultVisibilityModel extends AbstractHasHandlers implements VisibilityModel, HasDebugInfo {
 	
 	private boolean visible;
 	
-	protected AbstractVisibilityModel() {}
+	protected DefaultVisibilityModel() {}
 	
-	protected AbstractVisibilityModel(boolean initialVisibleStatus) {
+	protected DefaultVisibilityModel(boolean initialVisibleStatus) {
 		visible = initialVisibleStatus;
 	}
 
-	protected void setVisible(boolean value) {
+	public void setVisible(boolean value) {
 		if (this.visible == value) return;
 		this.visible = value;
 		VisibitilyEvent.fire(this);

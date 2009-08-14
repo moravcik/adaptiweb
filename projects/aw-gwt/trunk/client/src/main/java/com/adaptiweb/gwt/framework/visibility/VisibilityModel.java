@@ -7,6 +7,8 @@ import com.google.gwt.event.shared.HasHandlers;
 public interface VisibilityModel extends HasHandlers, Model {
 
 	boolean isVisible();
+	
+	void setVisible(boolean visible);
 
 	HandlerRegistration addVisibilityHandler(VisibilitityHandler handler);
 
