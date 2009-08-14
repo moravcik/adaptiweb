@@ -7,7 +7,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 
 public class DefaultVisibilityModel extends AbstractHasHandlers implements VisibilityModel, HasDebugInfo {
 	
-	private boolean visible;
+	private boolean visible = true;
 	
 	protected DefaultVisibilityModel() {}
 	
