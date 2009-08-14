@@ -9,9 +9,9 @@ public class DefaultVisibilityModel extends AbstractHasHandlers implements Visib
 	
 	private boolean visible = true;
 	
-	protected DefaultVisibilityModel() {}
+	public DefaultVisibilityModel() {}
 	
-	protected DefaultVisibilityModel(boolean initialVisibleStatus) {
+	public DefaultVisibilityModel(boolean initialVisibleStatus) {
 		visible = initialVisibleStatus;
 	}
 
