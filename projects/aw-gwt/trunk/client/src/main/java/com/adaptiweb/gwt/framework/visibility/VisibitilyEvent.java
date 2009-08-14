@@ -47,4 +47,11 @@ public class VisibitilyEvent extends GwtEvent<VisibilitityHandler> {
 	protected void dispatch(VisibilitityHandler handler) {
 		handler.onVisibilityChange(this);
 	}
+	
+	public static void initDispatch(VisibilityModel model, VisibilitityHandler...handlers) {
+		VisibitilyEvent initEvent = new VisibitilyEvent(model);
+		for (VisibilitityHandler handler : handlers) {
+			initEvent.dispatch(handler);
+		}
+	}
 }
