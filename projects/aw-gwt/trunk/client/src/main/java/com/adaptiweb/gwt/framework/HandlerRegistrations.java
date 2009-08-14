@@ -16,5 +16,6 @@ public class HandlerRegistrations {
 	public void discard() {
 		for (HandlerRegistration registration : registrations)
 			registration.removeHandler();
+		registrations.clear();
 	}
 }
