@@ -6,7 +6,9 @@ import java.util.Map;
 
 import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.adaptiweb.gwt.framework.HasDebugInfo;
+import com.adaptiweb.gwt.mvc.model.NumberModel;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.HasValue;
 
 public final class ModifiedModelFactory {
 	
@@ -63,24 +65,33 @@ public final class ModifiedModelFactory {
 		public int size() {
 			return models.size();
 		}
+		
+		@Override
+		public void reset() {
+			for (ModifiedModel model : this) model.reset();
+		}
 
 		@Override
 		public String toDebugString() {
+			boolean first= true;
 			StringBuilder sb = new StringBuilder();
-			sb.append(type).append('{');
+			sb.append(type);
+			if(isModified()) sb.append('*');
+			sb.append('{');
 			
 			for (ModifiedModel model : this) {
-				sb.append(GwtGoodies.toDebugString(model)).append(',');
+				if (first) first = false;
+				else sb.append(',');
+				sb.append(GwtGoodies.toDebugString(model));
 			}
-			sb.setCharAt(sb.length() - 1 , '}');
-			return sb.toString();
+			return sb.append('}').toString();
 		}
 	}
 	
-	private static abstract class
+	static abstract class
 	AbstractLogicModifiedModelSet extends AbstractModifiedModelSet {
 
-		protected int validCounter = 0;
+		protected int modifiedCounter = 0;
 		
 		public AbstractLogicModifiedModelSet(String setType, ModifiedModel... models) {
 			super(setType);
@@ -90,20 +101,20 @@ public final class ModifiedModelFactory {
 		@Override
 		public boolean add(ModifiedModel...models) {
 			for (ModifiedModel model : models)
-				if (!model.isModified()) validCounter++;
+				if (model.isModified()) modifiedCounter++;
 			return super.add(models);
 		}
 		
 		@Override
 		public boolean remove(ModifiedModel...models) {
 			for (ModifiedModel model : models)
-				if (model.isModified()) validCounter--;
+				if (model.isModified()) modifiedCounter--;
 			return super.remove(models);
 		}
 		
 		@Override
 		public void onModify(ModifiedEvent event) {
-			validCounter += event.isModified() ? +1 : -1;
+			modifiedCounter += event.isModified() ? +1 : -1;
 			super.onModify(event);
 		}
 	}
@@ -112,7 +123,7 @@ public final class ModifiedModelFactory {
 		return new AbstractLogicModifiedModelSet("and", models) {
 			@Override
 			protected boolean eval() {
-				return validCounter == size();
+				return modifiedCounter == size();
 			}
 		};
 	}
@@ -121,7 +132,7 @@ public final class ModifiedModelFactory {
 		return new AbstractLogicModifiedModelSet("or", models) {
 			@Override
 			protected boolean eval() {
-				return validCounter > 0;
+				return modifiedCounter > 0;
 			}
 		};
 	}
@@ -130,7 +141,7 @@ public final class ModifiedModelFactory {
 		return new AbstractLogicModifiedModelSet("xor", models) {
 			@Override
 			protected boolean eval() {
-				return validCounter == 0 || validCounter == size();
+				return modifiedCounter == 0 || modifiedCounter == size();
 			}
 		};
 	}
@@ -145,7 +156,29 @@ public final class ModifiedModelFactory {
 					}
 				}, true);
 			}
+			@Override
+			public void reset() {
+				model.reset();
+			}
 		};
 	}
-	
+
+	public static <T> ConfigureableModifiedModel<T> create(final HasValue<T> hasValue) {
+		return new AbstractHasValueCahangeHandlersModifiedModel<T>(hasValue) {
+			@Override
+			protected T getCurrentValue() {
+				return hasValue.getValue();
+			}
+		};
+	}
+
+	public static <T extends Number> ConfigureableModifiedModel<T> create(final NumberModel<T> numberModel) {
+		return new AbstractHasValueCahangeHandlersModifiedModel<T>(numberModel) {
+			@Override
+			protected T getCurrentValue() {
+				return numberModel.getNumber();
+			}
+			
+		};
+	}
 }

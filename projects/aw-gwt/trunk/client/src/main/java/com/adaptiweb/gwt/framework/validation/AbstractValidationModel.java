@@ -27,8 +27,8 @@ public abstract class AbstractValidationModel extends AbstractHasHandlers implem
 	}
 
 	@Override
-	public HandlerRegistration addValidationHandler(ValidationHandler handler) {
-		new ValidationEvent(this).dispatch(handler);
+	public HandlerRegistration addValidationHandler(ValidationHandler handler, boolean fireInitEvent) {
+		if(fireInitEvent) ValidationEvent.init(this, handler);
 		return handlers.addHandler(ValidationEvent.getType(), handler);
 	}
 

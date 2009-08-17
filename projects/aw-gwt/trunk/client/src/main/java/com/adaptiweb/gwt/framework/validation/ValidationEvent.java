@@ -10,6 +10,10 @@ public class ValidationEvent extends GwtEvent<ValidationHandler> {
 		if (TYPE != null) model.fireEvent(new ValidationEvent(model));
 	}
 
+	public static void init(ValidationModel model, ValidationHandler handler) {
+		if (TYPE != null) new ValidationEvent(model).dispatch(handler);
+	}
+
 	public static Type<ValidationHandler> getType() {
 		if (TYPE == null) TYPE = new Type<ValidationHandler>();
 		return TYPE;
@@ -47,4 +51,5 @@ public class ValidationEvent extends GwtEvent<ValidationHandler> {
 	protected void dispatch(ValidationHandler handler) {
 		handler.onValidationChange(this);
 	}
+
 }

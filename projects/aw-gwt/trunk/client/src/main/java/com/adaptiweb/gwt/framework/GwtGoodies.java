@@ -34,7 +34,7 @@ public class GwtGoodies {
 	public static String toDebugString(Object obj) {
 		if (obj instanceof HasDebugInfo)
 			return ((HasDebugInfo) obj).toDebugString();
-		return obj.toString();
+		return String.valueOf(obj);
 	}
 
 	public static String simpleClassName(String name) {

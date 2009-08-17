@@ -22,12 +22,11 @@ public class ValidationStyleChanger implements ValidationHandler {
 
 	@Override
 	public void onValidationChange(ValidationEvent event) {
-		apply(event.isValid()); 
+		apply(event.getModel().isValid()); 
 	}
 	
 	public ValidationModel register(ValidationModel validation) {
-		validation.addValidationHandler(this);
-		apply(validation.isValid());
+		validation.addValidationHandler(this, true);
 		return validation;
 	}
 

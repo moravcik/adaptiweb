@@ -5,7 +5,6 @@ import org.junit.Ignore;
 import com.adaptiweb.gwt.framework.table.ArrayTableRecord;
 import com.adaptiweb.gwt.framework.table.CellRenderer;
 import com.adaptiweb.gwt.framework.table.CellRendererFactory;
-import com.adaptiweb.gwt.framework.table.DataTable;
 
 
 @Ignore

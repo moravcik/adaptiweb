@@ -2,11 +2,11 @@ package com.adaptiweb.gwt.framework.modify;
 
 import java.util.Comparator;
 
-public class AbstractModifiedModel<T> extends BaseModifiedModel {
-	
-	public interface Equalator<X> {
-		boolean equal(X x1, X x2);
-	}
+import com.adaptiweb.gwt.framework.GwtGoodies;
+import com.adaptiweb.gwt.framework.HasDebugInfo;
+
+public abstract class AbstractModifiedModel<T> extends BaseModifiedModel
+implements ConfigureableModifiedModel<T>, HasDebugInfo {
 	
 	public static final Equalator<Object> DEFAULT_EQUALATOR = new Equalator<Object>() {
 		@Override
@@ -15,15 +15,18 @@ public class AbstractModifiedModel<T> extends BaseModifiedModel {
 		}
 	};
 	
-	private final Equalator<? super T> euqalator;
+	private Equalator<? super T> equalator = DEFAULT_EQUALATOR;
 	private T originalValue;
-	
-	public AbstractModifiedModel() {
-		this(DEFAULT_EQUALATOR);
+
+	@Override
+	public ConfigureableModifiedModel<T> setModifiedTester(Equalator<? super T> equalator) {
+		this.equalator = equalator;
+		return this;
 	}
 
-	public AbstractModifiedModel(final Comparator<? super T> comparator) {
-		this(new Equalator<T>() {
+	@Override
+	public ConfigureableModifiedModel<T> setModifiedTester(final Comparator<? super T> comparator) {
+		return setModifiedTester(new Equalator<T>() {
 			@Override
 			public boolean equal(T x1, T x2) {
 				return comparator.compare(x1, x2) == 0;
@@ -31,17 +34,25 @@ public class AbstractModifiedModel<T> extends BaseModifiedModel {
 		});
 	}
 	
-	public AbstractModifiedModel(Equalator<? super T> equalator) {
-		this.euqalator = equalator;
-	}
-	
-	AbstractModifiedModel<T> init(T originalValue) {
+	protected AbstractModifiedModel<T> init(T originalValue) {
 		this.originalValue = originalValue;
-		setModified(false);
+		super.reset();
 		return this;
 	}
 	
 	protected void update(T actualValue) {
-		setModified(!euqalator.equal(originalValue, actualValue));
+		setModified(!equalator.equal(originalValue, actualValue));
+	}
+	
+	@Override
+	public void reset() {
+		init(getCurrentValue());
+	}
+	
+	protected abstract T getCurrentValue();
+
+	@Override
+	public String toDebugString() {
+		return GwtGoodies.toDebugString(originalValue) + (isModified() ? "*" : "");
 	}
 }

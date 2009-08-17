@@ -28,7 +28,7 @@ public final class ValidationModelFactory {
 			for (ValidationModel model : models) {
 				if (!this.models.containsKey(model)) {
 					result = true;
-					this.models.put(model, model.addValidationHandler(this));
+					this.models.put(model, model.addValidationHandler(this, false));
 				}
 			}
 			setValid(validate());
@@ -89,7 +89,7 @@ public final class ValidationModelFactory {
 		@Override
 		public boolean add(ValidationModel...models) {
 			for (ValidationModel model : models)
-				if (!model.isValid()) validCounter++;
+				if (model.isValid()) validCounter++;
 			return super.add(models);
 		}
 		
@@ -142,8 +142,7 @@ public final class ValidationModelFactory {
 					public void onValidationChange(ValidationEvent event) {
 						setValid(!event.getModel().isValid());
 					}
-				});
-				setValid(!model.isValid());
+				}, true);
 			}
 			@Override
 			public String toDebugString() {

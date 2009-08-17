@@ -10,5 +10,5 @@ public interface ValidationModel extends HasHandlers, Model {
 	
 //	List<String> getValidationReport();
 
-	HandlerRegistration addValidationHandler(ValidationHandler handler);
+	HandlerRegistration addValidationHandler(ValidationHandler handler, boolean fireInitEvent);
 }

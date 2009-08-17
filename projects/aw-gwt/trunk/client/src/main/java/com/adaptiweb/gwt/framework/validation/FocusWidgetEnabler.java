@@ -11,8 +11,7 @@ public class FocusWidgetEnabler implements ValidationHandler {
 	}
 	
 	public void apply(ValidationModel validation) {
-		validation.addValidationHandler(this);
-		enable(validation.isValid());
+		validation.addValidationHandler(this, true);
 	}
 
 	private void enable(boolean on) {
@@ -21,7 +20,7 @@ public class FocusWidgetEnabler implements ValidationHandler {
 
 	@Override
 	public void onValidationChange(ValidationEvent event) {
-		enable(event.isValid());
+		enable(event.getModel().isValid());
 	}
 	
 }

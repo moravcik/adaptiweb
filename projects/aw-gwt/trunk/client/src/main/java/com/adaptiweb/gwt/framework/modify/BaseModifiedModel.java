@@ -19,6 +19,10 @@ public class BaseModifiedModel extends AbstractHasHandlers implements ModifiedMo
 		this.modified = modified;
 		ModifiedEvent.fire(this);
 	}
+	
+	public void reset() {
+		setModified(false);
+	}
 
 	@Override
 	public HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitEvent) {
