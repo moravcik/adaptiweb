@@ -24,20 +24,29 @@ import com.google.gwt.user.client.ui.TextBoxBase;
 public class NumberBoxComponent<T extends Number> extends FormComponent implements NumberModel<T> {
 	
 	protected final TextBoxBase widget = new TextBox();
-	protected final NumberModel<T> model = new DefaultNumberModel<T>();
+	protected final NumberModel<T> model;
 	private final NumberFomatter<T> formatter;
 	private final DummyValidation isNumber = new DummyValidation(true);
 
 	public NumberBoxComponent(NumberType<T> type) {
-		this(type.defaultFormatter());
+		this(type.defaultFormatter(), new DefaultNumberModel<T>());
 	}
 	
 	public NumberBoxComponent(NumberType<T> type, String format) {
-		this(NumberFomatter.create(type, format));
+		this(NumberFomatter.create(type, format), new DefaultNumberModel<T>());
 	}
 
-	public NumberBoxComponent(NumberFomatter<T> formatter) {
+	public NumberBoxComponent(NumberType<T> type, NumberModel<T> model) {
+		this(type.defaultFormatter(), model);
+	}
+	
+	public NumberBoxComponent(NumberType<T> type, String format, NumberModel<T> model) {
+		this(NumberFomatter.create(type, format), model);
+	}
+
+	private NumberBoxComponent(NumberFomatter<T> formatter, NumberModel<T> numberModel) {
 		this.formatter = formatter;
+		this.model = numberModel;
 		initWidget(widget);
 		registrations.add(widget.addKeyPressHandler(new KeyPressHandler() {
 			@Override
