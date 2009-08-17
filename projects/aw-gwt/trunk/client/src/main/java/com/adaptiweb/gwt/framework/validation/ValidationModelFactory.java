@@ -140,7 +140,7 @@ public final class ValidationModelFactory {
 				model.addValidationHandler(new ValidationHandler() {
 					@Override
 					public void onValidationChange(ValidationEvent event) {
-						setValid(!event.isValid());
+						setValid(!event.getModel().isValid());
 					}
 				});
 				setValid(!model.isValid());
