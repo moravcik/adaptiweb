@@ -94,8 +94,9 @@ public class NumberBoxComponent<T extends Number> extends FormComponent implemen
 	
 	@Override
 	protected ValidationModelSet validations(ValidationModel... initModels) {
-		ValidationModelSet validations = super.validations(isNumber);
-		validations.add(initModels);
+		boolean calledFirstTime = getValidation() == null;
+		ValidationModelSet validations = super.validations(initModels);
+		if (calledFirstTime) validations.add(isNumber);
 		return validations;
 	}
 
