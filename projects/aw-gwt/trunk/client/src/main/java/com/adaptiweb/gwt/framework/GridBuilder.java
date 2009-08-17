@@ -21,6 +21,7 @@ public class GridBuilder {
 		public BuilderGrid(int rows, int columns) {
 			super(rows, columns);
 		}
+		//changed visibility
 		@Override
 		public void removeCell(int row, int column) {
 			super.removeCell(row, column);
@@ -28,16 +29,13 @@ public class GridBuilder {
 	}
 
 	public Grid build() {
-		BuilderGrid grid = new BuilderGrid(rows, columns) {
-			@Override
-			public void removeCell(int row, int column) {
-				super.removeCell(row, column);
+		BuilderGrid grid = new BuilderGrid(rows, columns);
+		for(int r = 0; r < rows; r++) {
+			for(int c = columns - 1; c >= 0; c--) {
+				Cell cell = cells.get(new Coordinates(r, c));
+				if(cell == null) grid.removeCell(r, c);
+				else cell.apply(r, c, grid);
 			}
-		};
-		for(int r = 0; r < rows; r++) for(int c = columns - 1; c >= 0; c--) {
-			Cell cell = cells.get(new Coordinates(r, c));
-			if(cell != null) cell.apply(r, c, grid);
-			else grid.removeCell(r, c);
 		}
 
 		return grid;
