@@ -11,5 +11,7 @@ public interface VisibilityModel extends HasHandlers, Model {
 	void setVisible(boolean visible);
 
 	HandlerRegistration addVisibilityHandler(VisibilitityHandler handler);
+	
+	HandlerRegistration initAndAddVisibilityHandler(VisibilitityHandler handler);
 
 }

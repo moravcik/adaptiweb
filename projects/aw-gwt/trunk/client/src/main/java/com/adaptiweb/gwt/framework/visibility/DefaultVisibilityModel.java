@@ -28,6 +28,11 @@ public class DefaultVisibilityModel extends AbstractHasHandlers implements Visib
 
 	@Override
 	public HandlerRegistration addVisibilityHandler(VisibilitityHandler handler) {
+		return handlers.addHandler(VisibitilyEvent.getType(), handler);
+	}
+	
+	@Override
+	public HandlerRegistration initAndAddVisibilityHandler(VisibilitityHandler handler) {
 		new VisibitilyEvent(this).dispatch(handler);
 		return handlers.addHandler(VisibitilyEvent.getType(), handler);
 	}
