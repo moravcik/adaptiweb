@@ -21,7 +21,7 @@ public class FormComponent extends Composite {
 		if (validation == null) {
 			validation = ValidationModelFactory.and(initModels);
 		}
-		else if(initModels.length > 0) {
+		if(initModels.length > 0) {
 			validation.add(initModels);
 		}
 		return validation;
@@ -48,7 +48,7 @@ public class FormComponent extends Composite {
 				if (validation.isValid()) style.cancel(getElement());
 				else style.apply(getElement());
 			}
-		}));
+		}, true));
 	}
 	
 	public void discard() {
@@ -62,6 +62,6 @@ public class FormComponent extends Composite {
 			public void onValidationChange(ValidationEvent event) {
 				GWT.log(GwtGoodies.toDebugString(validation), null);
 			}
-		}));
+		}, true));
 	}
 }
