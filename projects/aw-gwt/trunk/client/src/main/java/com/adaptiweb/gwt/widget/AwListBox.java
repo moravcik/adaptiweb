@@ -96,7 +96,7 @@ public class AwListBox extends FocusWidget implements HasChangeHandlers, HasName
 
 	public void insertItem(String item, String value, int index) {
 		OptionElement option = Document.get().createOptionElement();
-		option.setText(item);
+		option.setInnerText(item);
 		option.setValue(value);
 		insertChild(option, index);
 	}
