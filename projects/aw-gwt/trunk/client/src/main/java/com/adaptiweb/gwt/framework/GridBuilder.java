@@ -6,6 +6,7 @@ import java.util.Map;
 import com.adaptiweb.gwt.framework.style.Style;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
@@ -159,7 +160,7 @@ public class GridBuilder {
 	public static Style colspan(final int span) {
 		return new Style() {
 			public void apply(Element td) {
-				td.setAttribute("colspan", String.valueOf(span));
+				DOM.setElementPropertyInt(td, "colSpan", span);
 			}
 		};
 	}
@@ -167,7 +168,7 @@ public class GridBuilder {
 	public static Style rowspan(final int span) {
 		return new Style() {
 			public void apply(Element td) {
-				td.setAttribute("rowspan", String.valueOf(span));
+				DOM.setElementPropertyInt(td, "rowSpan", span);
 			}
 		};
 	}
