@@ -16,6 +16,13 @@ public class GridBuilder {
 	private int rows = 0;
 	private int columns = 0;
 	
+	public static final Style HTML = new Style() {
+		@Override
+		public void apply(Element element) {
+			//nothing, this style just determine if text of column is HTML or not
+		}
+	};
+	
 	private final Map<Coordinates, Cell> cells = new HashMap<Coordinates, Cell>();
 	
 	private static class BuilderGrid extends Grid {
@@ -130,8 +137,15 @@ public class GridBuilder {
 	protected Cell cell(final String text, final Style...styles) {
 		return new Cell() {
 			public void apply(int r, int c, Grid grid) {
-				grid.setText(r, c, text);
+				if (hasHtmlStyle(styles)) grid.setHTML(r, c, text);
+				else grid.setText(r, c, text);
 				applyStyles(grid, r, c, styles);
+			}
+
+			private boolean hasHtmlStyle(Style[] styles) {
+				for (Style style : styles)
+					if (style == HTML) return true;
+				return false;
 			}
 		};
 	}
