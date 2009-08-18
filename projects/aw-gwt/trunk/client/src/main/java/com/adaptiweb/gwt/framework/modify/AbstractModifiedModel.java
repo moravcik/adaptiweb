@@ -36,7 +36,7 @@ implements ConfigureableModifiedModel<T>, HasDebugInfo {
 	
 	protected AbstractModifiedModel<T> init(T originalValue) {
 		this.originalValue = originalValue;
-		super.reset();
+		super.burn();
 		return this;
 	}
 	
@@ -45,7 +45,7 @@ implements ConfigureableModifiedModel<T>, HasDebugInfo {
 	}
 	
 	@Override
-	public void reset() {
+	public void burn() {
 		init(getCurrentValue());
 	}
 	

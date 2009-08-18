@@ -20,7 +20,7 @@ public class BaseModifiedModel extends AbstractHasHandlers implements ModifiedMo
 		ModifiedEvent.fire(this);
 	}
 	
-	public void reset() {
+	public void burn() {
 		setModified(false);
 	}
 

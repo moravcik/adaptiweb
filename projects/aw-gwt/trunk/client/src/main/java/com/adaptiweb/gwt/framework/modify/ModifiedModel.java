@@ -7,7 +7,7 @@ public interface ModifiedModel extends HasHandlers {
 
 	boolean isModified();
 	
-	void reset();
+	void burn();
 
 	HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitEvent);
 

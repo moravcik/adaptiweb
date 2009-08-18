@@ -18,7 +18,7 @@ abstract class AbstractHasValueCahangeHandlersModifiedModel<T> extends AbstractM
 	protected void init(HasValueChangeHandlers<T> hasHandlers) {
 		if (handlerRegistration != null) handlerRegistration.removeHandler();
 		handlerRegistration = hasHandlers.addValueChangeHandler(this);
-		reset();
+		burn();
 	}
 	
 	@Override

@@ -48,4 +48,15 @@ public class GwtGoodies {
 			&& widget.getAbsoluteTop() <= clientY 
 			&& widget.getAbsoluteTop() + widget.getOffsetHeight() >= clientY;
 	}
+
+	public static boolean isVisible(Widget widget) {
+		if (!widget.isVisible()) return false;
+		for(
+			Element element = widget.getElement();
+			element != null;
+			element = element.getParentElement()
+		) if ("none".equals(element.getStyle().getProperty("display"))) return false;
+		
+		return true;
+	}
 }

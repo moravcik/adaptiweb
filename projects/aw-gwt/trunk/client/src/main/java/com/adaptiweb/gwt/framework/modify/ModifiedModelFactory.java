@@ -67,8 +67,8 @@ public final class ModifiedModelFactory {
 		}
 		
 		@Override
-		public void reset() {
-			for (ModifiedModel model : this) model.reset();
+		public void burn() {
+			for (ModifiedModel model : this) model.burn();
 		}
 
 		@Override
@@ -157,8 +157,8 @@ public final class ModifiedModelFactory {
 				}, true);
 			}
 			@Override
-			public void reset() {
-				model.reset();
+			public void burn() {
+				model.burn();
 			}
 		};
 	}
