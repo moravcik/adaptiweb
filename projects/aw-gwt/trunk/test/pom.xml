@@ -13,6 +13,7 @@
 
 	<properties>
 		<gwtModule>com.adaptiweb.gwt.Demo</gwtModule>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 
 	<dependencies>
