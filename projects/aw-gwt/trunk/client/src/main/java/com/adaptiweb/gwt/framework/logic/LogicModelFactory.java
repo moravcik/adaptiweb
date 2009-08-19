@@ -1,14 +1,15 @@
 package com.adaptiweb.gwt.framework.logic;
 
 
-public class ModifiedModelFactory {
+public class LogicModelFactory {
 	
-	private ModifiedModelFactory() {}
+	private LogicModelFactory() {}
 
 	public static LogicModelSet and(LogicModel...models) {
 		return new AbstractLogicModelCountingSet("and", models) {
 			@Override
 			protected boolean eval() {
+				//System.out.println("  eval: " + toDebugString());
 				return getPositiveCount() == size();
 			}
 		};

@@ -1,10 +1,9 @@
 package com.adaptiweb.gwt.framework.validation;
 
-import com.adaptiweb.gwt.mvc.Model;
+import com.adaptiweb.gwt.framework.logic.LogicModel;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
 
-public interface ValidationModel extends HasHandlers, Model {
+public interface ValidationModel extends LogicModel {
 
 	boolean isValid();
 	

@@ -2,7 +2,7 @@ package com.adaptiweb.gwt.framework.logic;
 
 public abstract class AbstractLogicModelCountingSet extends AbstractLogicModelSet {
 
-	private int positiveCount = 0;
+	private int positiveCount;
 	
 	protected AbstractLogicModelCountingSet(String setType, LogicModel...models) {
 		super(setType, models);

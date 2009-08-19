@@ -2,50 +2,52 @@ package com.adaptiweb.gwt.widget;
 
 import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.adaptiweb.gwt.framework.HandlerRegistrations;
+import com.adaptiweb.gwt.framework.logic.LogicModel;
+import com.adaptiweb.gwt.framework.logic.LogicModelFactory;
+import com.adaptiweb.gwt.framework.logic.LogicModelSet;
+import com.adaptiweb.gwt.framework.logic.LogicValueChangeEvent;
+import com.adaptiweb.gwt.framework.logic.LogicValueChangeHandler;
 import com.adaptiweb.gwt.framework.style.DynamicStyle;
-import com.adaptiweb.gwt.framework.validation.ValidationEvent;
-import com.adaptiweb.gwt.framework.validation.ValidationHandler;
 import com.adaptiweb.gwt.framework.validation.ValidationModel;
-import com.adaptiweb.gwt.framework.validation.ValidationModelFactory;
-import com.adaptiweb.gwt.framework.validation.ValidationModelSet;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 
 public class FormComponent extends Composite {
 
-	private ValidationModelSet validation;
+	private LogicModelSet validation;
 	protected final HandlerRegistrations registrations = new HandlerRegistrations();
 
-	protected ValidationModelSet validations(ValidationModel...initModels) {
+	protected LogicModelSet validations(ValidationModel...models) {
 		if (validation == null) {
-			validation = ValidationModelFactory.and(initModels);
+			validation = LogicModelFactory.and(models);
 		}
-		if(initModels.length > 0) {
-			validation.add(initModels);
+		if(models.length > 0) {
+			for (ValidationModel model : models)
+				validation.add(model);
 		}
 		return validation;
 	}
 	
-	public ValidationModel getValidation() {
+	public LogicModel getValidation() {
 		return validation;
 	}
 	
 	public ValidationModel addValidation(ValidationModel validation) {
-		if (validations().add(validation)) return validation;
-		else throw new IllegalStateException();
+		if (validations().contains(validation)) throw new IllegalStateException();
+		validations().add(validation);
+		return validation;
 	}
 
-	public boolean removeValidation(ValidationModel validation) {
-		if (this.validation == null) return false;
-		else return this.validation.remove(validation);
+	public void removeValidation(ValidationModel validation) {
+		if (this.validation != null) this.validation.remove(validation);
 	}
 
 	public HandlerRegistration setValudationStyle(final DynamicStyle style) {
-		return registrations.add(validations().addValidationHandler(new ValidationHandler() {
+		return registrations.add(validations().addLogicValueChangeHandler(new LogicValueChangeHandler() {
 			@Override
-			public void onValidationChange(ValidationEvent event) {
-				if (validation.isValid()) style.cancel(getElement());
+			public void onLogicValueChange(LogicValueChangeEvent event) {
+				if (validation.getLogicValue()) style.cancel(getElement());
 				else style.apply(getElement());
 			}
 		}, true));
@@ -57,9 +59,9 @@ public class FormComponent extends Composite {
 	}
 
 	public void enbaleValidationDebuging() {
-		registrations.add(validation.addValidationHandler(new ValidationHandler() {
+		registrations.add(validation.addLogicValueChangeHandler(new LogicValueChangeHandler() {
 			@Override
-			public void onValidationChange(ValidationEvent event) {
+			public void onLogicValueChange(LogicValueChangeEvent event) {
 				GWT.log(GwtGoodies.toDebugString(validation), null);
 			}
 		}, true));

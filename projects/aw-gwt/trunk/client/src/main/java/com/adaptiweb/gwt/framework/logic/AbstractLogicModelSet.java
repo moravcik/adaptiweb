@@ -15,7 +15,7 @@ implements LogicModelSet, LogicValueChangeHandler, HasDebugInfo {
 	private final Map<LogicModel, HandlerRegistration> models
 		= new IdentityHashMap<LogicModel, HandlerRegistration>();
 	
-	public AbstractLogicModelSet(String type, LogicModel...models) {
+	protected AbstractLogicModelSet(String type, LogicModel...models) {
 		this.type = type;
 		for (LogicModel model : models) add(model);
 	}

@@ -32,7 +32,7 @@ public abstract class AbstractLogicModel extends AbstractHasHandlers implements 
 		fireValueChangeEvent();
 	}
 
-	private void fireValueChangeEvent() {
+	protected void fireValueChangeEvent() {
 		LogicValueChangeEvent.fire(this);
 	}
 	

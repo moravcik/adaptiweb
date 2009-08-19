@@ -1,11 +1,11 @@
 package com.adaptiweb.gwt.widget;
 
 import com.adaptiweb.gwt.framework.GwtGoodies;
+import com.adaptiweb.gwt.framework.logic.LogicModelSet;
 import com.adaptiweb.gwt.framework.validation.DummyValidation;
 import com.adaptiweb.gwt.framework.validation.MinMaxValidation;
 import com.adaptiweb.gwt.framework.validation.PrecisionValidation;
 import com.adaptiweb.gwt.framework.validation.ValidationModel;
-import com.adaptiweb.gwt.framework.validation.ValidationModelSet;
 import com.adaptiweb.gwt.mvc.model.DefaultNumberModel;
 import com.adaptiweb.gwt.mvc.model.NumberModel;
 import com.adaptiweb.gwt.util.NumberFomatter;
@@ -93,9 +93,9 @@ public class NumberBoxComponent<T extends Number> extends FormComponent implemen
 	}
 	
 	@Override
-	protected ValidationModelSet validations(ValidationModel... initModels) {
+	protected LogicModelSet validations(ValidationModel... initModels) {
 		boolean calledFirstTime = getValidation() == null;
-		ValidationModelSet validations = super.validations(initModels);
+		LogicModelSet validations = super.validations(initModels);
 		if (calledFirstTime) validations.add(isNumber);
 		return validations;
 	}

@@ -1,11 +1,11 @@
 package com.adaptiweb.gwt.framework.style;
 
-import com.adaptiweb.gwt.framework.validation.ValidationEvent;
-import com.adaptiweb.gwt.framework.validation.ValidationHandler;
-import com.adaptiweb.gwt.framework.validation.ValidationModel;
+import com.adaptiweb.gwt.framework.logic.LogicModel;
+import com.adaptiweb.gwt.framework.logic.LogicValueChangeEvent;
+import com.adaptiweb.gwt.framework.logic.LogicValueChangeHandler;
 import com.google.gwt.user.client.Element;
 
-public class ValidationStyleChanger implements ValidationHandler {
+public class ValidationStyleChanger implements LogicValueChangeHandler {
 	private final Element element;
 	private final Style validStyle;
 	private final Style invalidStyle;
@@ -21,12 +21,12 @@ public class ValidationStyleChanger implements ValidationHandler {
 	}
 
 	@Override
-	public void onValidationChange(ValidationEvent event) {
-		apply(event.getModel().isValid()); 
+	public void onLogicValueChange(LogicValueChangeEvent event) {
+		apply(event.getModel().getLogicValue()); 
 	}
 	
-	public ValidationModel register(ValidationModel validation) {
-		validation.addValidationHandler(this, true);
+	public LogicModel register(LogicModel validation) {
+		validation.addLogicValueChangeHandler(this, true);
 		return validation;
 	}
 

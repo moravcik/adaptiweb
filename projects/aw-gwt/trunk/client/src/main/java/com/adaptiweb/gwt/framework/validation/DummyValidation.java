@@ -14,5 +14,5 @@ public class DummyValidation extends AbstractValidationModel {
 	public void setValid(boolean value) {
 		super.setValid(value);
 	}
-	
+
 }

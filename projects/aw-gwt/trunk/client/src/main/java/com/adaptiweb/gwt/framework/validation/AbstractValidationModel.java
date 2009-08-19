@@ -1,29 +1,39 @@
 package com.adaptiweb.gwt.framework.validation;
 
-import com.adaptiweb.gwt.framework.AbstractHasHandlers;
-import com.adaptiweb.gwt.framework.GwtGoodies;
-import com.adaptiweb.gwt.framework.HasDebugInfo;
+import com.adaptiweb.gwt.framework.logic.AbstractLogicModel;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class AbstractValidationModel extends AbstractHasHandlers implements ValidationModel, HasDebugInfo {
+public abstract class AbstractValidationModel extends AbstractLogicModel implements ValidationModel {
 	
-	private boolean valid;
-	
-	protected AbstractValidationModel() {}
-	
-	protected AbstractValidationModel(boolean initialValidStatus) {
-		valid = initialValidStatus;
+	protected AbstractValidationModel() {
+		super();
 	}
 
-	protected void setValid(boolean value) {
-		if (this.valid == value) return;
-		this.valid = value;
-		ValidationEvent.fire(this);
+	protected AbstractValidationModel(boolean initialLogicValue) {
+		super(initialLogicValue);
 	}
 
+	protected AbstractValidationModel(Object source, boolean initialLogicValue) {
+		super(source, initialLogicValue);
+	}
+
+	protected AbstractValidationModel(Object source) {
+		super(source);
+	}
+	
 	@Override
 	public boolean isValid() {
-		return valid;
+		return getLogicValue();
+	}
+	
+	protected void setValid(boolean value) {
+		setLogicValue(value);
+	}
+	
+	@Override
+	protected void fireValueChangeEvent() {
+		super.fireValueChangeEvent();
+		ValidationEvent.fire(this);
 	}
 
 	@Override
@@ -32,12 +42,4 @@ public abstract class AbstractValidationModel extends AbstractHasHandlers implem
 		return handlers.addHandler(ValidationEvent.getType(), handler);
 	}
 
-	@Override
-	public String toDebugString() {
-		return toDebugString(GwtGoodies.simpleClassName(getClass().getName()));
-	}
-
-	protected String toDebugString(String type) {
-		return type + ":[" + isValid() + "]";
-	}
 }
