@@ -59,4 +59,35 @@ public class GwtGoodies {
 		
 		return true;
 	}
+	
+	/**
+	 * Pattern can contains index reference to params array.
+	 * Format is <b>$<i>n</i></b>, where <b><i>n</i></b> is 0-based index to parameters.
+	 * If character '$' need to be included in string, use double "$$".
+	 * @param pattern
+	 * @param params
+	 * @return formated string
+	 */
+	public static String format(String pattern, Object...params) {
+		StringBuilder sb = new StringBuilder();
+		boolean parsingIndex = false;
+		int indexValue = -1;
+		
+		for (char c : pattern.toCharArray()) {
+			if (parsingIndex && Character.isDigit(c)) {
+				indexValue = indexValue == -1 ? c - '0' : (indexValue * 10 + c - '0');
+			}
+			else if (parsingIndex && indexValue != -1) {
+				sb.append(String.valueOf(params[indexValue]));
+				indexValue = -1;
+				parsingIndex = c == '$';
+			}
+			else {
+				parsingIndex = !parsingIndex && c == '$';
+			}
+			if (!parsingIndex) sb.append(c);
+		}
+		if (indexValue != -1) sb.append(params[indexValue]);
+		return sb.toString();
+	}
 }

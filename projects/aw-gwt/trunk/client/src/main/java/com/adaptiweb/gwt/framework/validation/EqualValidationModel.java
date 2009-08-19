@@ -1,10 +1,13 @@
 package com.adaptiweb.gwt.framework.validation;
 
+import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
 public class EqualValidationModel extends AbstractValidationModel {
+	
+	public static final String DEFAULT_ERROR_MESSAGE = "Values '$0' and '$1' are not same!"; 
 	
 	private interface ObjectSource {
 		Object getObject();
@@ -26,6 +29,7 @@ public class EqualValidationModel extends AbstractValidationModel {
 	
 	private final ObjectSource a;
 	private final ObjectSource b;
+	private String errorMessage = DEFAULT_ERROR_MESSAGE;
 	
 	private EqualValidationModel(ObjectSource a, ObjectSource b) {
 		this.a = a;
@@ -55,4 +59,20 @@ public class EqualValidationModel extends AbstractValidationModel {
 		return validator;
 	}
 	
+	@Override
+	public String getErrorMessage() {
+		return GwtGoodies.format(errorMessage, a.getObject(), b.getObject());
+	}
+	
+	/**
+	 * Default: {@value #DEFAULT_ERROR_MESSAGE}
+	 * 
+	 * @param errorMessage can has two parameters: <ul>
+	 * <li>firstValue
+	 * <li>secondValue
+	 * </ul>
+	 */
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 }
