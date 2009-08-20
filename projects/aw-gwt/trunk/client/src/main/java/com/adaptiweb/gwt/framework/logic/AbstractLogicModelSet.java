@@ -2,6 +2,8 @@ package com.adaptiweb.gwt.framework.logic;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.adaptiweb.gwt.framework.GwtGoodies;
@@ -72,5 +74,22 @@ implements LogicModelSet, LogicValueChangeHandler, HasDebugInfo {
 			sb.append(GwtGoodies.toDebugString(model));
 		}
 		return sb.append('}').toString();
+	}
+	
+	@Override
+	public List<LogicModel> collectLeafs() {
+		LinkedList<LogicModel> list = new LinkedList<LogicModel>();
+		LinkedList<LogicModelSet> stack = new LinkedList<LogicModelSet>();
+		
+		stack.add(this);
+		
+		while (!stack.isEmpty()) {
+			for (LogicModel model : stack.remove()) {
+				if (model instanceof LogicModelSet == false) list.add(model);
+				else stack.add((LogicModelSet) model); 
+			}
+		}
+		
+		return list;
 	}
 }

@@ -1,10 +1,13 @@
 package com.adaptiweb.gwt.framework.modify;
 
+import com.adaptiweb.gwt.framework.logic.AbstractLogicModelCountingSet;
+import com.adaptiweb.gwt.framework.logic.LogicModel;
 import com.adaptiweb.gwt.mvc.model.NumberModel;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
 
-public class ModifiedModelGroup extends ModifiedModelFactory.AbstractLogicModifiedModelSet {
+public class ModifiedModelGroup extends AbstractLogicModelCountingSet implements ModifiedModel {
 
 	public ModifiedModelGroup() {
 		super("group(or)");
@@ -12,7 +15,7 @@ public class ModifiedModelGroup extends ModifiedModelFactory.AbstractLogicModifi
 
 	@Override
 	protected boolean eval() {
-		return modifiedCounter > 0;
+		return getPositiveCount() > 0;
 	}
 	
 	private <T> ConfigureableModifiedModel<T> add(ConfigureableModifiedModel<T> model) {
@@ -37,5 +40,30 @@ public class ModifiedModelGroup extends ModifiedModelFactory.AbstractLogicModifi
 			}
 		};
 		return add(mm);
+	}
+	
+	@Override
+	public void burn() {
+		for (LogicModel model : collectLeafs()) {
+			if (model instanceof ModifiedModel)
+				((ModifiedModel) model).burn();
+		}
+	}
+
+	@Override
+	public boolean isModified() {
+		return getLogicValue();
+	}
+
+	@Override
+	public HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitialEvent) {
+		if (fireInitialEvent) ModifiedEvent.init(this, handler);
+		return handlers.addHandler(ModifiedEvent.getType(), handler);
+	}
+	
+	@Override
+	protected void fireValueChangeEvent() {
+		super.fireValueChangeEvent();
+		ModifiedEvent.fire(this);
 	}
 }

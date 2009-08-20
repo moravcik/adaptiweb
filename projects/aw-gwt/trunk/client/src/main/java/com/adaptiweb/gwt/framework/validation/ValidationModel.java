@@ -18,23 +18,15 @@ public interface ValidationModel extends LogicModel {
 	class Util {
 		List<String> collectErrorMessages(LogicModelSet models) {
 			LinkedList<String> list = new LinkedList<String>();
-			LinkedList<LogicModelSet> stack = new LinkedList<LogicModelSet>();
-			
-			stack.add(models);
-			
-			while (!stack.isEmpty()) {
-				for (LogicModel model : stack.remove()) {
-					if (model instanceof LogicModelSet) {
-						stack.add((LogicModelSet) model);
-					}
-					else if (model instanceof ValidationModel) {
-						ValidationModel validationModel = (ValidationModel) model;
-						if (!validationModel.isValid())
-							list.add(validationModel.getErrorMessage());
-					}
+
+			for (LogicModel model : models.collectLeafs()) {
+				if (model instanceof ValidationModel) {
+					ValidationModel validationModel = (ValidationModel) model;
+					if (!validationModel.isValid())
+						list.add(validationModel.getErrorMessage());
 				}
 			}
-			
+
 			return list;
 		}
 	}

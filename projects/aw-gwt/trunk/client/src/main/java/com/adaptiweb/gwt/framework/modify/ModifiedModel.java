@@ -1,9 +1,9 @@
 package com.adaptiweb.gwt.framework.modify;
 
+import com.adaptiweb.gwt.framework.logic.LogicModel;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
 
-public interface ModifiedModel extends HasHandlers {
+public interface ModifiedModel extends LogicModel {
 
 	boolean isModified();
 	

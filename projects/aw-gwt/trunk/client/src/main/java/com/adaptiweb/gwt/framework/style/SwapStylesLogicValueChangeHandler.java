@@ -5,19 +5,19 @@ import com.adaptiweb.gwt.framework.logic.LogicValueChangeEvent;
 import com.adaptiweb.gwt.framework.logic.LogicValueChangeHandler;
 import com.google.gwt.user.client.Element;
 
-public class ValidationStyleChanger implements LogicValueChangeHandler {
+public class SwapStylesLogicValueChangeHandler implements LogicValueChangeHandler {
 	private final Element element;
-	private final Style validStyle;
-	private final Style invalidStyle;
+	private final Style onStyle;
+	private final Style offStyle;
 
-	private ValidationStyleChanger(Element element, Style validStyle, Style invalidStyle) {
+	private SwapStylesLogicValueChangeHandler(Element element, Style onStyle, Style offStyle) {
 		this.element = element;
-		this.validStyle = validStyle;
-		this.invalidStyle = invalidStyle;
+		this.onStyle = onStyle;
+		this.offStyle = offStyle;
 	}
 	
-	public static ValidationStyleChanger create(Element element, Style validStyle, Style invalidStyle) {
-		return new ValidationStyleChanger(element, validStyle, invalidStyle);
+	public static SwapStylesLogicValueChangeHandler create(Element element, Style onStyle, Style offStyle) {
+		return new SwapStylesLogicValueChangeHandler(element, onStyle, offStyle);
 	}
 
 	@Override
@@ -31,11 +31,11 @@ public class ValidationStyleChanger implements LogicValueChangeHandler {
 	}
 
 	private void apply(boolean valid) {
-		Style inactiveStyle = !valid ? validStyle : invalidStyle;
+		Style inactiveStyle = !valid ? onStyle : offStyle;
 		if (inactiveStyle instanceof DynamicStyle)
 			((DynamicStyle) inactiveStyle).cancel(element);
 		
-		Style activeStyle = valid ? validStyle : invalidStyle;
+		Style activeStyle = valid ? onStyle : offStyle;
 		if (activeStyle != null) activeStyle.apply(element); 
 	}
 }

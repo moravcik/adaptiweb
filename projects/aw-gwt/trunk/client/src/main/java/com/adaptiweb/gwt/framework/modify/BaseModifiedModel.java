@@ -1,29 +1,31 @@
 package com.adaptiweb.gwt.framework.modify;
 
-import com.adaptiweb.gwt.framework.AbstractHasHandlers;
+import com.adaptiweb.gwt.framework.logic.AbstractLogicModel;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 
-public class BaseModifiedModel extends AbstractHasHandlers implements ModifiedModel {
+public class BaseModifiedModel extends AbstractLogicModel implements ModifiedModel {
 
-	private boolean modified;
-
-	protected BaseModifiedModel() {}
-
-	protected BaseModifiedModel(boolean initChangedStatus) {
-		modified = initChangedStatus;
+	protected BaseModifiedModel() {
+		super();
 	}
 
-	protected void setModified(boolean modified) {
-		if (this.modified == modified) return;
-		this.modified = modified;
-		ModifiedEvent.fire(this);
+	protected BaseModifiedModel(boolean initialLogicValue) {
+		super(initialLogicValue);
 	}
-	
+
+	protected BaseModifiedModel(Object source, boolean initialLogicValue) {
+		super(source, initialLogicValue);
+	}
+
+	protected BaseModifiedModel(Object source) {
+		super(source);
+	}
+
 	public void burn() {
 		setModified(false);
 	}
-
+	
 	@Override
 	public HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitEvent) {
 		HandlerRegistration registrantion = handlers.addHandler(ModifiedEvent.getType(), handler);
@@ -33,7 +35,11 @@ public class BaseModifiedModel extends AbstractHasHandlers implements ModifiedMo
 
 	@Override
 	public boolean isModified() {
-		return modified;
+		return getLogicValue();
+	}
+	
+	protected void setModified(boolean modified) {
+		setLogicValue(modified);
 	}
 
 }
