@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 public class GwtResourceFilter implements Filter {
 	
 	private static final String GWT_MODULE = "gwtModule";
+	private static final String EXCLUDES = "excludes";
 
 	//TODO make configurable url pattern matching
 	//TODO better is ant-like pattern 
@@ -31,6 +32,8 @@ public class GwtResourceFilter implements Filter {
 	private ServletContext context;
 
 	private String gwtModule;
+	
+	private Pattern excludes;
 
 	@Override
 	public void destroy() {
@@ -42,7 +45,7 @@ public class GwtResourceFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String path = req.getRequestURI().substring(req.getContextPath().length());
 		
-		if(SUPPORTED_EXTENSIONS.matcher(path).matches()) {
+		if(isIncluded(path) && !isExcluded(path)) {
 			String resource = "/WEB-INF/" + gwtModule + path;
 			InputStream input = context.getResourceAsStream(resource);
 			
@@ -57,6 +60,14 @@ public class GwtResourceFilter implements Filter {
 			}
 		}
 		else chain.doFilter(request, response);
+	}
+
+	private boolean isIncluded(String path) {
+		return SUPPORTED_EXTENSIONS.matcher(path).matches();
+	}
+
+	private boolean isExcluded(String path) {
+		return excludes != null && excludes.matcher(path).find();
 	}
 
 	private boolean log(String msg) {
@@ -75,14 +86,26 @@ public class GwtResourceFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		context = filterConfig.getServletContext();
-		gwtModule = filterConfig.getInitParameter(GWT_MODULE);
+		gwtModule = initGwtModule(filterConfig);
+		excludes = initExcludes(filterConfig);
+	}
+
+	private static String initGwtModule(FilterConfig filterConfig) throws ServletException {
+		String gwtModule = filterConfig.getInitParameter(GWT_MODULE);
 		
 		if(gwtModule == null)
-			gwtModule = context.getInitParameter(GWT_MODULE);
+			gwtModule = filterConfig.getServletContext().getInitParameter(GWT_MODULE);
 		
 		if(gwtModule == null)
 			throw new ServletException(
 				"Missing '" + GWT_MODULE + "' - context-param or filter-param for filter " + filterConfig.getFilterName() + "!");
+		
+		return gwtModule;
+	}
+
+	private static Pattern initExcludes(FilterConfig filterConfig) {
+		String excludes = filterConfig.getInitParameter(EXCLUDES);
+		return excludes == null ? null : Pattern.compile(excludes);
 	}
 
 }
