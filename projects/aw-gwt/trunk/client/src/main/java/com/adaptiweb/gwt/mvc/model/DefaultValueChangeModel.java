@@ -18,6 +18,16 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	@Override
 	public void setValue(T value) {
 		if (GwtGoodies.areEquals(this.value, value)) return;
+		setValueForced(value);
+	}
+
+	@Override
+	public void reloadValue() {
+		setValueForced(this.value);
+	}
+	
+	@Override
+	public void setValueForced(T value) {
 		ValueChangeEvent.fire(this, this.value = value);
 	}
 

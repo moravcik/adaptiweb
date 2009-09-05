@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+// TODO: needed closing handler support
 public class Dialog {
 	final private DialogBox dialogBox = new DialogBox(false, true);
 	final private PopupPanel glass = constructPopupGlass();
