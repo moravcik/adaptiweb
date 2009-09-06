@@ -8,7 +8,7 @@ public interface ValueChangeModel<T> extends HasValueChangeHandlers<T> {
 	
 	void setValue(T value);
 	
-	void setValueForced(T value);
+	void setValueForce(T value);
 	
 	void reloadValue();
 

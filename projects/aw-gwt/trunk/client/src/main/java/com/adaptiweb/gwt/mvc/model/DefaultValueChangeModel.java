@@ -17,17 +17,16 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 
 	@Override
 	public void setValue(T value) {
-		if (GwtGoodies.areEquals(this.value, value)) return;
-		setValueForced(value);
+		if (shouldChange(value)) setValueForce(value);
 	}
 
 	@Override
 	public void reloadValue() {
-		setValueForced(this.value);
+		setValueForce(this.value);
 	}
 	
 	@Override
-	public void setValueForced(T value) {
+	public void setValueForce(T value) {
 		ValueChangeEvent.fire(this, this.value = value);
 	}
 
@@ -36,4 +35,7 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 		return handlers.addHandler(ValueChangeEvent.getType(), handler);
 	}
 
+	protected boolean shouldChange(T value) {
+		return false == GwtGoodies.areEquals(this.value, value);
+	}
 }
