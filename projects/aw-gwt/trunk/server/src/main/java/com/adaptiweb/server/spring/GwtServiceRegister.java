@@ -1,7 +1,9 @@
 package com.adaptiweb.server.spring;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,11 +20,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class GwtServiceRegister extends GenericServlet {
 	
-	private final static long serialVersionUID = 1L;
-
-	private final static Pattern SERVICE_TYPE_FROM_URI = Pattern.compile("/gwt/([^/]+)(?:/(.+))?");
+	private Pattern uriPattern;
 	
 	private final Map<String, RemoteServiceServlet> gwtServices;
+	
+	private Map<String, Integer> mappingGroups;
 
 	@Autowired
 	public GwtServiceRegister(Map<String, RemoteServiceServlet> gwtServices) {
@@ -34,13 +36,30 @@ public class GwtServiceRegister extends GenericServlet {
 	}
 
 	public void init(ServletConfig servletConfig) throws ServletException {
-		for (RemoteServiceServlet service : gwtServices.values())
-			service.init(servletConfig);
+		uriPattern = Pattern.compile(servletConfig.getInitParameter("uriPattern"));
+		mappingGroups = parseMappingGroups(servletConfig.getInitParameter("mappingGroups"));
+		
+		if (!mappingGroups.containsKey("gwtService")) {
+			throw new IllegalStateException("Missing gwtService mapping group!");
+		}
+		
+		for (RemoteServiceServlet service : gwtServices.values()) service.init(servletConfig);
+	}
+
+	private Map<String, Integer> parseMappingGroups(String initParameter) {
+		Pattern entryPattern = Pattern.compile("([^:]+):(\\d+)");
+		Map<String, Integer> result = new HashMap<String, Integer>();
+		
+		for (String entry : initParameter.split(",")) {
+			Matcher m = entryPattern.matcher(entry.trim());
+			if (!m.matches()) throw new IllegalStateException("Invalid parameter value: " + initParameter);
+			result.put(m.group(1), new Integer(m.group(2)));
+		}
+		return result;
 	}
 
 	public void destroy() {
-		for (RemoteServiceServlet service : gwtServices.values())
-			service.destroy();
+		for (RemoteServiceServlet service : gwtServices.values()) service.destroy();
 	}
 
 	@Override
@@ -53,20 +72,26 @@ public class GwtServiceRegister extends GenericServlet {
 		gwtServices.get(serviceName).service(request, response);
 	}
 
-	public static final String getServiceBeanName(HttpServletRequest request) throws ServletException {
+	public String getServiceBeanName(HttpServletRequest request) throws ServletException {
 		String uri = request.getRequestURI().substring(request.getContextPath().length());
-		Matcher m = SERVICE_TYPE_FROM_URI.matcher(uri);
+
+		Matcher m = uriPattern.matcher(uri);
 		
 		if(!m.matches())
 			throw new ServletException("Incorrect service path! (" + uri + ")");
 		
-		if(m.group(2) != null) request.setAttribute("subject", m.group(2));
+		for (Entry<String, Integer> mapping : mappingGroups.entrySet())
+			request.setAttribute(mapping.getKey(), m.group(mapping.getValue()));
 		
-		String uriName = m.group(1);
-		
+		return gwtServiceToBeanName((String) request.getAttribute("gwtService"));
+	}
+
+	private String gwtServiceToBeanName(String uriName) {
 		StringBuilder result = new StringBuilder(10 + uriName.length());
 		result.append("gwt");
-		boolean activeState = true; 
+		
+		boolean activeState = true;
+		
 		for(char c : uriName.toCharArray()) {
 			if(c == '-') activeState = true;
 			else if(activeState) { result.append(Character.toUpperCase(c)); activeState = false; }
