@@ -19,7 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class GwtServiceRegister extends GenericServlet {
-	
+	private static final long serialVersionUID = 1L;
+
 	private Pattern uriPattern;
 	
 	private final Map<String, RemoteServiceServlet> gwtServices;
