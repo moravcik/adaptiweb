@@ -90,4 +90,16 @@ public class GwtGoodies {
 		if (indexValue != -1) sb.append(params[indexValue]);
 		return sb.toString();
 	}
+
+	/**
+	 * Round double to given number of decimal places
+	 * @param n number to round
+	 * @param scale number of decimal places to round for
+	 * @return
+	 */
+	public static Double round(Double n, int scale) {
+		double shift = Math.pow(10.0, scale);
+		return Math.round(n * shift) / shift;
+	}
+
 }
