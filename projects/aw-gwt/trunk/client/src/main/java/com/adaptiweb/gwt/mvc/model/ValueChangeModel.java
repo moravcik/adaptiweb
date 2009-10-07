@@ -6,6 +6,8 @@ public interface ValueChangeModel<T> extends HasValueChangeHandlers<T> {
 
 	T getValue();
 	
+	boolean hasValue();
+	
 	void setValue(T value);
 	
 	void setValueForce(T value);

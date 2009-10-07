@@ -16,6 +16,11 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	}
 
 	@Override
+	public boolean hasValue() {
+		return value != null;
+	}
+	
+	@Override
 	public void setValue(T value) {
 		if (shouldChange(value)) setValueForce(value);
 	}
