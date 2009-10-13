@@ -22,7 +22,7 @@
 
 	<properties>
 		<mavenApiVersion>2.0.9</mavenApiVersion>
-		<svnkitVersion>1.2.1.5297</svnkitVersion>
+		<svnkitVersion>1.2.3.5521</svnkitVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
