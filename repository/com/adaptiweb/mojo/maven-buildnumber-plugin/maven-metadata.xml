@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><metadata>
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
   <groupId>com.adaptiweb.mojo</groupId>
   <artifactId>maven-buildnumber-plugin</artifactId>
   <version>0.1-beta</version>
   <versioning>
-    <latest>0.1-beta</latest>
+    <latest>1.4</latest>
     <release>0.1-beta</release>
     <versions>
       <version>0.1-beta</version>
+      <version>1.4</version>
     </versions>
-    <lastUpdated>20090320151453</lastUpdated>
+    <lastUpdated>20091013130854</lastUpdated>
   </versioning>
 </metadata>
