@@ -1,6 +1,8 @@
 package com.adaptiweb.utils.xmlbind;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,6 +41,18 @@ public abstract class BindUtils {
 		}
 		return result.toString();
 	}
+
+	public static <T> T unmarshal(File file, String characterSetName, Class<T> targetType) throws IOException {
+		InputStream is = new FileInputStream(file);
+		try {
+			return unmarshal(is, characterSetName, targetType);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException ignore) {
+			}
+		}
+	}
 	
 	public static <T> T unmarshal(InputStream is, String characterSetName, Class<T> targetType) throws IOException {
 		return unmarshal(new InputStreamReader(is, characterSetName), targetType);
@@ -70,4 +84,5 @@ public abstract class BindUtils {
 		}
 		return null;
 	}
+
 }

@@ -57,7 +57,7 @@ public class Marshaller {
 	private void examineSource(Object obj, Class<?> reflect, MarshallerOutput output) throws IOException, ParserException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
 		if(obj == null) return;
 		
-		if(obj instanceof Map) {
+		if(obj instanceof Map<?,?>) {
 			for(Entry<?,?> entry : ((Map<?,?>) obj).entrySet()) {
 				output.startElement(BindUtils.toXmlName(entry.getKey().toString()));
 				if(entry.getValue() != null)
@@ -118,7 +118,7 @@ public class Marshaller {
 	}
 
 	private boolean isBasicType(Object obj) {
-		return obj instanceof Enum || obj instanceof BigDecimal
+		return obj instanceof Enum<?> || obj instanceof BigDecimal
 				|| obj instanceof String || obj instanceof Integer
 				|| obj instanceof Long || obj instanceof Character
 				|| obj instanceof Boolean || obj instanceof Date
@@ -126,7 +126,7 @@ public class Marshaller {
 	}
 	
 	public static String toString(Object obj, Class<?> type, String currentTag) {
-		if(obj instanceof Enum) {
+		if(obj instanceof Enum<?>) {
 			if(currentTag.endsWith("_text"))
 				return ((Enum<?>) obj).toString();
 			else if(currentTag.endsWith("_num"))
@@ -247,7 +247,7 @@ public class Marshaller {
 				e.printStackTrace();
 			}
 		}
-		if(o instanceof Class) return ((Class<?>) o).getName();
+		if(o instanceof Class<?>) return ((Class<?>) o).getName();
 		if(o instanceof BigDecimal) return ((BigDecimal) o).toPlainString();
 		if(o instanceof Date || o instanceof Calendar) {
 			Date dateTime = o instanceof Calendar?
