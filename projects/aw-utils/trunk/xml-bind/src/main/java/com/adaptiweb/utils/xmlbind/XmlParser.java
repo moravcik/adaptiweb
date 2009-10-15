@@ -100,21 +100,37 @@ public class XmlParser  {
 	
 	private final State COMMENT_STATE = new State() {
 
-		private final char[] end = "-->".toCharArray();
-		public int status;
+		private final char[] commentEnd = "-->".toCharArray();
+		private final char[] cdataEnd = "]]>".toCharArray();
+		private final char[] cdata = "[CDATA[".toCharArray();
+		private char[] end;
+		public int status, cdataStatus;
 		
 		@Override
 		void enter(State any) {
 			status = 0;
+			cdataStatus = 0;
+			end = commentEnd;
 		}
 
 		@Override
 		State next(char c) throws XmlParserException {
-			if(c == end[status]) status++;
+			if (c == end[status]) status++;
 			else status = 0;
+			
+			if (cdataStatus >= 0 && cdataStatus < cdata.length && c == cdata[cdataStatus]) cdataStatus++;
+			else cdataStatus = -1;
+			if (cdataStatus == cdata.length) end = cdataEnd;
+			
+			buffer.append(c);
+			
 			return status == end.length ? CONTENT_STATE : this;
 		}
 		
+		void exit(State nextState) throws XmlParserException {
+			if(end == cdataEnd)
+				handler.cdataString(buffer.substring(cdata.length, buffer.length() - cdataEnd.length));
+		};
 	};
 	
 	private final State TAG_STATE = new State() {

@@ -1,5 +1,7 @@
 package com.adaptiweb.utils.typeanalyzer;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
@@ -26,11 +28,22 @@ class DefaultTypeAnalysis implements TypeAnalysis {
 
 	public Object createInstance() {
 		try {
-			return type.newInstance();
+			Constructor<?> constructor = type.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			return constructor.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 			return null;
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return null;
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			return null;
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 			return null;
 		}

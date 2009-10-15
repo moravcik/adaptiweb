@@ -53,14 +53,36 @@ public abstract class BindUtils {
 			}
 		}
 	}
-	
+
+	public static <T> T unmarshal(File file, String characterSetName, T target) throws IOException {
+		InputStream is = new FileInputStream(file);
+		try {
+			return unmarshal(is, characterSetName, target);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException ignore) {
+			}
+		}
+	}
+
 	public static <T> T unmarshal(InputStream is, String characterSetName, Class<T> targetType) throws IOException {
 		return unmarshal(new InputStreamReader(is, characterSetName), targetType);
+	}
+
+	public static <T> T unmarshal(InputStream is, String characterSetName, T target) throws IOException {
+		return unmarshal(new InputStreamReader(is, characterSetName), target);
 	}
 
 	public static <T> T unmarshal(Reader reader, Class<T> targetType) throws IOException {
 		UnmarshallerHandler handler = new UnmarshallerHandler(TypeAnalyzer.examineType(targetType));
 		return targetType.cast(XmlParser.parse(reader, handler));
+	}
+
+	public static <T> T unmarshal(Reader reader, T target) throws IOException {
+		UnmarshallerHandler handler = new UnmarshallerHandler(TypeAnalyzer.forObject(target));
+		XmlParser.parse(reader, handler);
+		return target;
 	}
 	
 	public static <T> T unmarshal(String xmlFragment, Class<T> targetType) throws IOException {

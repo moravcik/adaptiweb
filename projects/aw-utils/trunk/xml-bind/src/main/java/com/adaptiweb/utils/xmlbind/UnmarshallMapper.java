@@ -38,6 +38,7 @@ public class UnmarshallMapper {
 		private final boolean isPrimitiveType;
 		
 		public MappingPart(final Method setter, final UnmarshallMapper mapper) {
+			setter.setAccessible(true);
 			this.setter = setter;
 			this.mapper = mapper;
 			this.isPrimitiveType = setter.getParameterTypes()[0].isPrimitive();

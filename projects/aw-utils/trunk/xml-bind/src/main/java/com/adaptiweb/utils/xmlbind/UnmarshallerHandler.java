@@ -18,6 +18,11 @@ public class UnmarshallerHandler implements XmlHandler {
 	public void contentString(String content) {
 		if(current != null) current.value = content;
 	}
+	
+	@Override
+	public void cdataString(String cdata) {
+		if(current != null) current.value = cdata;
+	}
 
 	public void ignoreableWhitespaces(String chars) {
 		if(chars.length() == 0) contentString(chars);

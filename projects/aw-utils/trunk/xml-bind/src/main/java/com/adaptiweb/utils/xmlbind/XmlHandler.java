@@ -4,15 +4,18 @@ import java.util.Map;
 
 public interface XmlHandler {
 
-	public void ignoreableWhitespaces(String content);
+	void ignoreableWhitespaces(String content);
 
-	public void contentString(String content);
+	void contentString(String content);
 
-	public void beginElement(String tagName, Map<String, String> attrs);
-
-	public void endElement(String tagName);
-
-	public void processInstruction(String name, Map<String, String> attrs);
+	void cdataString(String cdata);
 	
-	public Object done();
+	void beginElement(String tagName, Map<String, String> attrs);
+
+	void endElement(String tagName);
+
+	void processInstruction(String name, Map<String, String> attrs);
+	
+	Object done();
+
 }

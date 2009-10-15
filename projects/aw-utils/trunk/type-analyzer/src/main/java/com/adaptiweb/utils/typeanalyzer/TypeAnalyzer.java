@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * This class provide static methods for 
@@ -15,7 +16,7 @@ public class TypeAnalyzer {
 	
 	public static TypeAnalysis forSetMethod(Method m) {
 		Type type = m.getGenericParameterTypes()[0];
-		if(type instanceof TypeVariable || type instanceof WildcardType) {
+		if(type instanceof TypeVariable<?> || type instanceof WildcardType) {
 			try {
 				type = m.getDeclaringClass().getMethod("get" + m.getName().substring(3)).getReturnType();
 			} catch (SecurityException e) {
@@ -23,7 +24,7 @@ public class TypeAnalyzer {
 			} catch (NoSuchMethodException e) {
 				return null;
 			}
-			if(type instanceof TypeVariable || type instanceof WildcardType)
+			if(type instanceof TypeVariable<?> || type instanceof WildcardType)
 				return null;
 		}
 		
@@ -36,7 +37,7 @@ public class TypeAnalyzer {
 			return examineGenericArrayType((GenericArrayType) type);
 		if(type instanceof ParameterizedType)
 			return examineParameterizedType((ParameterizedType) type);
-		if(type instanceof Class)
+		if(type instanceof Class<?>)
 			return examineType((Class<?>) type);
 		return null;
 	}
@@ -70,7 +71,46 @@ public class TypeAnalyzer {
 			
 		return new DefaultTypeAnalysis(type);
 	}
-
+	
+	public static TypeAnalysis forObject(final Object obj) {
+		final TypeAnalysis analysis = new DefaultTypeAnalysis(obj.getClass());
+		
+		return new TypeAnalysis() {
+			private boolean used;
+			
+			@Override
+			public Object parse(String data) {
+				return analysis.parse(data);
+			}
+			
+			@Override
+			public Class<?> getType() {
+				return analysis.getType();
+			}
+			
+			@Override
+			public TypeNature getNature() {
+				return analysis.getNature();
+			}
+			
+			@Override
+			public Type getComponent() {
+				return analysis.getComponent();
+			}
+			
+			@Override
+			public Object createInstance() {
+				assert !used && (used = true);
+				return obj;
+			}
+			
+			@Override
+			public Object composite(LinkedList<Object> list) {
+				return analysis.composite(list);
+			}
+		};
+	}
+	
 	private static TypeAnalysis examineParameterizedType(ParameterizedType type) {
 		Type[] parameters = type.getActualTypeArguments();
 		if(parameters.length > 1) return null;
