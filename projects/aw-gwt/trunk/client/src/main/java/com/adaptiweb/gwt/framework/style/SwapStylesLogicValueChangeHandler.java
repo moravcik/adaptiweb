@@ -27,6 +27,7 @@ public class SwapStylesLogicValueChangeHandler implements LogicValueChangeHandle
 	
 	public LogicModel register(LogicModel validation) {
 		validation.addLogicValueChangeHandler(this, true);
+		apply(validation.getLogicValue());
 		return validation;
 	}
 
