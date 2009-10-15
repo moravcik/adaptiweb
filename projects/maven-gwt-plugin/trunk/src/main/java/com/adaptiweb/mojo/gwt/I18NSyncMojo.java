@@ -31,7 +31,6 @@ import com.google.gwt.util.tools.Utility;
 /**
  * @goal i18n
  * @phase process-sources
- * @requiresProject
  */
 public class I18NSyncMojo extends AbstractMojo {
 
@@ -65,8 +64,8 @@ public class I18NSyncMojo extends AbstractMojo {
 		
 		Thread currentThread = Thread.currentThread();
 		ClassLoader customClassLoader = createCustomClassLoader(currentThread.getContextClassLoader());
-		
 		currentThread.setContextClassLoader(customClassLoader);
+		
 		try {
 			String[] params = new String[] { "-out", out.getPath(), "-createMessages", null };
 			
