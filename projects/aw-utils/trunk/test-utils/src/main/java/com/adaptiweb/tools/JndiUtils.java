@@ -1,5 +1,6 @@
 package com.adaptiweb.tools;
 
+import javax.activation.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameAlreadyBoundException;
@@ -20,12 +21,15 @@ public final class JndiUtils {
 			InitialContext initialContext = new InitialContext();
 			initialContext.unbind(jndiName);
 		} catch (NoInitialContextException ignore) {
-			// TODO: handle exception
 		} catch (NamingException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	/**
+	 * Load {@link DataSource} configuration from class annotated by {@link DbTestJNDIDataSource}
+	 * and register it to JNDI name-space.
+	 */
 	public static void setUpJNDIDataSource(Class<?> annotatedClass) {
 		if (!annotatedClass.isAnnotationPresent(DbTestJNDIDataSource.class))
 			throw new IllegalArgumentException("Class " + annotatedClass + " must be annotated by annotation " + DbTestJNDIDataSource.class);
