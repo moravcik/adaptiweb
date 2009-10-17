@@ -11,8 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
-
 import com.adaptiweb.tools.JndiUtils;
 
 
@@ -113,7 +111,7 @@ public class DbTestConfig {
 	public static DbTestConfig create(Object dbTestInstance) {
 		Class<? extends Object> type = dbTestInstance.getClass();
 
-		if (type.isAnnotationPresent(DbTestJNDIDataSource.class)) setUpJNDIDataSource(type.getAnnotation(DbTestJNDIDataSource.class));
+		if (type.isAnnotationPresent(DbTestJNDIDataSource.class)) JndiUtils.setUpJNDIDataSource(type);
 
 		//TODO DbTestConnection can be used for method which create EntityManagerFactory
 		String unit = type.getAnnotation(DbTestConnection.class).persistenceUnit();
@@ -126,17 +124,6 @@ public class DbTestConfig {
 				else throw new IllegalArgumentException(duplicateOrderMsg(method));
 			}
 		return result;
-	}
-
-	private static void setUpJNDIDataSource(DbTestJNDIDataSource conf) {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName(conf.driver().getName());
-		dataSource.setUrl(conf.url());
-		
-		if (conf.username().length() > 0) dataSource.setUsername(conf.username());
-		if (conf.password().length() > 0) dataSource.setPassword(conf.password());
-		
-		JndiUtils.bind(conf.jndiName(), dataSource);
 	}
 
 	private static boolean isDbTestExecution(Method method) {

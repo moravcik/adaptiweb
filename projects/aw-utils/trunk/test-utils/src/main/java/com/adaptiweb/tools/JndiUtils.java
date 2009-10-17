@@ -6,6 +6,10 @@ import javax.naming.NameAlreadyBoundException;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 
+import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+
+import com.adaptiweb.tools.dbtest.DbTestJNDIDataSource;
+
 
 public final class JndiUtils {
 	
@@ -20,6 +24,23 @@ public final class JndiUtils {
 		} catch (NamingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static void setUpJNDIDataSource(Class<?> annotatedClass) {
+		if (!annotatedClass.isAnnotationPresent(DbTestJNDIDataSource.class))
+			throw new IllegalArgumentException("Class " + annotatedClass + " must be annotated by annotation " + DbTestJNDIDataSource.class);
+		setUpJNDIDataSource(annotatedClass.getAnnotation(DbTestJNDIDataSource.class));
+	}
+
+	public static void setUpJNDIDataSource(DbTestJNDIDataSource conf) {
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(conf.driver().getName());
+		dataSource.setUrl(conf.url());
+		
+		if (conf.username().length() > 0) dataSource.setUsername(conf.username());
+		if (conf.password().length() > 0) dataSource.setPassword(conf.password());
+		
+		JndiUtils.bind(conf.jndiName(), dataSource);
 	}
 
 	public static void bind(String jndiName, Object value) {
