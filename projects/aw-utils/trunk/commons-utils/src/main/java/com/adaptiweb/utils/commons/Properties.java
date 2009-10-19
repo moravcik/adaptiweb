@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,6 +66,16 @@ public class Properties implements Iterable<String> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Properties(java.util.Properties properties) {
+		this((Map) properties);
+	}
+
+	public Properties(Map<String,String> properties) {
+		this.properties = new HashMap<String, String>(properties);
+		this.prefix = "";
+	}
+
 	private Properties(String prefix, Map<String,String> properties) {
 		this.properties = properties;
 		this.prefix = prefix.length() == 0 || prefix.endsWith(".") ? prefix : prefix + ".";

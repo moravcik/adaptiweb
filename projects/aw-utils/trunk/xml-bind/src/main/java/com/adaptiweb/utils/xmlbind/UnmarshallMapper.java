@@ -2,8 +2,10 @@ package com.adaptiweb.utils.xmlbind;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,7 +95,7 @@ public class UnmarshallMapper {
 			component = UnmarshallMapper.getInstance(TypeAnalyzer.forGenericType(analysis.getComponent()));
 			break;
 		case STUCTURE:
-			for(Method m : analysis.getType().getMethods()) {
+			for(Method m : methods(analysis.getType())) {
 				if(m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
 					
 					TypeAnalysis analysis = TypeAnalyzer.forSetMethod(m);
@@ -111,6 +113,15 @@ public class UnmarshallMapper {
 			}
 			break;
 		}
+	}
+
+	private Method[] methods(Class<?> type) {
+		Method[] methods = type.getMethods();
+		Method[] declaredMethods = type.getDeclaredMethods();
+		HashSet<Method> result = new HashSet<Method>(methods.length + declaredMethods.length);
+		result.addAll(Arrays.asList(methods));
+		result.addAll(Arrays.asList(declaredMethods));
+		return result.toArray(new Method[result.size()]);
 	}
 
 	public Object map(XmlSource source) {

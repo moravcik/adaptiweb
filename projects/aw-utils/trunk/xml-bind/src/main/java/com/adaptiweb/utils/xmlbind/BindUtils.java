@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,32 @@ public abstract class BindUtils {
 		return result.toString();
 	}
 
+	public static <T> T unmarshal(URL url, String characterSetName, T persistenceXml) throws IOException {
+		URLConnection conn = url.openConnection();
+		InputStream is = conn.getInputStream();
+		try {
+			return unmarshal(is, characterSetName, persistenceXml);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException ignore) {
+			}
+		}
+	}
+
+	public static <T> T unmarshal(URL url, String characterSetName, Class<T> targetType) throws IOException {
+		URLConnection conn = url.openConnection();
+		InputStream is = conn.getInputStream();
+		try {
+			return unmarshal(is, characterSetName, targetType);
+		} finally {
+			try {
+				is.close();
+			} catch (IOException ignore) {
+			}
+		}
+	}
+	
 	public static <T> T unmarshal(File file, String characterSetName, Class<T> targetType) throws IOException {
 		InputStream is = new FileInputStream(file);
 		try {
