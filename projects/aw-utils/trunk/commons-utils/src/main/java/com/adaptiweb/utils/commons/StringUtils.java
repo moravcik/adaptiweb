@@ -63,4 +63,14 @@ public final class StringUtils {
 			+ (ip >> 8 & 0xFF) + "."
 			+ (ip & 0xFF);
 	}
+
+	public static String join(Object[] values, String separator) {
+		StringBuilder sb = null;
+		for (Object value : values) {
+			if (sb == null) sb = new StringBuilder();
+			else sb.append(separator);
+			sb.append(String.valueOf(value));
+		}
+		return null;
+	}
 }
