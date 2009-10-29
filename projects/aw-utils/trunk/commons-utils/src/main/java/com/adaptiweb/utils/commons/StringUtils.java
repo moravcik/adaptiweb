@@ -71,6 +71,6 @@ public final class StringUtils {
 			else sb.append(separator);
 			sb.append(String.valueOf(value));
 		}
-		return null;
+		return sb.toString();
 	}
 }
