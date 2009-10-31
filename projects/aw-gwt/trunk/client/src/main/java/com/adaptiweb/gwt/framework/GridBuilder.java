@@ -22,6 +22,14 @@ public class GridBuilder {
 			//nothing, this style just determine if text of column is HTML or not
 		}
 	};
+	public static final Style ZERO_CELLPADDING_CELLSPACING = new Style() {
+		@Override
+		public void apply(Element element) {
+			assert "table".equalsIgnoreCase(element.getTagName());
+			element.setAttribute("cellpadding", "0");
+			element.setAttribute("cellspacing", "0");
+		}
+	};
 	
 	private final Map<Coordinates, Cell> cells = new HashMap<Coordinates, Cell>();
 	
@@ -36,7 +44,7 @@ public class GridBuilder {
 		}
 	}
 
-	public Grid build() {
+	public Grid build(Style...styles) {
 		BuilderGrid grid = new BuilderGrid(rows, columns);
 		for(int r = 0; r < rows; r++) {
 			for(int c = columns - 1; c >= 0; c--) {
@@ -45,7 +53,10 @@ public class GridBuilder {
 				else cell.apply(r, c, grid);
 			}
 		}
-
+		
+		Element element = grid.getElement();
+		for(Style style : styles) style.apply(element);
+		
 		return grid;
 	}
 	
@@ -103,8 +114,8 @@ public class GridBuilder {
 			return GridBuilder.this.column(col);
 		}
 		
-		public Grid build() {
-			return GridBuilder.this.build();
+		public Grid build(Style...styles) {
+			return GridBuilder.this.build(styles);
 		}
 		
 		public Linker cell() {
