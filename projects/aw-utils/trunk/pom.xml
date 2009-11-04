@@ -19,6 +19,7 @@
 	<modules>
 		<module>commons-utils</module>
 		<module>xml-bind</module>
+		<module>csv-bind</module>
 		<module>type-analyzer</module>
 		<module>test-utils</module>
 	</modules>
