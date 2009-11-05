@@ -2,7 +2,7 @@ package com.adaptiweb.utils.csvbind.bean;
 
 import java.util.List;
 
-import com.adaptiweb.utils.csvbind.CsvField;
+import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldStringEditor;
 
 

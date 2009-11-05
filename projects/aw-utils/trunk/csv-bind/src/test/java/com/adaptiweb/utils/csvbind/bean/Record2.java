@@ -1,6 +1,6 @@
 package com.adaptiweb.utils.csvbind.bean;
 
-import com.adaptiweb.utils.csvbind.CsvField;
+import com.adaptiweb.utils.csvbind.annotation.CsvField;
 
 
 public class Record2 {

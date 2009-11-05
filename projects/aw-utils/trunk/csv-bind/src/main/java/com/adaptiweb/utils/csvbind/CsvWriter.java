@@ -14,7 +14,6 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 import com.adaptiweb.utils.csvbind.CsvFieldMapping.CsvFieldDescriptor;
 import com.adaptiweb.utils.csvbind.CsvFieldMapping.ListPropertyEditor;
-import com.adaptiweb.utils.csvbind.CsvReader.LineAlign;
 
 /**
  * Wrapped opencsv CSVWriter.
@@ -61,7 +60,7 @@ public class CsvWriter<T> {
         mapping.setType(beanClass);
     }
 
-    public CsvWriter(Writer writer, Class<T> beanClass, LineAlign align) throws IOException {
+    public CsvWriter(Writer writer, Class<T> beanClass) throws IOException {
     	this(writer, beanClass, CsvConstants.EXCEL_SEPARATOR, CsvConstants.EXCEL_QUOTECHAR);
     }
     

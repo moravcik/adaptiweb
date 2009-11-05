@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import au.com.bytecode.opencsv.bean.MappingStrategy;
 
+import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.bean.Record1;
 import com.adaptiweb.utils.csvbind.bean.Record2;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldDateEditor;

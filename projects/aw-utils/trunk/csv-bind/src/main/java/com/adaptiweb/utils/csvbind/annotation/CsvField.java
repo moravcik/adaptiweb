@@ -1,10 +1,12 @@
-package com.adaptiweb.utils.csvbind;
+package com.adaptiweb.utils.csvbind.annotation;
 
 import java.beans.PropertyEditor;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.adaptiweb.utils.csvbind.CsvReader;
 
 /**
  * Annotation for {@link CsvReader} target bean fields.

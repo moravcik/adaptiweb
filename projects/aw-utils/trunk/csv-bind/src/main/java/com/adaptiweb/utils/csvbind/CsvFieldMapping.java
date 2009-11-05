@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 
+import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldPatternEditor;
 
 public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
