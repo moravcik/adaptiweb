@@ -31,11 +31,6 @@ public class PrecisionValidation extends AbstractValidationModel {
 		setValid(value == null ? true : eval(value.doubleValue()));
 	}
 	
-	protected void validate(double value) {
-		lastTestedValue = value;
-		setValid(eval(value));
-	}
-	
 	private boolean eval(double value) {
 		value = value * Math.pow(10, maxDeciamlPlaces);
 		return Math.round(value) == value;

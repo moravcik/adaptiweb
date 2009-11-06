@@ -5,13 +5,13 @@ public final class ConcatUtils {
 	
 	private ConcatUtils() {}
 	
-	public static String concat(String glue, String...items) {
+	public static String concat(String glue, Object...items) {
 		StringBuilder result = new StringBuilder();
 		
-		for(String item : items) {
+		for(Object item : items) {
 			if(item != null) {
 				if(result.length() > 0) result.append(glue);
-				result.append(item);
+				result.append(item.toString());
 			}
 		}
 		
