@@ -41,15 +41,16 @@ public class DefaultListModel<T> implements ListModel<T> {
 	@Override
 	public List<T> replace(int position, int count, List<T> item) {
 		int index = postitionToIndex(position);
-		List<T> removed = removeRecords(index, count, item);
+		List<T> removed = removeRecords(index, count);
 		
-		if (position == -1) item.addAll(item);
-		else item.addAll(index, item);
+		if (position == -1) records.addAll(item);
+		else records.addAll(index, item);
 
+		ListChangeEvent.fire(this, position, removed, item);
 		return removed;
 	}
 
-	private List<T> removeRecords(int index, int count, List<T> records) {
+	private List<T> removeRecords(int index, int count) {
 		assert count >= 0;
 		if (count == 0) return Collections.emptyList();
 
