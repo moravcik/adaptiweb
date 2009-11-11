@@ -43,8 +43,18 @@ public class DbTestConfig {
 				public void execute(EntityManager em) {
 					invokeMethod(obj, method, em);
 				}
+				
+				@Override
+				public String toString() {
+					return method.toString();
+				}
 
 			}, method.getAnnotation(DbTestExecution.class).useTransaction(), method.getAnnotation(DbTestExecution.class).order());
+		}
+		
+		@Override
+		public String toString() {
+			return "@DbTestExecution(order="+order+", useTransaction="+useTransaction+") " + execution;
 		}
 
 		public void execute(EntityManager em) {
@@ -89,13 +99,16 @@ public class DbTestConfig {
 	private void execute(Record record, EntityManagerFactory emf) {
 		EntityManager em = emf.createEntityManager();
 		boolean useTransaction = record.useTransaction();
+		boolean commiting = false;
 		try {
 			if (useTransaction) em.getTransaction().begin();
 			record.execute(em);
+			commiting = true;
 			if (useTransaction) em.getTransaction().commit();
 		} catch (RuntimeException e) {
 			if (useTransaction && em.getTransaction().isActive()) em.getTransaction().rollback();
-			throw e;
+			if (useTransaction && commiting) throw new RuntimeException("While comit after " + record, e); 
+			else throw e;
 		} finally {
 			em.close();
 		}
