@@ -3,6 +3,7 @@ package com.adaptiweb.gwt.framework;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class GwtGoodies {
@@ -100,6 +101,12 @@ public class GwtGoodies {
 	public static Double round(Double n, int scale) {
 		double shift = Math.pow(10.0, scale);
 		return Math.round(n * shift) / shift;
+	}
+
+	public static Widget decorate(Widget w) {
+		DecoratorPanel result = new DecoratorPanel();
+		result.add(w);
+		return result;
 	}
 
 }

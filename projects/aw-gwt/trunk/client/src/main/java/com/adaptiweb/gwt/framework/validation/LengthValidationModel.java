@@ -3,6 +3,7 @@ package com.adaptiweb.gwt.framework.validation;
 import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
 public class LengthValidationModel extends AbstractValidationModel {
@@ -57,6 +58,37 @@ public class LengthValidationModel extends AbstractValidationModel {
 			}
 		});
 		
+		return validation;
+	}
+
+	public static LengthValidationModel checkMin(int minLength, SuggestBox suggestBox) {
+		return check(minLength, -1, suggestBox);
+	}
+
+	public static LengthValidationModel checkMax(int maxLength, SuggestBox suggestBox) {
+		return check(-1, maxLength, suggestBox);
+	}
+
+	public static LengthValidationModel check(int minLength, int maxLength, final SuggestBox suggestBox) {
+		
+		final LengthValidationModel validation = new LengthValidationModel(new LengthSource() {
+			@Override
+			public int getLength() {
+				return suggestBox.getText().length();
+			}
+
+			@Override
+			public Object getSourceValue() {
+				return suggestBox.getText();
+			}
+		}, minLength, maxLength);
+		
+		suggestBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				validation.validate();
+			}
+		});
 		return validation;
 	}
 	

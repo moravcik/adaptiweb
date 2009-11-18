@@ -28,7 +28,6 @@ public class DefaultListModel<T> implements ListModel<T> {
 		return records.get(postitionToIndex(position));
 	}
 
-	@Override
 	public int indexOf(T item) {
 		return records.indexOf(item);
 	}
@@ -109,5 +108,9 @@ public class DefaultListModel<T> implements ListModel<T> {
 				changeHandler = refreshHandler = null;
 			}
 		};
+	}
+
+	protected ArrayList<T> getRecords() {
+		return records;
 	}
 }
