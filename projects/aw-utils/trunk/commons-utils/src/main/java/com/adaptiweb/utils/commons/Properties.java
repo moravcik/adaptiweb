@@ -1,8 +1,10 @@
 package com.adaptiweb.utils.commons;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.adaptiweb.utils.commons.exceptions.ResourceErrorException;
 
@@ -35,16 +38,20 @@ public class Properties implements Iterable<String> {
 	}
 	
 	public Properties(String resourceName, Package localtion, ClassLoader loader, String charset) throws ResourceErrorException {
+		this(resourceAsUrl(resourceName, localtion, loader), charset);
+	}
+	
+	public Properties(File file) {
+		this(file, System.getProperty("file.encoding"));
+	}
+
+	public Properties(File file, String charset) {
+		this(fileAsUrl(file), charset);
+	}
+
+	public Properties(URL resource, String charset) {
 		properties = Collections.synchronizedMap(new LinkedHashMap<String, String>());
 		prefix = "";
-		
-		if(!resourceName.endsWith(".properties")) resourceName += ".properties";
-		resourceName = localtion == null ? resourceName :
-				localtion.getName().replace('.', '/').concat("/").concat(resourceName);
-		
-		URL resource = loader.getResource(resourceName);
-		if(resource == null)
-			throw new IllegalArgumentException("Can't find resource " + resourceName);
 		
 		InputStream resourceStream = null;
 		java.util.Properties aux = new java.util.Properties();
@@ -66,6 +73,25 @@ public class Properties implements Iterable<String> {
 		}
 	}
 	
+	private static URL resourceAsUrl(String resourceName, Package localtion, ClassLoader loader) {
+		if(!resourceName.endsWith(".properties")) resourceName += ".properties";
+		resourceName = localtion == null ? resourceName :
+				localtion.getName().replace('.', '/').concat("/").concat(resourceName);
+		
+		URL resource = loader.getResource(resourceName);
+		if(resource == null)
+			throw new IllegalArgumentException("Can't find resource " + resourceName);
+		return resource;
+	}
+
+	private static URL fileAsUrl(File file) {
+		try {
+			return file.toURI().toURL();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public Properties(java.util.Properties properties) {
 		this((Map) properties);
@@ -193,6 +219,17 @@ public class Properties implements Iterable<String> {
 		if(prefix.length() == 0) return properties.size();
 		int result = 0;
 		for(Iterator<String> i = iterator(); i.hasNext(); i.next()) result++;
+		return result;
+	}
+
+	public Map<String,String> setAll(Map<String, String> runtimeProperties) {
+		Map<String, String> result = new HashMap<String, String>(runtimeProperties.size());
+		
+		for (Entry<String, String> entry : runtimeProperties.entrySet()) {
+			String previousValue = setProperty(entry.getKey(), entry.getValue());
+			if (previousValue != null) result.put(entry.getKey(), previousValue);
+		}
+		
 		return result;
 	}
 	
