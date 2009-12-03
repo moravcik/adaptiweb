@@ -1,3 +1,4 @@
 <module>
 	<source path="common"/>
+	<inherits name="com.googlecode.gwt.math.Math"/>
 </module>

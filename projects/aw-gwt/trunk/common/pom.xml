@@ -13,12 +13,23 @@
   <name>aw-gwt-common</name>
   <url>http://maven.apache.org</url>
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.5</version>
+		<scope>test</scope>
+	</dependency>	
+	<!-- for BigDecimal support -->
+	<dependency>
+	    <groupId>com.google.code.gwt-math</groupId>
+	    <artifactId>gwt-math</artifactId>
+	    <version>2.0.3</version>
+	</dependency>		
+	<dependency>
+	    <groupId>com.google.code.gwt-math</groupId>
+	    <artifactId>gwt-math-server</artifactId>
+	    <version>2.0.3</version>
+	</dependency>		
   </dependencies>
   
   	<build>
