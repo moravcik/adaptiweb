@@ -51,7 +51,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 			});
 	
 	protected Integer listIndex = null; 
-	protected ListPropertyEditor listEditor = null;
+	protected CollectionPropertyEditor listEditor = null;
 
 	/**
 	 * Set target class of bean, include loading input fields and setting editors.
@@ -113,7 +113,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 				((CsvFieldPatternEditor) editor).setPatterns(fieldAnnotation.patterns());
 			// wrap list editor
 			if (fieldAnnotation.list()) {
-				editor = listEditor = new ListPropertyEditor(editor);
+				editor = listEditor = new CollectionPropertyEditor(editor);
 	            listIndex = fieldAnnotation.index();
 			}
 		} else { // load default editor
@@ -168,11 +168,11 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
     /**
      * List CSV editor
      */
-    public static class ListPropertyEditor extends PropertyEditorSupport {
+    public static class CollectionPropertyEditor extends PropertyEditorSupport {
         private PropertyEditor itemEditor;
         private List<Object> list = new ArrayList<Object>();
         
-        public ListPropertyEditor(PropertyEditor itemEditor) {
+        public CollectionPropertyEditor(PropertyEditor itemEditor) {
             this.itemEditor = itemEditor;
         }
         public void setAsText(String s) throws IllegalArgumentException {
@@ -182,7 +182,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
         @Override
         public void setValue(Object value) {
         	list.clear();
-        	if (value != null && value instanceof List) 
+        	if (value != null && value instanceof Collection<?>) 
         		list.addAll((Collection<?>) value);
         }
         public Object getValue() {

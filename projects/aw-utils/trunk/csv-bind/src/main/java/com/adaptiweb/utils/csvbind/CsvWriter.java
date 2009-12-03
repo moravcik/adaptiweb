@@ -13,7 +13,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.adaptiweb.utils.csvbind.CsvFieldMapping.CsvFieldDescriptor;
-import com.adaptiweb.utils.csvbind.CsvFieldMapping.ListPropertyEditor;
+import com.adaptiweb.utils.csvbind.CsvFieldMapping.CollectionPropertyEditor;
 
 /**
  * Wrapped opencsv CSVWriter.
@@ -83,10 +83,10 @@ public class CsvWriter<T> {
 	        	if (value == null) stringCols.add("");
 	        	else {
 		        	PropertyEditor editor = desc.getFieldEditor();
-		        	if (value instanceof Collection  // handle list field
-		        			&& editor instanceof CsvFieldMapping.ListPropertyEditor) {
+		        	if (value instanceof Collection<?>  // handle collection field
+		        			&& editor instanceof CsvFieldMapping.CollectionPropertyEditor) {
 		        		
-		        		PropertyEditor itemEditor = ((ListPropertyEditor) editor).getItemEditor();
+		        		PropertyEditor itemEditor = ((CollectionPropertyEditor) editor).getItemEditor();
 		        		for (Object valueItem : (Collection<?>) value) {
 		        			if (valueItem == null) stringCols.add("");
 		        			else {
