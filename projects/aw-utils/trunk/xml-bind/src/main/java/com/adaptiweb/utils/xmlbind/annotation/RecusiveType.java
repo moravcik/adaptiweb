@@ -8,7 +8,7 @@ public enum RecusiveType {
 	
 	public boolean is(Class<?> type) {
 		if(this.equals(AUTO)) {
-			return type.getName().startsWith("sk.ana.");
+			return type.getName().startsWith("sk.ana."); // TODO need change
 				
 		}
 		
