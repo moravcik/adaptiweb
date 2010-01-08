@@ -70,6 +70,7 @@ public class GwtServiceRegister extends GenericServlet {
 		if (!gwtServices.containsKey(serviceName))
 			throw new ServletException("Unknown service " +  serviceName + "!");
 		
+		if (request.getCharacterEncoding() == null) request.setCharacterEncoding("utf-8");
 		gwtServices.get(serviceName).service(request, response);
 	}
 
