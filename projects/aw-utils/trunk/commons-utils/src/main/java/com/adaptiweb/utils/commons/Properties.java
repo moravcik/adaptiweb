@@ -204,8 +204,12 @@ public class Properties implements Iterable<String> {
 		return result;
 	}
 
+	public String reconstructPropertyDefinition() {
+		return reconstructPropertyDefinition(null);
+	}
+
 	public String reconstructPropertyDefinition(String key) {
-		key = prefix + key;
+		key = key == null ? prefix.substring(0, prefix.length() - 1) : prefix + key;
 		return key + "=" + properties.get(key);
 	}
 

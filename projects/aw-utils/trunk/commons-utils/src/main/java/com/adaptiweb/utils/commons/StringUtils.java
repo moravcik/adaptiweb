@@ -73,4 +73,17 @@ public final class StringUtils {
 		}
 		return sb.toString();
 	}
+
+	public static String toHexString(byte[] bytes) {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : bytes) sb.append(String.format("%02x", b));
+		return sb.toString();
+	}
+
+	public static String substring(String str, int from, int to) {
+		int length = str.length();
+		if (from < 0) from += length;
+		if (to < 0) to += length;
+		return str.substring(from, to);
+	}
 }

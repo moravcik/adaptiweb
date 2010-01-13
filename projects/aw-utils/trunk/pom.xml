@@ -22,6 +22,7 @@
 		<module>csv-bind</module>
 		<module>type-analyzer</module>
 		<module>test-utils</module>
+		<module>config-injection</module>
 	</modules>
 
 	<dependencies>

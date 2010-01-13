@@ -12,7 +12,7 @@ public interface VariableSource {
 	 * @return variable value or {@code null} if variable is not present in this source.
 	 * @throws NullPointerException if variableName is {@code null}.
 	 */
-	String getVariableValue(String variableName) throws NullPointerException;
+	String getRawValue(String variableName) throws NullPointerException;
 
 	/**
 	 * Source for environment variables.
@@ -21,7 +21,7 @@ public interface VariableSource {
 	 */
 	static final VariableSource ENVIRONMENT = new VariableSource() {
 
-		public String getVariableValue(String variableName) {
+		public String getRawValue(String variableName) {
 			return System.getenv(variableName);
 		}
 	};
@@ -33,7 +33,7 @@ public interface VariableSource {
 	 */
 	static final VariableSource SYSTEM = new VariableSource() {
 
-		public String getVariableValue(String variableName) {
+		public String getRawValue(String variableName) {
 			return System.getProperty(variableName);
 		}
 	};
@@ -47,7 +47,7 @@ public interface VariableSource {
 	 */
 	static final VariableSource EMPTY = new VariableSource() {
 
-		public String getVariableValue(String variableName) {
+		public String getRawValue(String variableName) {
 			return "";
 		}
 	};
