@@ -1,8 +1,8 @@
 package com.adaptiweb.gwt.mvc.model;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.google.gwt.user.client.ui.HasValue;
 
-public interface NumberModel<T extends Number> extends HasValueChangeHandlers<T> {
+public interface NumberModel<T extends Number> extends HasValue<T> {
 	
 	T getNumber();
 	

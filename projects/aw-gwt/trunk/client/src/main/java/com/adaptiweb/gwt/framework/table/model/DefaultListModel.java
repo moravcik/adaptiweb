@@ -1,6 +1,7 @@
 package com.adaptiweb.gwt.framework.table.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,6 +36,11 @@ public class DefaultListModel<T> implements ListModel<T> {
 	@Override
 	public int size() {
 		return records.size();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return records.isEmpty();
 	}
 	
 	@Override
@@ -113,4 +119,19 @@ public class DefaultListModel<T> implements ListModel<T> {
 	protected ArrayList<T> getRecords() {
 		return records;
 	}
+	
+	public void remove(T item) {
+		int itemIndex = indexOf(item);
+		replace(itemIndex, 1, new ArrayList<T>());
+	}
+	
+	public void removeAll() {
+		replace(0, size(), new ArrayList<T>());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void add(T item) {
+		replace(0, 0, Arrays.asList(item));
+	}
+
 }

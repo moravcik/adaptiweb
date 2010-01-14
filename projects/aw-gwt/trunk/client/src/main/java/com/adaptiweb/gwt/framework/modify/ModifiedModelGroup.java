@@ -2,7 +2,6 @@ package com.adaptiweb.gwt.framework.modify;
 
 import com.adaptiweb.gwt.framework.logic.AbstractLogicModelCountingSet;
 import com.adaptiweb.gwt.framework.logic.LogicModel;
-import com.adaptiweb.gwt.mvc.model.NumberModel;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
@@ -25,10 +24,6 @@ public class ModifiedModelGroup extends AbstractLogicModelCountingSet implements
 	
 	public <T> ConfigureableModifiedModel<T> add(HasValue<T> hasValue) {
 		return add(ModifiedModelFactory.create(hasValue));
-	}
-
-	public <T extends Number> ConfigureableModifiedModel<T> add(NumberModel<T> numberModel) {
-		return add(ModifiedModelFactory.create(numberModel));
 	}
 
 	public ConfigureableModifiedModel<Integer> add(final ListBox lb) {

@@ -15,7 +15,17 @@ public interface ListModel<T> extends HasListChangeHandlers<T>, HasListRefreshHa
 	T get(int position);
 
 	int size();
+	
+	boolean isEmpty();
 
 	void fireEvent(GwtEvent<?> event);
 
+	// helper methods
+	public void remove(T item);
+	
+	public void removeAll();
+	
+	public void add(T item);
+
+	
 }

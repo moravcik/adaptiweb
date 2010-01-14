@@ -10,7 +10,7 @@ import com.adaptiweb.gwt.framework.table.model.ListRefreshHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 
-public class DataTable<R extends DataTableRecord> extends Composite implements ListModel<R> {
+public class DataTable<R extends DataTableRecord> extends Composite implements ListModel<R> { // FIXME only delegating DefaultListModel
 	
 	private final ListModel<R> model = new DefaultListModel<R>(this);
 	private final DataTableWidget widget = new DataTableWidget();
@@ -54,6 +54,22 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 		return model.size();
 	}
 	
+	public boolean isEmpty() {
+		return model.isEmpty();
+	}
+	
+	public void add(R item) {
+		model.add(item);
+	}
+	
+	public void remove(R item) {
+		model.remove(item);
+	}
+	
+	public void removeAll() {
+		model.removeAll();
+	}
+	
 	@Override
 	protected void onLoad() {
 		renderHeaders();
@@ -73,4 +89,5 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 //            col++;
 //        }
 	}
+
 }

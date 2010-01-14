@@ -22,7 +22,7 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	
 	@Override
 	public void setValue(T value) {
-		if (shouldChange(value)) setValueForce(value);
+		setValue(value, true);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	
 	@Override
 	public void setValueForce(T value) {
-		ValueChangeEvent.fire(this, this.value = value);
+		setValueForce(value, true);
 	}
 
 	@Override
@@ -43,4 +43,15 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	protected boolean shouldChange(T value) {
 		return false == GwtGoodies.areEquals(this.value, value);
 	}
+
+	@Override
+	public void setValue(T value, boolean fireEvents) {
+		if (shouldChange(value)) setValueForce(value, fireEvents);
+	}
+	
+	private void setValueForce(T value, boolean fireEvents) {
+		this.value = value;
+		if (fireEvents) ValueChangeEvent.fire(this, value);
+	}
+	
 }

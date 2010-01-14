@@ -126,4 +126,20 @@ public class NumberBoxComponent<T extends Number> extends FormComponent implemen
 	public ValidationModel setPrecisionValidation(int decimalPlaces) {
 		return addValidation(new PrecisionValidation(this, decimalPlaces));
 	}
+
+	// generalized
+	@Override
+	public T getValue() {
+		return model.getNumber();
+	}
+
+	@Override
+	public void setValue(T value) {
+		model.setValue(value);
+	}
+
+	@Override
+	public void setValue(T value, boolean fireEvents) {
+		model.setValue(value, fireEvents);
+	}
 }
