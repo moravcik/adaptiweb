@@ -18,7 +18,7 @@
 	<url>http://adaptiweb.googlecode.com/svn/site/maven-gwt-plugin/index.html</url>
 	
 	<properties>
-		<gwtVersion>1.7.0</gwtVersion>
+		<gwtVersion>2.0.0</gwtVersion>
 	</properties>
 
 	<dependencies>
@@ -36,7 +36,6 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
 			<version>${gwtVersion}</version>
-			<classifier>${platform}</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
