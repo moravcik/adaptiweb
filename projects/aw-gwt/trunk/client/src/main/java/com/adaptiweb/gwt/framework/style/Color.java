@@ -1248,6 +1248,6 @@ public enum Color implements ColorType, Style {
 
 	@Override
 	public void apply(Element element) {
-		element.getStyle().setProperty("color", colorValue());
+		element.getStyle().setColor(colorValue());
 	}
 }
