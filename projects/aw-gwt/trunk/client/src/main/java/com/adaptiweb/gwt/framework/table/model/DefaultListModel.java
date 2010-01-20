@@ -12,11 +12,25 @@ import com.google.gwt.event.shared.HasHandlers;
 
 public class DefaultListModel<T> implements ListModel<T> {
 	
+	/**
+	 * Strategy for adding items
+	 */
+	public enum Strategy {
+		QUEUE, // default
+		STACK
+	}
+	
 	private final ArrayList<T> records = new ArrayList<T>();
 	private final HandlerManager handlers;
+	private final Strategy addStrategy;
 	
 	public DefaultListModel() {
+		this(Strategy.QUEUE);
+	}
+	
+	public DefaultListModel(Strategy addStrategy) {
 		this.handlers = new HandlerManager(this);
+		this.addStrategy = addStrategy;
 	}
 	
 	public DefaultListModel(HasHandlers target) {
@@ -131,7 +145,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 	
 	@SuppressWarnings("unchecked")
 	public void add(T item) {
-		replace(0, 0, Arrays.asList(item));
+		replace(Strategy.STACK == addStrategy ? 0 : -1, 0, Arrays.asList(item));
 	}
 
 }
