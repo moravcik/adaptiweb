@@ -47,6 +47,14 @@ public class ParameterCollection extends LinkedHashMap<String,String> {
 		return containsKey(name) ? getIntValue(name) : defaultValue;
 	}
 
+	public String getValue(String name) {
+		return get(name);
+	}
+	
+	public String getValue(String name, String defaultValue) {
+		return containsKey(name) ? getValue(name) : defaultValue;
+	}
+	
 	public boolean getBooleanValue(String name) {
 		String value = get(name);
 		return "1".equals(value) || "y".equalsIgnoreCase(value) || "t".equalsIgnoreCase(value);
