@@ -7,11 +7,12 @@ class DefaultIntegerPropertyConverter implements PropertyConverter<Integer> {
 
 	@Override
 	public Integer convert(VariableResolver variables, String name, String defaultValue) {
-		return Integer.parseInt(variables.resolveValue(name));
+		String result = variables.resolveValue(name);
+		return result == null ? null : Integer.parseInt(result);
 	}
 
 	@Override
 	public Class<Integer> getType() {
-		return int.class;
+		return Integer.class;
 	}
 }
