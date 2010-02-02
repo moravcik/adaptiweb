@@ -4,6 +4,12 @@ public class SystemVariableSource implements VariableSource {
 	
 	private String prefix = "";
 	
+	public SystemVariableSource() {}
+
+	public SystemVariableSource(String prefix) {
+		setPrefix(prefix);
+	}
+	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
