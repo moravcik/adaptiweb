@@ -236,5 +236,12 @@ public class Properties implements Iterable<String> {
 		
 		return result;
 	}
+
+	public Map<String,String> toMap() {
+		if (prefix.length() == 0) return new HashMap<String, String>(properties);
+		Map<String, String> result = new HashMap<String, String>(properties.size());
+		for(String key : this) result.put(key, getProperty(key));
+		return result;
+	}
 	
 }
