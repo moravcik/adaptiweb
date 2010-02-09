@@ -17,15 +17,10 @@ import com.adaptiweb.utils.commons.VariableResolver;
 public class PropertyFileVariableSource implements InicializableVariableSource {
 	
 	private Properties properties;
-	
-	private long lastModified;
-
-	private File file;
-	
 	private String expression;
-
+	private File file;
+	private long lastModified;
 	private String template;
-
 	
 	public void setPropertyFileName(String expression) {
 		this.expression = expression;

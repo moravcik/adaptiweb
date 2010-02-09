@@ -74,6 +74,16 @@ public final class StringUtils {
 		return sb.toString();
 	}
 
+	public static String join(Iterable<String> values, String separator) {
+		StringBuilder sb = null;
+		for (Object value : values) {
+			if (sb == null) sb = new StringBuilder();
+			else sb.append(separator);
+			sb.append(String.valueOf(value));
+		}
+		return sb.toString();
+	}
+	
 	public static String toHexString(byte[] bytes) {
 		StringBuilder sb = new StringBuilder();
 		for (byte b : bytes) sb.append(String.format("%02x", b));
