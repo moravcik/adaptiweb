@@ -81,7 +81,7 @@ public class LiveFileHandler implements LiveFile {
 		return file;
 	}
 	
-	private static void createDefaultFile(String templateResource, File file) {
+	public static void createDefaultFile(String templateResource, File file) {
 		try {
 			File template = ResourceUtils.getFile(templateResource);
 			FileUtils.forceMkdir(file.getParentFile());
