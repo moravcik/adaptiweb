@@ -1,7 +1,8 @@
 package com.adaptiweb.gwt.util;
 
+import java.util.HashMap;
+
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dev.util.collect.HashMap;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
