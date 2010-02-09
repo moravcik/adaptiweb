@@ -7,8 +7,9 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 
-public class MetaProperties extends HashMap<String,String> {
-	public MetaProperties(String prefix) {
+public class MetaProperties extends HashMap<String, String> {
+	
+	private MetaProperties(String prefix) {
 		GWT.log("Creating MetaProperties with prefix=" + prefix , null);
 		NodeList<Element> nodes = Document.get().getElementsByTagName("META");
 		for (int i = 0; i < nodes.getLength(); i++) {
@@ -18,5 +19,12 @@ public class MetaProperties extends HashMap<String,String> {
 			name = name.substring(prefix.length());
 			put(name, metaElement.getAttribute("content"));
 		}
+	}
+	
+	private static final HashMap<String,MetaProperties> instances = new HashMap<String, MetaProperties>();
+	
+	public static MetaProperties instance(String prefix) {
+		if (!instances.containsKey(prefix)) instances.put(prefix, new MetaProperties(prefix));
+		return instances.get(prefix);
 	}
 }
