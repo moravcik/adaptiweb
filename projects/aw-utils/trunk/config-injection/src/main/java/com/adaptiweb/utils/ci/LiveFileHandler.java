@@ -1,17 +1,23 @@
 package com.adaptiweb.utils.ci;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ResourceUtils;
 
 import com.adaptiweb.utils.commons.VariableResolver;
 
 public class LiveFileHandler implements LiveFile {
 
+	private static final String CLASSPATH_URL = "classpath:";
 	private VariableResolver variables;
 	private File file;
 	private String fileName;
@@ -82,12 +88,24 @@ public class LiveFileHandler implements LiveFile {
 	}
 	
 	public static void createDefaultFile(String templateResource, File file) {
+		InputStream is = null;
+		OutputStream os = null;
 		try {
-			File template = ResourceUtils.getFile(templateResource);
 			FileUtils.forceMkdir(file.getParentFile());
-			FileUtils.copyFile(template, file, false);
+			
+			if (templateResource.startsWith(CLASSPATH_URL)) {
+				templateResource = templateResource.substring(CLASSPATH_URL.length());
+				is = new ClassPathResource(templateResource).getInputStream();
+				os = new FileOutputStream(file);
+				IOUtils.copy(is, os);
+			} else {
+				FileUtils.copyFile(ResourceUtils.getFile(templateResource), file, false);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			IOUtils.closeQuietly(is);
+			IOUtils.closeQuietly(os);
 		}
 	}
 }
