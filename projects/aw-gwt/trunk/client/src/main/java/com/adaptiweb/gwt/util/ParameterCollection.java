@@ -64,4 +64,12 @@ public class ParameterCollection extends LinkedHashMap<String,String> {
 		return containsKey(name) ? getBooleanValue(name) : defaultValue;
 	}
 
+	public <T extends Enum<T>> T getEnumValue(Class<T> enumType, String name, T defaultValue) {
+		return containsKey(name) ? getEnumValue(enumType, name) : defaultValue;
+	}
+	
+	public <T extends Enum<T>> T getEnumValue(Class<T> enumType, String name) {
+		return Enum.valueOf(enumType, get(name));
+	}
+	
 }
