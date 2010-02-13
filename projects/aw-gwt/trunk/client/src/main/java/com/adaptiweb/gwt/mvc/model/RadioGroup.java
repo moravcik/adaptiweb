@@ -39,12 +39,16 @@ public class RadioGroup<T> extends Listeners<ChangeListener<T>> implements Value
 	}
 
 	public void onValueChange(ValueChangeEvent<Boolean> event) {
-		if(values.containsKey(event.getSource()) && event.getValue())
+		if (values.containsKey(event.getSource()) && event.getValue())
 			setValue(values.get(event.getSource()));
 	}
 
 	public void setValue(T value) {
-		if(selected != buttons.get(value)) {
+		if (value == null) {
+			if (selected != null) selected.setValue(false, false);
+			return;
+		}
+		if (selected != buttons.get(value)) {
 			selected = buttons.get(value);
 			selected.setValue(true, false);
 			fireEvent(new ChangeEvent<T>(values.get(selected)));
