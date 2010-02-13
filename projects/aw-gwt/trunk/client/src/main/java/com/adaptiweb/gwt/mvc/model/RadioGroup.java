@@ -45,7 +45,10 @@ public class RadioGroup<T> extends Listeners<ChangeListener<T>> implements Value
 
 	public void setValue(T value) {
 		if (value == null) {
-			if (selected != null) selected.setValue(false, false);
+			if (selected != null) {
+				selected.setValue(false, false);
+				selected = null;
+			}
 			return;
 		}
 		if (selected != buttons.get(value)) {
