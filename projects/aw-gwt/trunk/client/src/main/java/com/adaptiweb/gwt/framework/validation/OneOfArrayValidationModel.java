@@ -6,48 +6,26 @@ import java.util.List;
 import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.adaptiweb.gwt.mvc.model.ValueChangeModel;
 import com.adaptiweb.gwt.util.ConcatUtils;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 
-//TODO create test
-public class OneOfArrayValidationModel extends AbstractValidationModel {
+public class OneOfArrayValidationModel extends ValueChangeValidationModel {
 
 	public static final String DEFAULT_ERROR_MESSAGE = "Value must be one of: $0";
 	
-	private String errorMessage;
+	private <T> OneOfArrayValidationModel(ValueChangeModel<T> vcm, ValidationSource source) {
+		super(vcm, source);
+	}
 
-	private final List<?> valueList;
-	
-	private final HandlerRegistration registration;
+	public static <T> OneOfArrayValidationModel create(final ValueChangeModel<T> vcm, T... values) {
+		final List<T> valueList = Arrays.asList(values);
 
-	private <T> OneOfArrayValidationModel(ValueChangeModel<T> vcm, T[] values) {
-		valueList = Arrays.asList(values);
-		errorMessage = GwtGoodies.format(DEFAULT_ERROR_MESSAGE, ConcatUtils.concat(", ", valueList.toArray()));
-		registration = vcm.addValueChangeHandler(new ValueChangeHandler<T>() {
+		OneOfArrayValidationModel instance = new OneOfArrayValidationModel(vcm, new ValidationSource() {
 			@Override
-			public void onValueChange(ValueChangeEvent<T> event) {
-				validate(event.getValue());
+			public boolean isValid() {
+				return valueList.contains(vcm.getValue());
 			}
 		});
-		validate(vcm.getValue());
-	}
-
-	protected void validate(Object value) {
-		setValid(valueList.contains(value));
-	}
-
-	public void discard() {
-		registration.removeHandler();
-	}
-
-	@Override
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-	
-	public static <T> OneOfArrayValidationModel create(final ValueChangeModel<T> vcm, T... values) {
-		return new OneOfArrayValidationModel(vcm, values);
+		instance.setErrorMessage(GwtGoodies.format(DEFAULT_ERROR_MESSAGE, ConcatUtils.concat(", ", values)));
+		return instance;
 	}
 
 }
