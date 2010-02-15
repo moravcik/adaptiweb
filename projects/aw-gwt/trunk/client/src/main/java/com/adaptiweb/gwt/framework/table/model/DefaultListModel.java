@@ -136,7 +136,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 	
 	public void remove(T item) {
 		int itemIndex = indexOf(item);
-		replace(itemIndex, 1, new ArrayList<T>());
+		if (itemIndex >= 0) replace(itemIndex, 1, new ArrayList<T>());
 	}
 	
 	public void removeAll() {
