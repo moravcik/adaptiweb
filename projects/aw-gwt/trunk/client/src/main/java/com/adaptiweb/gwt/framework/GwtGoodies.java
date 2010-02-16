@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class GwtGoodies {
@@ -107,6 +108,12 @@ public class GwtGoodies {
 		DecoratorPanel result = new DecoratorPanel();
 		result.add(w);
 		return result;
+	}
+
+	public static Widget center(final Widget widget) {
+		return new SimplePanel(DOM.createElement("CENTER")) {{
+			setWidget(widget);
+		}};
 	}
 
 }
