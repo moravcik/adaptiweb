@@ -19,6 +19,15 @@ public enum Styles implements DynamicStyle {
 	public String toString() {
 		return name().toLowerCase();
 	}
+
+	public static final Style addStyleName(final String styleName) {
+		return new Style() {
+			@Override
+			public void apply(Element element) {
+				StyleNameManager.addStyleName(element, styleName);
+			}
+		};
+	}
 }
 
 class StyleNameManager extends UIObject {

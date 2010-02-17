@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.adaptiweb.gwt.framework.style.Style;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -26,11 +25,11 @@ public class GridBuilder {
 		@Override
 		public void apply(Element element) {
 			assert "table".equalsIgnoreCase(element.getTagName());
-			element.setAttribute("cellpadding", "0");
-			element.setAttribute("cellspacing", "0");
+			element.setAttribute("cellPadding", "0");
+			element.setAttribute("cellSpacing", "0");
 		}
 	};
-	
+
 	private final Map<Coordinates, Cell> cells = new HashMap<Coordinates, Cell>();
 	
 	private static class BuilderGrid extends Grid {
@@ -198,10 +197,33 @@ public class GridBuilder {
 		};
 	}
 
-	public static Style width(final String width) {
+	public static Style cellPadding(final int cellpadding) {
 		return new Style() {
-			public void apply(Element td) {
-				td.setAttribute("width", width);
+			@Override
+			public void apply(Element element) {
+				assert "table".equalsIgnoreCase(element.getTagName());
+				element.setAttribute("cellPadding", "" + cellpadding);
+			}
+		};
+	}
+	
+	public static Style cellSpacing(final int cellspacing) {
+		return new Style() {
+			@Override
+			public void apply(Element element) {
+				assert "table".equalsIgnoreCase(element.getTagName());
+				element.setAttribute("cellSpacing", "" + cellspacing);
+			}
+		};
+	}
+
+	public static Style cellSpacingCellPadding(final int cellspacing, final int cellpadding) {
+		return new Style() {
+			@Override
+			public void apply(Element element) {
+				assert "table".equalsIgnoreCase(element.getTagName());
+				element.setAttribute("cellSpacing", "" + cellspacing);
+				element.setAttribute("cellPadding", "" + cellpadding);
 			}
 		};
 	}
