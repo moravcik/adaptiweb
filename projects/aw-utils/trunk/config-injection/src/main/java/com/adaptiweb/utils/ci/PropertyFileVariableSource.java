@@ -43,6 +43,7 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 	}
 	
 	public Properties getProperties() {
+		fileHandler.checkChanges(this);
 		return properties.get();
 	}
 	
