@@ -27,4 +27,13 @@ public class MetaProperties extends HashMap<String, String> {
 		if (!instances.containsKey(prefix)) instances.put(prefix, new MetaProperties(prefix));
 		return instances.get(prefix);
 	}
+
+	/**
+	 * @param propertyName
+	 * @param expectedValue
+	 * @return <code>true</code> if property exists and has expected value
+	 */
+	public boolean check(String propertyName, String expectedValue) {
+		return containsKey(propertyName) && expectedValue.equals(get(propertyName));
+	}
 }
