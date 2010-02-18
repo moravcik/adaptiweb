@@ -69,6 +69,7 @@ public class Dialog {
 		verticalPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		verticalPanel.add(buttonPanel);
 		dialogBox.add(verticalPanel);
+		buttonPanel.setSpacing(2);
 	}
 	
 	protected void initContent(Panel panel) {
