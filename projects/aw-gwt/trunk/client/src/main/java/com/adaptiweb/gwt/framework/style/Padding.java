@@ -10,7 +10,31 @@ public class Padding {
 			element.getStyle().setPadding(0, Unit.PX);
 		}
 	};
-	
+
+	public static final Style ZERO_TOP = new Style() {
+		public void apply(Element element) {
+			element.getStyle().setPaddingTop(0, Unit.PX);
+		}
+	};
+
+	public static final Style ZERO_RIGHT = new Style() {
+		public void apply(Element element) {
+			element.getStyle().setPaddingRight(0, Unit.PX);
+		}
+	};
+
+	public static final Style ZERO_BOTTOM = new Style() {
+		public void apply(Element element) {
+			element.getStyle().setPaddingBottom(0, Unit.PX);
+		}
+	};
+
+	public static final Style ZERO_LEFT = new Style() {
+		public void apply(Element element) {
+			element.getStyle().setPaddingLeft(0, Unit.PX);
+		}
+	};
+
 	public static final Style all(final int padding, final Unit unit) {
 		return new Style() {
 			public void apply(Element element) {
