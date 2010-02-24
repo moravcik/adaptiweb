@@ -3,6 +3,7 @@ package com.adaptiweb.gwt.framework;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -114,6 +115,10 @@ public class GwtGoodies {
 		return new SimplePanel(DOM.createElement("CENTER")) {{
 			setWidget(widget);
 		}};
+	}
+	
+	public static boolean isIE() {
+		return Window.Navigator.getUserAgent().toLowerCase().contains("msie");
 	}
 
 }
