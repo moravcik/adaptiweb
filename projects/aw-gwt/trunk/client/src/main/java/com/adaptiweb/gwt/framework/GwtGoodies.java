@@ -121,4 +121,13 @@ public class GwtGoodies {
 		return Window.Navigator.getUserAgent().toLowerCase().contains("msie");
 	}
 
+	public static void copyToClipboard(String text) {
+		if (isIE()) copyTextToClipboard(text);
+		else Window.alert("Copy to clipboard is available only for IE");
+	}
+	
+	private static native void copyTextToClipboard(String content) /*-{
+		$wnd.clipboardData.setData('Text', content);
+	}-*/;
+
 }
