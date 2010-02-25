@@ -40,6 +40,12 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 		return handlers.addHandler(ValueChangeEvent.getType(), handler);
 	}
 
+	public HandlerRegistration addValueChangeHandlerAndInit(ValueChangeHandler<T> handler) {
+		HandlerRegistration result = handlers.addHandler(ValueChangeEvent.getType(), handler);
+		handler.onValueChange(new ValueChangeEvent<T>(this.value) {});
+		return result;
+	}
+
 	protected boolean shouldChange(T value) {
 		return false == GwtGoodies.areEquals(this.value, value);
 	}
