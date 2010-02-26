@@ -40,6 +40,7 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 		return handlers.addHandler(ValueChangeEvent.getType(), handler);
 	}
 
+	@Override
 	public HandlerRegistration addValueChangeHandlerAndInit(ValueChangeHandler<T> handler) {
 		HandlerRegistration result = handlers.addHandler(ValueChangeEvent.getType(), handler);
 		handler.onValueChange(new ValueChangeEvent<T>(this.value) {});
