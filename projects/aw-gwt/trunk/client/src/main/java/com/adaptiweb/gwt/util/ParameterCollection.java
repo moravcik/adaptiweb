@@ -47,6 +47,14 @@ public class ParameterCollection extends LinkedHashMap<String,String> {
 		return containsKey(name) ? getIntValue(name) : defaultValue;
 	}
 
+	public long getLongValue(String name) {
+		return Long.parseLong(get(name));
+	}
+
+	public long getLongValue(String name, Long defaultValue) {
+		return containsKey(name) ? getLongValue(name) : defaultValue;
+	}
+
 	public String getValue(String name) {
 		return get(name);
 	}

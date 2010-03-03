@@ -71,6 +71,16 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 	}
 	
 	@Override
+	public void addAll(List<R> items) {
+		model.addAll(items);
+	}
+
+	@Override
+	public void setAll(List<R> items) {
+		model.setAll(items);
+	}
+
+	@Override
 	protected void onLoad() {
 		renderHeaders();
 	}

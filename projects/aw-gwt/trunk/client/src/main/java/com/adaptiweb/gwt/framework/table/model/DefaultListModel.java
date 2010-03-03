@@ -148,4 +148,14 @@ public class DefaultListModel<T> implements ListModel<T> {
 		replace(Strategy.STACK == addStrategy ? 0 : -1, 0, Arrays.asList(item));
 	}
 
+	@Override
+	public void addAll(List<T> items) {
+		replace(Strategy.STACK == addStrategy ? 0 : -1, 0, items);
+	}
+
+	@Override
+	public void setAll(List<T> items) {
+		replace(0, size(), items);
+	}
+
 }
