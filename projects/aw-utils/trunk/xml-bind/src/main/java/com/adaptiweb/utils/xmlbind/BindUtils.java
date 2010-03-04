@@ -113,8 +113,12 @@ public abstract class BindUtils {
 		return target;
 	}
 	
-	public static <T> T unmarshal(String xmlFragment, Class<T> targetType) throws IOException {
-		return unmarshal(new StringReader(xmlFragment), targetType);
+	public static <T> T unmarshal(String xmlFragment, Class<T> targetType) {
+		try {
+			return unmarshal(new StringReader(xmlFragment), targetType);
+		} catch (IOException e) {
+			throw new RuntimeException("Unexpected exception", e);
+		}
 	}
 
 	public static String marshall(Object source) {
