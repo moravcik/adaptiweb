@@ -26,4 +26,6 @@ public interface ListModel<T> extends HasListChangeHandlers<T>, HasListRefreshHa
 	public void add(T item);
 	public void addAll(List<T> items);
 	public void setAll(List<T> items);
+
+	public List<T> getItems();
 }
