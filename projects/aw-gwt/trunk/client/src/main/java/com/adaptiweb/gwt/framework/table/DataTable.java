@@ -100,4 +100,8 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 //        }
 	}
 
+	public List<R> getItems() {
+		return model.getItems();
+	}
+
 }

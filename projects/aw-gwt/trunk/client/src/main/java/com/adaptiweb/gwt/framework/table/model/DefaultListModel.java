@@ -20,7 +20,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 		STACK
 	}
 	
-	private final ArrayList<T> records = new ArrayList<T>();
+	final ArrayList<T> records = new ArrayList<T>();
 	private final HandlerManager handlers;
 	private final Strategy addStrategy;
 	
@@ -130,7 +130,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 		};
 	}
 
-	protected ArrayList<T> getRecords() {
+	public List<T> getItems() {
 		return records;
 	}
 	
