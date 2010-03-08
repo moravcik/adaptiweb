@@ -4,15 +4,15 @@ import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditor;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import com.adaptiweb.utils.csvbind.annotation.CsvField;
-
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.MappingStrategy;
+
+import com.adaptiweb.utils.csvbind.annotation.CsvField;
 
 /**
  * CSV files reader based on opencsv {@link CSVReader}
@@ -230,6 +230,28 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
     @Override
     protected PropertyEditor getPropertyEditor(PropertyDescriptor propertydescriptor) throws InstantiationException, IllegalAccessException {
     	return mapping.getEditor(propertydescriptor.getName());
+    }
+    
+    /**
+     * Read single line into single T bean
+     * 
+     * @param <T> type of csv bean
+     * @param csvLine single line containing serialized csv bean
+     * @param beanClass T.class
+     * 
+     * @throws IllegalArgumentException if there is a problem instantiating beanClass
+     *         or CsvException if there is problem parsing csvLine string
+     */
+    public static <T> T readLine(String csvLine, Class<T> beanClass) throws CsvException {
+    	if (csvLine == null || csvLine.length() == 0) return null;
+    	
+    	CsvReader<T> csvReader = new CsvReader<T>(new StringReader(csvLine), beanClass);
+    	try {
+	    	csvReader.loadNextRecord();
+	    	return csvReader.nextRecord;
+    	} finally {
+    		csvReader.closeResources();
+    	}
     }
     
 }
