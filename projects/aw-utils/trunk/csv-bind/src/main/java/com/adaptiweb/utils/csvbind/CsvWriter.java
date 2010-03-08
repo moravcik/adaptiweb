@@ -2,6 +2,7 @@ package com.adaptiweb.utils.csvbind;
 
 import java.beans.PropertyEditor;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -125,5 +126,28 @@ public class CsvWriter<T> {
             	e.printStackTrace();
             }
         }
+    }
+    
+    /**
+     * Persist single bean into string
+     * @param <T>
+     * @param bean
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+	public static <T> String writeLine(T bean) {
+    	if (bean == null) return null;
+    	
+    	CsvWriter<T> csvWriter = null;
+    	StringWriter str = new StringWriter();
+    	try {
+    		csvWriter = new CsvWriter<T>(str, (Class<T>) bean.getClass());
+	    	csvWriter.writeNext(bean);
+	    	return str.toString();
+    	} catch (IOException e) {
+    		return ""; // quietly
+    	} finally {
+    		if (csvWriter != null) csvWriter.closeResources();
+    	}
     }
 }
