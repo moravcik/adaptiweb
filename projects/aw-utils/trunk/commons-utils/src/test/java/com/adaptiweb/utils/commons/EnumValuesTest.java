@@ -15,7 +15,6 @@ public class EnumValuesTest {
 	static EnumFilter<SampleEnum> evenFilter = new EnumFilter<SampleEnum>() {
 		@Override
 		public boolean fit(SampleEnum value) {
-			System.out.printf((value.ordinal() + 1) % 2 == 0 ? "%s is parny\n" : "%s is not parny\n", value);
 			return (value.ordinal() + 1) % 2 == 0;
 		}
 	};
@@ -23,7 +22,6 @@ public class EnumValuesTest {
 	static EnumFilter<SampleEnum> oddFilter = new EnumFilter<SampleEnum>() {
 		@Override
 		public boolean fit(SampleEnum value) {
-			System.out.printf((value.ordinal() + 1) % 2 == 1 ? "%s is neparny\n" : "%s is not neparny\n", value);
 			return (value.ordinal() + 1) % 2 == 1;
 		}
 	};
