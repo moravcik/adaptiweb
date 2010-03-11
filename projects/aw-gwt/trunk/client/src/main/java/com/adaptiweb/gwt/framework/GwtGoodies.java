@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.SerializationException;
+import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -128,6 +130,22 @@ public class GwtGoodies {
 	
 	private static native void copyTextToClipboard(String content) /*-{
 		$wnd.clipboardData.setData('Text', content);
+	}-*/;
+
+	public static Object getSerializedObject(String name, SerializationStreamFactory ssf) {
+		String rpcString = getSerializedRpcValue(name);
+		GWT.log("serialized[" + name + "]: " + rpcString, null);
+		if (rpcString == null) return null;
+		try {
+			return ssf.createStreamReader(rpcString).readObject();
+		} catch (SerializationException e) {
+			GWT.log(e.getMessage(), e);
+			return null;
+		}
+	}
+	
+	public static native String getSerializedRpcValue(String name) /*-{
+		return eval("$wnd."+name);
 	}-*/;
 
 }
