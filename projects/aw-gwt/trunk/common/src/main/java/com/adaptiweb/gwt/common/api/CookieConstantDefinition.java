@@ -5,10 +5,11 @@ import java.util.Date;
 
 public interface CookieConstantDefinition {
 
-	public static long MINUTE = 1000 * 60;
-	public static long HOUR = MINUTE * 60;
-	public static long DAY = HOUR  * 24;
-	public static long YEAR = DAY * 365;
+	public static final long FOR_SESSION = -1;
+	public static final long MINUTE = 1000 * 60;
+	public static final long HOUR = MINUTE * 60;
+	public static final long DAY = HOUR  * 24;
+	public static final long YEAR = DAY * 365;
 	
 	public static CookieConstantDefinition JSESSIONID = new CookieConstantDefinition() {
 		@Override
