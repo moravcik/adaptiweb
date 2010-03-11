@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.adaptiweb.gwt.common.api.CookieConstantDefinition;
+import com.adaptiweb.gwt.common.cookies.CookieDefinition;
 
 public class Cookies {
 	
@@ -29,7 +29,7 @@ public class Cookies {
 				this.cookies.put(cookie.getName(), cookie);
 	}
 
-	public String getValue(CookieConstantDefinition definition) {
+	public String getValue(CookieDefinition definition) {
 		return getValue(definition.name());
 	}
 
