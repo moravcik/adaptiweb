@@ -18,6 +18,50 @@ import com.google.gwt.user.server.rpc.RPC;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.gwt.user.server.rpc.SerializationPolicy;
 
+/**
+ * <h5>Usage:</h5>
+ * 
+ * <i>GWT service...</i>
+ * <pre>
+ * public interface UserService extends RempteService {
+ *   UserCredential loadUserCredential();
+ * }
+ * </pre>
+ * <i>Implementation...</i>
+ * <pre>
+ * public class GwtUserService extends RemoteServiceServlet implements UserService {
+ * <b>{@code  @Preload(name="userCredential",modules="mainGwtModule")}</b>
+ *   public UserCredential loadUserCredential() {...}
+ * }
+ * </pre>
+ * <i>Controller...</i>
+ * <pre>
+ *{@code @Autowired}
+ * protected GwtPreloadManager preloadManager;
+ *   .
+ *   .
+ *   .
+ *   Map<String,String> serializedObjects = preloadManager.getPreloadValues(<b>"mainGwtModule"</b>);
+ *   if (!serializedObjects.isEmpty())
+ *     request.setAttribute("serializedObjects", serializedObjects);
+ * </pre>
+ * <i>View...</i>
+ * <pre>
+ * &lt;c:if test="${serializedObjects != null}"&gt;
+ *   &lt;script language="javascript" type="text/javascript"&gt;
+ *     &lt;c:forEach var="entry" items="${serializedObjects}"&gt;
+ *       var ${entry.key}='${entry.value}';
+ *     &lt;/c:forEach&gt;
+ *   &lt;/script&gt;
+ * &lt;/c:if&gt;
+ * </pre>
+ * <i>Clients code...</i>
+ * <pre>
+ * SerializationStreamFactory ssf = GWT.create(UserService.class);
+ * UserCredential user = (UserCredential) 
+ *   GwtGoodies.getSerializedObject(<b>"userCredential"</b>, ssf);
+ * </pre>
+ */
 public class GwtPreloadManager {
 	
 	private static final String ALL_MODULES = null;
