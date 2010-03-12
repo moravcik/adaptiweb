@@ -6,7 +6,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 
+
+/**
+ * This annotation is for method implementing some GWT {@link RemoteService}'s method.
+ * 
+ * <p>
+ * <b>Preconditions:</b><ul>
+ * <li>Annotated method can't use {@link AbstractRemoteServiceServlet#getThreadLocalRequest()}
+ * or {@link AbstractRemoteServiceServlet#getThreadLocalResponse()} because invoking
+ * is realized outside RPC call.</li>
+ * <li>Method can't have parameters.</li>
+ * </ul>
+ * </p> 
+ */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
