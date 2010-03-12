@@ -1,12 +1,12 @@
-package com.adaptiweb.utils.commons;
+package com.adaptiweb.gwt.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.EnumSet;
 
 import org.junit.Test;
 
-import com.adaptiweb.utils.commons.EnumValues.EnumFilter;
+import com.adaptiweb.gwt.common.EnumValues.EnumFilter;
 
 public class EnumValuesTest {
 	
