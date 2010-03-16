@@ -148,4 +148,12 @@ public class GwtGoodies {
 		return eval("$wnd."+name);
 	}-*/;
 
+	public static String nullToEmpty(String string) {
+		return string == null ? "" : string;
+	}
+	
+	public static String emptyToNull(String string) {
+		return string != null && string.length() == 0 ? null : string;
+	}
+
 }
