@@ -47,6 +47,9 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 		return result;
 	}
 
+	/**
+	 * Override when comparing JavaScriptObject instances
+	 */
 	protected boolean shouldChange(T value) {
 		return false == GwtGoodies.areEquals(this.value, value);
 	}
