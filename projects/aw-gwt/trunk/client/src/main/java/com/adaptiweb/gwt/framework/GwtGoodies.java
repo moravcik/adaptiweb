@@ -25,6 +25,9 @@ public class GwtGoodies {
         return elementById;
     }
     
+    /**
+     * IMPORTANT: does not work on JavaScriptObject instances
+     */
     public static boolean areEquals(Object original, Object actual) {
     	return original == null ? actual == null : original.equals(actual);
     }

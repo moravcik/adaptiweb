@@ -10,4 +10,23 @@
 	<artifactId>commons-utils</artifactId>
 	<packaging>jar</packaging>
 	<name>commons-utils</name>
+	
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<excludes>
+					<exclude>**/.*</exclude>
+				</excludes>
+				<includes>
+					<include>com/adaptiweb/utils/commons/param/**/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+	
 </project>

@@ -2,7 +2,7 @@ package com.adaptiweb.gwt.util;
 
 import com.google.gwt.user.client.Window.Location;
 
-
+@Deprecated // not used
 public final class UrlParameters {
 	
 	private UrlParameters() {};
