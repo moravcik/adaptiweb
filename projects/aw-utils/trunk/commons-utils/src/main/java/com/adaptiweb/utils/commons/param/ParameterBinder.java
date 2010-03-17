@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ParameterBinder<T> extends ParameterExtractor<T> {
-	void bindValue(T target, String value, boolean isParsed);
+	void bindValue(T target, String value);
 
 	public static class Helper {
 

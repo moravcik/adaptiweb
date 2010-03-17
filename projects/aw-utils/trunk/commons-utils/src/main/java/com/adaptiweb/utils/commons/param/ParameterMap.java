@@ -30,8 +30,8 @@ public class ParameterMap extends LinkedHashMap<Parameter, String> {
 	
 	public <T> void bindParameters(T target, ParameterBinder<T>... binders) {
 		for (ParameterBinder<T> binder : binders) {
-			boolean isParsed = containsKey(binder.getParameter());
-			binder.bindValue(target, isParsed ? get(binder.getParameter()) : null, isParsed);
+			binder.bindValue(target, 
+					containsKey(binder.getParameter()) ? get(binder.getParameter()) : null);
 		}
 	}
 
