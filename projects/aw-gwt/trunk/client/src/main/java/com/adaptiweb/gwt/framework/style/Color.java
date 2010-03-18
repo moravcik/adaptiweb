@@ -1207,7 +1207,7 @@ public enum Color implements ColorType, Style {
 	}
 
 	public Style backgroundColorStyle() {
-		return customStyle("background-color");
+		return customStyle("backgroundColor");
 	}
 
 	private Style customStyle(final String stylePropertyName) {
