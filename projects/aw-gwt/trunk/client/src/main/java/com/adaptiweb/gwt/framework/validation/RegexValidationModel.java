@@ -41,8 +41,8 @@ public class RegexValidationModel extends AbstractValidationModel {
 	}
 
 	protected void validate(String text) {
-		lastTestedValue = text;
-		setValid(text.matches(regex));
+		lastTestedValue = GwtGoodies.nullToEmpty(text);
+		setValid(lastTestedValue.matches(regex));
 	}
 	
 	public void discard() {
