@@ -59,9 +59,11 @@ public final class JndiUtils {
 					initialContext.createSubcontext(jndiName.substring(0, index));
 				} catch (NameAlreadyBoundException ignore) {}
 			}
-
-			initialContext.bind(jndiName, value);
-		} catch (NameAlreadyBoundException ignore) {
+			try {
+				initialContext.bind(jndiName, value);
+			} catch (NameAlreadyBoundException ignore) {
+				initialContext.rebind(jndiName, value);
+			}
 		} catch (NamingException e) {
 			throw new RuntimeException(e);
 		}
