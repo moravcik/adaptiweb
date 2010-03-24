@@ -24,10 +24,12 @@ import org.junit.Test;
 
 import au.com.bytecode.opencsv.bean.MappingStrategy;
 
+import com.adaptiweb.utils.csvbind.CsvReaderTest.CsvTestRecord3.TestEnum;
 import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.bean.Record1;
 import com.adaptiweb.utils.csvbind.bean.Record2;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldDateEditor;
+import com.adaptiweb.utils.csvbind.editor.CsvFieldEnumEditor;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldStringEditor;
 
 public class CsvReaderTest {
@@ -176,7 +178,7 @@ public class CsvReaderTest {
 
         // CsvTestRecord reader with array parsing
         CsvReader<CsvTestRecord3> r4 = new CsvReader<CsvTestRecord3>(
-                new StringReader("1;2;3;31.12.2008;a1;a2;a3;a4\n3;4;;;b1;b2;b3\n5;6"), 
+                new StringReader("1;2;3;31.12.2008;" + TestEnum.CCC.name() + ";a1;a2;a3;a4\n3;4;;;" + TestEnum.BBB.name() + ";b1;b2;b3\n5;6"), 
                 CsvTestRecord3.class);
         assertNotNull(r4);
         Iterator<CsvTestRecord3> it4 = r4.iterator();
@@ -189,18 +191,20 @@ public class CsvReaderTest {
             if (c4 == 0) {
                 assertEquals("1", rec.getField1());
                 assertEquals(2, rec.getField2());
-                assertEquals(4, rec.getField5().size());
-                assertTrue(rec.getField5().get(0).equals("a1"));
-                assertTrue(rec.getField5().get(1).equals("a2"));
-                assertTrue(rec.getField5().get(2).equals("a3"));
-                assertTrue(rec.getField5().get(3).equals("a4"));
+                assertEquals(TestEnum.CCC, rec.getField5());
+                assertEquals(4, rec.getField6().size());
+                assertTrue(rec.getField6().get(0).equals("a1"));
+                assertTrue(rec.getField6().get(1).equals("a2"));
+                assertTrue(rec.getField6().get(2).equals("a3"));
+                assertTrue(rec.getField6().get(3).equals("a4"));
             } else if (c4 == 1) {
                 assertEquals("3", rec.getField1());
                 assertEquals(4, rec.getField2());
-                assertEquals(3, rec.getField5().size());
-                assertTrue(rec.getField5().get(0).equals("b1"));
-                assertTrue(rec.getField5().get(1).equals("b2"));
-                assertTrue(rec.getField5().get(2).equals("b3"));
+                assertEquals(TestEnum.BBB, rec.getField5());
+                assertEquals(3, rec.getField6().size());
+                assertTrue(rec.getField6().get(0).equals("b1"));
+                assertTrue(rec.getField6().get(1).equals("b2"));
+                assertTrue(rec.getField6().get(2).equals("b3"));
             } else if (c4 == 2) {
                 assertEquals("5", rec.getField1());
                 assertEquals(6, rec.getField2());
@@ -384,22 +388,47 @@ public class CsvReaderTest {
     }
 
     public static class CsvTestRecord3 extends CsvTestRecord2 {
-        @CsvField(index = 4, list = true, editor=CsvFieldStringEditor.class)
-        private List<String> field5;
+    	public enum TestEnum {
+    		AAA,
+    		BBB,
+    		CCC,
+    		DDD;
+    		
+    		public static class Editor extends CsvFieldEnumEditor<TestEnum> {
+    			public Editor() {
+    				super(TestEnum.class);
+    			}
+    		}
+    	}
+    	
+    	@CsvField(index = 4, editor=TestEnum.Editor.class)
+    	TestEnum field5;
+    	
+        @CsvField(index = 5, list = true, editor=CsvFieldStringEditor.class)
+        private List<String> field6;
 
         public CsvTestRecord3() {}
         
-        public CsvTestRecord3(String field1, int field2, String field3, Date field4, List<String> field5) {
+        public CsvTestRecord3(String field1, int field2, String field3, Date field4, TestEnum field5, List<String> field6) {
             super(field1, field2, field3, field4);
             this.field5 = field5;
+            this.field6 = field6;
         }
         
-        public List<String> getField5() {
-            return field5;
+        public List<String> getField6() {
+            return field6;
         }
-        public void setField5(List<String> field5) {
-            this.field5 = field5;
+        public void setField6(List<String> field6) {
+            this.field6 = field6;
         }
+
+		public TestEnum getField5() {
+			return field5;
+		}
+
+		public void setField5(TestEnum field5) {
+			this.field5 = field5;
+		}
     }
 
     public static class CsvReaderPublic<T> extends CsvReader<T> {

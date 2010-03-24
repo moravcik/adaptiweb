@@ -16,6 +16,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.adaptiweb.utils.csvbind.CsvReaderTest.CsvTestRecord3;
+import com.adaptiweb.utils.csvbind.CsvReaderTest.CsvTestRecord3.TestEnum;
 import com.adaptiweb.utils.csvbind.bean.Record2;
 
 
@@ -46,9 +47,9 @@ public class CsvWriterTest {
             		CsvTestRecord3.class, CsvConstants.EXCEL_SEPARATOR, CsvConstants.EXCEL_QUOTECHAR);
             Date date = new Date();
             SimpleDateFormat dateFormat = new SimpleDateFormat(CsvReaderTest.datePattern);
-            CsvTestRecord3 tr = new CsvTestRecord3("field content;; with \"semicolons\"\"; and quotes", 1234567890, "f3", date, Arrays.asList("i1", "i2", "i3", "i4"));
+            CsvTestRecord3 tr = new CsvTestRecord3("field content;; with \"semicolons\"\"; and quotes", 1234567890, "f3", date, TestEnum.CCC, Arrays.asList("i1", "i2", "i3", "i4"));
             String out2 = w2.writeNext(tr);
-            assertEquals("\"field content;; with \"\"semicolons\"\"\"\"; and quotes\";\"1234567890\";\"f3\";\"" + dateFormat.format(date) + "\";\"i1\";\"i2\";\"i3\";\"i4\"\n", out2);
+            assertEquals("\"field content;; with \"\"semicolons\"\"\"\"; and quotes\";\"1234567890\";\"f3\";\"" + dateFormat.format(date) + "\";\"" + TestEnum.CCC.name() + "\";\"i1\";\"i2\";\"i3\";\"i4\"\n", out2);
             Assert.assertTrue("Output file must exist!", outFile.exists());
             
             w2.closeResources();
