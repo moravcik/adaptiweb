@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.adaptiweb.gwt.framework.GwtGoodies;
+import com.adaptiweb.gwt.mvc.model.DefaultNumberModel;
 import com.adaptiweb.gwt.mvc.model.DefaultStringModel;
 import com.adaptiweb.gwt.mvc.model.StringModel;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -19,6 +20,8 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	protected final StringModel model = new DefaultStringModel();
 	private final HashMap<String, Integer> indexes = new HashMap<String, Integer>();
 	private final LinkedList<ListBoxItem> values = new LinkedList<ListBoxItem>();
+	private DefaultNumberModel<Integer> sizeModel;
+	
 	private boolean unknownValue = false;
 	private boolean enabledNull = false;
 	private boolean isNull = false;
@@ -28,7 +31,37 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		String label();
 	}
 	
-	public void addItem(ListBoxItem item) {
+	public interface ListBoxItemFactory<I> {
+		ListBoxItem asListBoxItem(I item);
+	}
+	
+	public void clear() {
+		if (unknownValue) {
+			listBox.removeItem(0);
+			unknownValue = false;
+		}
+		setText(null);
+		indexes.clear();
+		values.clear();
+		while(listBox.getItemCount() > 1) listBox.removeItem(1);
+		updateSizeModel();
+	}
+
+	private void updateSizeModel() {
+		if (sizeModel != null) sizeModel.setValue(values.size());
+	}
+	
+	public <I> void addItems(ListBoxItemFactory<I> factory, I...items) {
+		for (I item : items) add(factory.asListBoxItem(item));
+		updateSizeModel();
+	}
+	
+	public void addItems(ListBoxItem...items) {
+		for (ListBoxItem item : items) add(item);
+		updateSizeModel();
+	}
+	
+	private void add(ListBoxItem item) {
 		String value = item.value();
 		assert value != null : "Null item isn't allowed. Use method setNullLabel()";
 		assert !indexes.containsKey(value) : "Duplicate item value " + value;
@@ -44,6 +77,8 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 			if (unknown.equals(getText()))
 				listBox.setSelectedIndex(enabledNull ? index + 1 : index);
 		}
+
+		updateSizeModel();
 	}
 
 	public ListBoxComponent() {
@@ -106,6 +141,14 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 		return model.addValueChangeHandler(handler);
 	}
+	
+	public HandlerRegistration addSizeChangeHandlerAndInit(ValueChangeHandler<Integer> handler) {
+		if (sizeModel == null) {
+			sizeModel = new DefaultNumberModel<Integer>();
+			sizeModel.setValue(values.size());
+		}
+		return sizeModel.addValueChangeHandlerAndInit(handler);
+	}
 
 	@Override
 	public String getText() {
@@ -126,4 +169,5 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		if (value == null || !indexes.containsKey(value)) return null;
 		return values.get(indexes.get(value));
 	}
+
 }
