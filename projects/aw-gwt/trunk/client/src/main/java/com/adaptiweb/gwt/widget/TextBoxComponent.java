@@ -5,6 +5,13 @@ import com.adaptiweb.gwt.framework.validation.RegexValidationModel;
 import com.adaptiweb.gwt.framework.validation.ValidationModel;
 import com.adaptiweb.gwt.mvc.model.DefaultStringModel;
 import com.adaptiweb.gwt.mvc.model.StringModel;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
+import com.google.gwt.event.dom.client.HasFocusHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
+import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -13,7 +20,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.TextBoxBase;
 
-public class TextBoxComponent extends FormComponent implements StringModel {
+public class TextBoxComponent extends FormComponent implements StringModel, HasKeyDownHandlers, HasKeyUpHandlers, HasBlurHandlers, HasFocusHandlers {
 	
 	protected final TextBoxBase textBox = new TextBox();
 	protected final StringModel model = new DefaultStringModel();
@@ -53,4 +60,28 @@ public class TextBoxComponent extends FormComponent implements StringModel {
 	public ValidationModel setRegexValidation(String regex) {
 		return addValidation(new RegexValidationModel(this, regex));
 	}
+
+	@Override
+	public HandlerRegistration addKeyUpHandler(KeyUpHandler handler) {
+		return textBox.addKeyUpHandler(handler);
+	}
+
+	@Override
+	public HandlerRegistration addBlurHandler(BlurHandler handler) {
+		return textBox.addBlurHandler(handler);
+	}
+
+	public void focus() {
+		textBox.setFocus(true);
+	}
+
+	@Override
+	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+		return textBox.addKeyDownHandler(handler);
+	}
+
+	@Override
+	public HandlerRegistration addFocusHandler(FocusHandler handler) {
+		return textBox.addFocusHandler(handler);
+	}	
 }

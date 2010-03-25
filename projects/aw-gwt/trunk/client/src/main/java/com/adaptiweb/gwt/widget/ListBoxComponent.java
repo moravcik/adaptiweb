@@ -56,6 +56,19 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		updateSizeModel();
 	}
 	
+	public void addItems(String...items) {
+		final String[] holder = new String[1];
+		ListBoxItem accessor = new ListBoxItem() {
+			public String value() { return holder[0]; }
+			public String label() { return holder[0]; }
+		};
+		for (String item : items) {
+			holder[0] = item;
+			add(accessor);
+		}
+		updateSizeModel();
+	}
+
 	public void addItems(ListBoxItem...items) {
 		for (ListBoxItem item : items) add(item);
 		updateSizeModel();
@@ -168,6 +181,10 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		String value = getWidgetValue();
 		if (value == null || !indexes.containsKey(value)) return null;
 		return values.get(indexes.get(value));
+	}
+
+	public void focus() {
+		listBox.setFocus(true);
 	}
 
 }
