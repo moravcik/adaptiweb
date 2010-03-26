@@ -10,7 +10,10 @@ public class ModifiedModelFactory {
 			protected T getCurrentValue() {
 				return hasValue.getValue();
 			}
+			@Override
+			protected void setOriginalValue(T originalValue) {
+				hasValue.setValue(originalValue);
+			}
 		};
 	}
-
 }

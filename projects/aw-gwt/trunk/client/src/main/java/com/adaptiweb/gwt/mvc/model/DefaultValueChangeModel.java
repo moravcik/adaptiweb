@@ -26,11 +26,13 @@ public class DefaultValueChangeModel<T> extends AbstractHasHandlers implements V
 	}
 
 	@Override
+	@Deprecated
 	public void reloadValue() {
 		setValueForce(this.value);
 	}
 	
 	@Override
+	@Deprecated
 	public void setValueForce(T value) {
 		setValueForce(value, true);
 	}

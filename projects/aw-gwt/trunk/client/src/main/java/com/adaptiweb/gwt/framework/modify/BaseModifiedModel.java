@@ -26,6 +26,10 @@ public class BaseModifiedModel extends AbstractLogicModel implements ModifiedMod
 		setModified(false);
 	}
 	
+	public void revert() {
+		setModified(false);
+	}
+	
 	@Override
 	public HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitEvent) {
 		HandlerRegistration registrantion = handlers.addHandler(ModifiedEvent.getType(), handler);

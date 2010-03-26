@@ -6,8 +6,14 @@ public interface ValueChangeModel<T> extends HasValue<T>, HasValueChangeInitHand
 
 	boolean hasValue();
 	
+	/**
+	 * @deprecated instead of this overwrite method #
+	 * 
+	 */
+	@Deprecated
 	void setValueForce(T value);
 	
+	@Deprecated
 	void reloadValue();
 
 }

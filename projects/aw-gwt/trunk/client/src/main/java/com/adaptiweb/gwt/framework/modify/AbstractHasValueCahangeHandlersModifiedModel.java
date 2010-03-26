@@ -23,7 +23,7 @@ abstract class AbstractHasValueCahangeHandlersModifiedModel<T> extends AbstractM
 	
 	@Override
 	public void onValueChange(ValueChangeEvent<T> event) {
-		update(getCurrentValue());
+		update();
 	}
 
 }
