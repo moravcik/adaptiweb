@@ -18,8 +18,9 @@ public class WidgetEnabler implements LogicValueChangeHandler {
 		model.addLogicValueChangeHandler(this, true);
 	}
 	
-	public void apply(LogicModel validation) {
+	public WidgetEnabler apply(LogicModel validation) {
 		model.add(validation);
+		return this;
 	}
 
 	protected void enable(boolean value) {

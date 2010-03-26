@@ -6,6 +6,7 @@ public abstract class AbstractLogicModelCountingSet extends AbstractLogicModelSe
 	
 	protected AbstractLogicModelCountingSet(String setType, LogicModel...models) {
 		super(setType, models);
+		setLogicValue(eval());
 	}
 	
 	protected int getPositiveCount() {
