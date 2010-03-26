@@ -3,7 +3,10 @@ package com.adaptiweb.gwt.widget;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.adaptiweb.gwt.common.ListBoxItem;
 import com.adaptiweb.gwt.framework.GwtGoodies;
+import com.adaptiweb.gwt.framework.logic.LogicModel;
+import com.adaptiweb.gwt.framework.validation.DummyValidation;
 import com.adaptiweb.gwt.mvc.model.DefaultNumberModel;
 import com.adaptiweb.gwt.mvc.model.DefaultStringModel;
 import com.adaptiweb.gwt.mvc.model.StringModel;
@@ -21,15 +24,11 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	private final HashMap<String, Integer> indexes = new HashMap<String, Integer>();
 	private final LinkedList<ListBoxItem> values = new LinkedList<ListBoxItem>();
 	private DefaultNumberModel<Integer> sizeModel;
+	private DummyValidation validation;
 	
 	private boolean unknownValue = false;
 	private boolean enabledNull = false;
 	private boolean isNull = false;
-	
-	public interface ListBoxItem {
-		String value();
-		String label();
-	}
 	
 	public interface ListBoxItemFactory<I> {
 		ListBoxItem asListBoxItem(I item);
@@ -44,16 +43,17 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		indexes.clear();
 		values.clear();
 		while(listBox.getItemCount() > 1) listBox.removeItem(1);
-		updateSizeModel();
+		updateModels();
 	}
 
-	private void updateSizeModel() {
+	private void updateModels() {
 		if (sizeModel != null) sizeModel.setValue(values.size());
+		if (validation != null) validation.setValid(!hasUnknownValue() && getText() != null || values.isEmpty());
 	}
 	
 	public <I> void addItems(ListBoxItemFactory<I> factory, I...items) {
 		for (I item : items) add(factory.asListBoxItem(item));
-		updateSizeModel();
+		updateModels();
 	}
 	
 	public void addItems(String...items) {
@@ -66,12 +66,12 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 			holder[0] = item;
 			add(accessor);
 		}
-		updateSizeModel();
+		updateModels();
 	}
 
 	public void addItems(ListBoxItem...items) {
 		for (ListBoxItem item : items) add(item);
-		updateSizeModel();
+		updateModels();
 	}
 	
 	private void add(ListBoxItem item) {
@@ -91,7 +91,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 				listBox.setSelectedIndex(enabledNull ? index + 1 : index);
 		}
 
-		updateSizeModel();
+		updateModels();
 	}
 
 	public ListBoxComponent() {
@@ -99,7 +99,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		registrations.add(listBox.addChangeHandler(new ChangeHandler() {
 			@Override
 			public void onChange(ChangeEvent event) {
-				model.setText(getWidgetValue());
+				setText(getWidgetValue());
 			}
 		}));
 		registrations.add(model.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -107,6 +107,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 			public void onValueChange(ValueChangeEvent<String> event) {
 				if (!GwtGoodies.areEquals(getWidgetValue(), model.getText()))
 					setWidgetValue(model.getText());
+				updateModels();
 			}
 		}));
 		setWidgetValue(model.getText());
@@ -158,7 +159,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	public HandlerRegistration addSizeChangeHandlerAndInit(ValueChangeHandler<Integer> handler) {
 		if (sizeModel == null) {
 			sizeModel = new DefaultNumberModel<Integer>();
-			sizeModel.setValue(values.size());
+			updateModels();
 		}
 		return sizeModel.addValueChangeHandlerAndInit(handler);
 	}
@@ -185,6 +186,29 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 
 	public void focus() {
 		listBox.setFocus(true);
+	}
+
+	@Override
+	public String getValue() {
+		return model.getValue();
+	}
+
+	@Override
+	public void setValue(String value) {
+		model.setValue(value);
+	}
+
+	@Override
+	public void setValue(String value, boolean fireEvent) {
+		model.setValue(value, fireEvent);
+	}
+
+	public LogicModel createStandardValidation() {
+		if (validation == null) { 
+			validation = new DummyValidation();
+			updateModels();
+		}
+		return validation;
 	}
 
 }

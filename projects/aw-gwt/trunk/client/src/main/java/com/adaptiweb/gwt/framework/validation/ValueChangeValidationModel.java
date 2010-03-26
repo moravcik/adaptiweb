@@ -1,6 +1,6 @@
 package com.adaptiweb.gwt.framework.validation;
 
-import com.adaptiweb.gwt.mvc.model.ValueChangeModel;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -9,7 +9,7 @@ public class ValueChangeValidationModel extends AbstractValidationModel {
 	private String errorMessage;
 	private final HandlerRegistration registration;
 
-	protected <T> ValueChangeValidationModel(ValueChangeModel<T> vcm, final ValidationSource source) {
+	protected <T> ValueChangeValidationModel(HasValueChangeHandlers<T> vcm, final ValidationSource source) {
 		registration = vcm.addValueChangeHandler(new ValueChangeHandler<T>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<T> event) {
@@ -32,7 +32,7 @@ public class ValueChangeValidationModel extends AbstractValidationModel {
 		this.errorMessage = errorMessage;
 	}
 
-	public static <T> ValueChangeValidationModel create(final ValueChangeModel<T> vcm, ValidationSource source) {
+	public static <T> ValueChangeValidationModel create(final HasValueChangeHandlers<T> vcm, ValidationSource source) {
 		return new ValueChangeValidationModel(vcm, source);
 	}
 

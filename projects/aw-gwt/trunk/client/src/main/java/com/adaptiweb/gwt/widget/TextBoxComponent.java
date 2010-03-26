@@ -83,5 +83,20 @@ public class TextBoxComponent extends FormComponent implements StringModel, HasK
 	@Override
 	public HandlerRegistration addFocusHandler(FocusHandler handler) {
 		return textBox.addFocusHandler(handler);
+	}
+
+	@Override
+	public String getValue() {
+		return model.getValue();
+	}
+
+	@Override
+	public void setValue(String value) {
+		model.setValue(value);
+	}
+
+	@Override
+	public void setValue(String value, boolean fireEvent) {
+		model.setValue(value, fireEvent);
 	}	
 }

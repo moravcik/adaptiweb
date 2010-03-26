@@ -40,8 +40,8 @@ implements ConfigureableModifiedModel<T>, HasDebugInfo {
 		return this;
 	}
 	
-	protected void update(T actualValue) {
-		setModified(!equalator.equal(originalValue, actualValue));
+	protected void update() {
+		setModified(!equalator.equal(originalValue, getCurrentValue()));
 	}
 	
 	@Override
@@ -49,6 +49,14 @@ implements ConfigureableModifiedModel<T>, HasDebugInfo {
 		init(getCurrentValue());
 	}
 	
+	@Override
+	public void revert() {
+		setOriginalValue(originalValue);
+		update();
+	}
+	
+	protected abstract void setOriginalValue(T originalValue);
+
 	protected abstract T getCurrentValue();
 
 	@Override

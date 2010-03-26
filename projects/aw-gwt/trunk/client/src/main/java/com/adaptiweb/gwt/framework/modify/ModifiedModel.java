@@ -8,6 +8,8 @@ public interface ModifiedModel extends LogicModel {
 	boolean isModified();
 	
 	void burn();
+	
+	void revert();
 
 	HandlerRegistration addModifiedHandler(ModifiedHandler handler, boolean fireInitEvent);
 
