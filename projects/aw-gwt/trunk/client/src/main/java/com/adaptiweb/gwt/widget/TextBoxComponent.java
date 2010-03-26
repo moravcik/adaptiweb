@@ -98,5 +98,9 @@ public class TextBoxComponent extends FormComponent implements StringModel, HasK
 	@Override
 	public void setValue(String value, boolean fireEvent) {
 		model.setValue(value, fireEvent);
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		textBox.setReadOnly(readOnly);
 	}	
 }
