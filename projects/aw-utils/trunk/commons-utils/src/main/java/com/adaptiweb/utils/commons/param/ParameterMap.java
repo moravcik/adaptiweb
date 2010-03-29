@@ -15,17 +15,16 @@ public class ParameterMap extends LinkedHashMap<Parameter, String> {
 		void bindParameterMap(ParameterMap parameters);
 	}
 	
-	public interface Ignorable {
-		boolean isIgnored();
-		void setIgnored(boolean ignored);
-	}
-	
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for (Map.Entry<Parameter, String> entry : entrySet())
 			result.append('&').append(entry.getKey()).append('=').append(entry.getValue());
 		return result.length() > 0 ? result.substring(1) : "";
+	}
+	
+	public void bindParameters(ParameterMap.Binder... binders) {
+		for (ParameterMap.Binder mapBinder : binders) mapBinder.bindParameterMap(this);
 	}
 	
 	public <T> void bindParameters(T target, ParameterBinder<T>... binders) {
@@ -54,8 +53,4 @@ public class ParameterMap extends LinkedHashMap<Parameter, String> {
 		}
 	}
 
-	public static boolean isIgnored(Object obj) {
-		return obj instanceof Ignorable && ((Ignorable) obj).isIgnored();
-	}
-	
 }
