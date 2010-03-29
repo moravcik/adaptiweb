@@ -177,7 +177,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
         }
         public void setAsText(String s) throws IllegalArgumentException {
             itemEditor.setAsText(s);
-            list.add(itemEditor.getValue());
+            if (itemEditor.getValue() != null) list.add(itemEditor.getValue()); // skip null values
         }
         @Override
         public void setValue(Object value) {

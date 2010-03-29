@@ -1,21 +1,21 @@
 package com.adaptiweb.gwt.mvc.model;
 
-public class DefaultValueChangeBackedModel<T> extends DefaultValueChangeModel<T> implements ValueChangeBackedModel<T> {
+public class DefaultValueChangeCachedModel<T> extends DefaultValueChangeModel<T> implements ValueChangeCachedModel<T> {
 
 	private T valueBacked;
 	
 	@Override
-	public T getValueBacked() {
+	public T getValueCached() {
 		return valueBacked;
 	}
 
 	@Override
-	public boolean hasValueBacked() {
+	public boolean hasValueCached() {
 		return valueBacked != null;
 	}
 
 	@Override
-	public void setValueBacked(T value) {
+	public void setValueCached(T value) {
 		if (shouldChange(value)) {
 			this.valueBacked = getValue();
 			super.setValueForce(value);
