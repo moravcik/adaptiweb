@@ -7,11 +7,11 @@ public class LogicValueChangeEvent extends GwtEvent<LogicValueChangeHandler> {
 	private static Type<LogicValueChangeHandler> TYPE;
 
 	public static void fire(LogicModel model) {
-		if (TYPE != null) model.fireEvent(new LogicValueChangeEvent(model));
+		if (TYPE != null) model.fireEvent(new LogicValueChangeEvent(model, false));
 	}
 
 	public static void init(LogicModel model, LogicValueChangeHandler handler) {
-		if (TYPE != null) new LogicValueChangeEvent(model).dispatch(handler);
+		if (TYPE != null) new LogicValueChangeEvent(model, true).dispatch(handler);
 	}
 
 	public static Type<LogicValueChangeHandler> getType() {
@@ -21,10 +21,16 @@ public class LogicValueChangeEvent extends GwtEvent<LogicValueChangeHandler> {
 
 	private final boolean logicValue;
 	private final LogicModel model;
+	private final boolean initEvent;
 
-	protected LogicValueChangeEvent(LogicModel model) {
+	protected LogicValueChangeEvent(LogicModel model, boolean initEvent) {
 		this.logicValue = model.getLogicValue();
 		this.model = model;
+		this.initEvent = initEvent;
+	}
+	
+	public boolean isInitEvent() {
+		return initEvent;
 	}
 
 	@Override
