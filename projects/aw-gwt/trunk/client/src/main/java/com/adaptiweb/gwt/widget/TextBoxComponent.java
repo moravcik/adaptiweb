@@ -102,5 +102,9 @@ public class TextBoxComponent extends FormComponent implements StringModel, HasK
 
 	public void setReadOnly(boolean readOnly) {
 		textBox.setReadOnly(readOnly);
+	}
+
+	public void setName(String name) {
+		textBox.setName(name);
 	}	
 }

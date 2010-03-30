@@ -43,8 +43,9 @@ public abstract class AbstractLogicModel extends AbstractHasHandlers implements 
 	
 	@Override
 	public HandlerRegistration addLogicValueChangeHandler(LogicValueChangeHandler handler, boolean fireInitEvent) {
+		HandlerRegistration registration = handlers.addHandler(LogicValueChangeEvent.getType(), handler);
 		if(fireInitEvent) LogicValueChangeEvent.init(this, handler);
-		return handlers.addHandler(LogicValueChangeEvent.getType(), handler);
+		return registration;
 	}
 
 	@Override
