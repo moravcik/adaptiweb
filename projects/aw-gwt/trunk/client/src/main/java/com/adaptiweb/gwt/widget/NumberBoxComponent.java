@@ -142,4 +142,8 @@ public class NumberBoxComponent<T extends Number> extends FormComponent implemen
 	public void setValue(T value, boolean fireEvents) {
 		model.setValue(value, fireEvents);
 	}
+
+	public void setReadOnly(boolean readOnly) {
+		widget.setReadOnly(readOnly);
+	}
 }
