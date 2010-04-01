@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 // TODO: needed closing handler support
 public class Dialog {
 	final private DialogBox dialogBox = new DialogBox(false, true);
-	final private PopupPanel glass = constructPopupGlass();
+	final private static PopupPanel glass = constructPopupGlass();
 	final private SimplePanel contentPanel = new SimplePanel();
 	final private HorizontalPanel buttonPanel = new HorizontalPanel();
 	final private Timer showTimer = new Timer() {
@@ -108,7 +108,17 @@ public class Dialog {
 	}
 
 	public static PopupPanel constructPopupGlass() {
-		final PopupPanel popupPanel = new PopupPanel();
+		final PopupPanel popupPanel = new PopupPanel() {
+			private int showCounter = 0;
+			@Override
+			public void show() {
+				if (showCounter++ == 0) super.show();
+			}
+			@Override
+			public void hide() {
+				if (--showCounter == 0) super.hide();
+			}
+		};
 		
 		popupPanel.add(new Label(""));
 		popupPanel.setPixelSize(
@@ -133,11 +143,11 @@ public class Dialog {
 	}
 
 	public String getTitle() {
-		return dialogBox.getTitle();
+		return dialogBox.getText();
 	}
 
 	public void setTitle(String title) {
-		dialogBox.setTitle(title);
+		dialogBox.setText(title);
 	}
 	
 }
