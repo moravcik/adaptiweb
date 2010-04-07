@@ -151,6 +151,7 @@ public class GwtGoodies {
 		return eval("$wnd."+name);
 	}-*/;
 
+	/* GWT version of StringUtils */
 	public static String nullToEmpty(String string) {
 		return string == null ? "" : string;
 	}
@@ -159,4 +160,7 @@ public class GwtGoodies {
 		return string != null && string.length() == 0 ? null : string;
 	}
 
+	public static boolean isNotEmpty(String string) {
+		return string != null && string.length() > 0;
+	}
 }
