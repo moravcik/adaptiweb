@@ -40,9 +40,23 @@ public class Dialog {
 		}
 	};
 	
+	public boolean isModal() {
+		return dialogBox.isModal();
+	}
+
+	public void setModal(boolean modal) {
+		if (modal != dialogBox.isModal()) {
+			if (isShowing()) {
+				if (modal) glass.show();
+				else glass.hide();
+			}
+			dialogBox.setModal(modal);
+		}
+	}
+	
 	public void hide() {
 		dialogBox.hide();
-		glass.hide();
+		if(isModal()) glass.hide();
 	}
 	
 	public void show() {
@@ -53,7 +67,7 @@ public class Dialog {
         }
         else cleanUp();
         
-        glass.show();
+        if(isModal()) glass.show();
         dialogBox.setVisible(false);
         dialogBox.show();
         showTimer.schedule(1);
@@ -149,5 +163,8 @@ public class Dialog {
 	public void setTitle(String title) {
 		dialogBox.setText(title);
 	}
-	
+
+	public boolean isShowing() {
+		return dialogBox.isShowing();
+	}
 }
