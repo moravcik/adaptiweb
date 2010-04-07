@@ -115,6 +115,10 @@ public class NumberBoxComponent<T extends Number> extends FormComponent implemen
 		return model.addValueChangeHandler(handler);
 	}
 	
+	public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
+		return widget.addKeyPressHandler(handler);
+	}
+
 	public ValidationModel setMinMaxValidation(Long min, Long max) {
 		return addValidation(new MinMaxValidation(this, min, max));
 	}
