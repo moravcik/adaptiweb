@@ -1,11 +1,12 @@
 package com.adaptiweb.gwt.framework;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -16,29 +17,41 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-// TODO: needed closing handler support
 public class Dialog {
 	final private DialogBox dialogBox = new DialogBox(false, true);
-	final private static PopupPanel glass = constructPopupGlass();
+	final private static Glass glass = new Glass();
 	final private SimplePanel contentPanel = new SimplePanel();
 	final private HorizontalPanel buttonPanel = new HorizontalPanel();
 	final private Timer showTimer = new Timer() {
 			@Override
 			public void run() {
 		        dialogBox.center();
-		        dialogBox.hide();
 		        dialogBox.setVisible(true);
-		        dialogBox.show();
 			}
 	    };
 	private boolean inicialized = false;
 
-	final private ClickHandler closeHandler = new ClickHandler() {
+	final private ClickHandler hideByClickHandler = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
 			hide();
 		}
 	};
+	
+	final private CloseHandler<PopupPanel> closeHandler = new CloseHandler<PopupPanel>() {
+		@Override
+		public void onClose(CloseEvent<PopupPanel> event) {
+			afterHide(event.isAutoClosed());
+		}
+	};
+	
+	public boolean isAutoHide() {
+		return dialogBox.isAutoHideEnabled();
+	}
+	
+	public void setAutoHide(boolean autoHide) {
+		dialogBox.setAutoHideEnabled(autoHide);
+	}
 	
 	public boolean isModal() {
 		return dialogBox.isModal();
@@ -54,20 +67,36 @@ public class Dialog {
 		}
 	}
 	
-	public void hide() {
+	public void addAutoHidePartner(Element partner) {
+		dialogBox.addAutoHidePartner(partner);
+	}
+	
+	public void removeAutoHidePartner(Element partner) {
+		dialogBox.removeAutoHidePartner(partner);
+	}
+
+	public HandlerRegistration addCloseHandler(CloseHandler<PopupPanel> handler) {
+		return dialogBox.addCloseHandler(handler);
+	}
+
+	/**
+	 * If you intended to overwrite this method,
+	 * overwrite {@link #afterHide(boolean)} or register {@link CloseHandler} by {@link #addCloseHandler(CloseHandler)}.
+	 */
+	public final void hide() {
 		dialogBox.hide();
-		if(isModal()) glass.hide();
 	}
 	
 	public void show() {
-        if(inicialized == false) {
+		if (isShowing()) return;
+        if (inicialized == false) {
     		initContent(contentPanel);
     		initActionButton();
     		inicialized = true;
         }
         else cleanUp();
         
-        if(isModal()) glass.show();
+        if (isModal()) glass.show();
         dialogBox.setVisible(false);
         dialogBox.show();
         showTimer.schedule(1);
@@ -83,6 +112,7 @@ public class Dialog {
 		verticalPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		verticalPanel.add(buttonPanel);
 		dialogBox.add(verticalPanel);
+		dialogBox.addCloseHandler(closeHandler);
 		buttonPanel.setSpacing(2);
 	}
 	
@@ -102,7 +132,7 @@ public class Dialog {
 		buttonPanel.add(button);
 		buttonPanel.add(new Label(" "));
 		if(closingButton)
-			button.addClickHandler(closeHandler);
+			button.addClickHandler(hideByClickHandler);
 		return button;
 	}
 	
@@ -121,37 +151,6 @@ public class Dialog {
 		return replacement;
 	}
 
-	public static PopupPanel constructPopupGlass() {
-		final PopupPanel popupPanel = new PopupPanel() {
-			private int showCounter = 0;
-			@Override
-			public void show() {
-				if (showCounter++ == 0) super.show();
-			}
-			@Override
-			public void hide() {
-				if (--showCounter == 0) super.hide();
-			}
-		};
-		
-		popupPanel.add(new Label(""));
-		popupPanel.setPixelSize(
-				Window.getScrollLeft() + Window.getClientWidth(),
-                Window.getScrollTop() + Window.getClientHeight());
-		
-		Window.addResizeHandler(new ResizeHandler() {
-			@Override
-			public void onResize(ResizeEvent event) {
-				popupPanel.setPixelSize(event.getWidth(), event.getHeight());
-			}
-		});
-        
-        popupPanel.setPopupPosition(0, 0);
-        popupPanel.setStyleName("glass");
-        
-        return popupPanel;
-	}
-
 	public void center() {
 		dialogBox.center();
 	}
@@ -166,5 +165,9 @@ public class Dialog {
 
 	public boolean isShowing() {
 		return dialogBox.isShowing();
+	}
+	
+	protected void afterHide(boolean autoHiden) {
+		if (isModal()) glass.hide();
 	}
 }
