@@ -1,4 +1,4 @@
-package com.adaptiweb.gwt;
+package com.adaptiweb.gwt.preload;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
-import com.adaptiweb.server.spring.Preload;
-import com.adaptiweb.server.spring.SerializationPolicyProvider;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RPC;

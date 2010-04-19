@@ -1,4 +1,4 @@
-package com.adaptiweb.server.spring;
+package com.adaptiweb.gwt.preload;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.server.rpc.RPC;

@@ -1,4 +1,4 @@
-package com.adaptiweb.server.spring;
+package com.adaptiweb.gwt.rpc;
 
 import java.io.IOException;
 import java.util.HashMap;
