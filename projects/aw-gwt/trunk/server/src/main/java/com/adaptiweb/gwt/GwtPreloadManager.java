@@ -1,4 +1,4 @@
-package com.adaptiweb.server.spring;
+package com.adaptiweb.gwt;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,9 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ReflectionUtils;
 
+import com.adaptiweb.server.spring.Preload;
+import com.adaptiweb.server.spring.SerializationPolicyProvider;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.RPC;
@@ -121,31 +125,22 @@ public class GwtPreloadManager {
 		return result;
 	}
 
-	public Map<String, String> getPreloadValues(String gwtModul) {
+	public Map<String, String> getPreloadValues(String gwtModul, HttpServletRequest request) {
 		Map<String, String> result = new HashMap<String, String>(determineResultSize(gwtModul));
 
-		putValues(ALL_MODULES, result);
-		putValues(gwtModul, result);
+		putValues(ALL_MODULES, request, result);
+		putValues(gwtModul, request, result);
 		
 		return result;
 	}
 	
-	private void putValues(String moduleName, Map<String, String> result) {
+	private void putValues(String moduleName, HttpServletRequest request, Map<String, String> result) {
 		if (loaders.containsKey(moduleName)) {
 			for (Loader loader : loaders.get(moduleName)) {
-				String value = loadValue(loader);
+				String value = loader.load(policyProvider, request);
 				if (value != null) result.put(loader.variableName, value);
 			}
 		}
-	}
-
-	private String loadValue(Loader loader) {
-		try {
-			return loader.load(policyProvider);
-		} catch (SerializationException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	private int determineResultSize(String gwtModul) {
@@ -166,11 +161,23 @@ public class GwtPreloadManager {
 			this.variableName = variableName;
 		}
 
-		public String load(SerializationPolicyProvider policyProvider) throws SerializationException {
-			Object result = ReflectionUtils.invokeMethod(method, service);
-			if (result == null) return null;
-			SerializationPolicy policy = policyProvider.getPolicyFor(method.getDeclaringClass());
-			return RPC.encodeResponseForSuccess(method, result, policy);
+		public String load(SerializationPolicyProvider policyProvider, HttpServletRequest request) {
+			ExtendedRemoteServiceServlet customizedService = service instanceof ExtendedRemoteServiceServlet ? ((ExtendedRemoteServiceServlet) service) : null; 
+			if (customizedService != null) customizedService.setThreadLocalRequest(request); 
+			try {
+				Object result = method.invoke(service);
+				if (result == null) return null;
+				SerializationPolicy policy = policyProvider.getPolicyFor(method.getDeclaringClass());
+				return RPC.encodeResponseForSuccess(method, result, policy);
+			} catch (SerializationException e) {
+				e.printStackTrace();
+				return null;
+			} catch (Exception ex) {
+				ReflectionUtils.handleReflectionException(ex);
+				throw new IllegalStateException("Should never get here");
+			} finally {
+				if (customizedService != null) customizedService.removeThreadLocalRequest();
+			}
 		}
 	}
 	
