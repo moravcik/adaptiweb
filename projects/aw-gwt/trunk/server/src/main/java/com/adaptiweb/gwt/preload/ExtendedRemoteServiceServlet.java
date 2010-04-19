@@ -1,4 +1,4 @@
-package com.adaptiweb.gwt;
+package com.adaptiweb.gwt.preload;
 
 import javax.servlet.http.HttpServletRequest;
 

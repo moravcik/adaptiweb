@@ -1,4 +1,4 @@
-package com.adaptiweb.server.spring;
+package com.adaptiweb.gwt.preload;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
