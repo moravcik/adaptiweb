@@ -9,7 +9,7 @@ class MethodReflectionInjector extends AbstractAnnotationInjector {
 	private Method method;
 	private Object target;
 
-	public MethodReflectionInjector(Method method, AutoConfigurable target) {
+	public MethodReflectionInjector(Method method, Object target) {
 		super(method.getAnnotation(AutoConfig.class));
 		assert method.isAnnotationPresent(AutoConfig.class);
 		assert method.getDeclaringClass() == target.getClass();
