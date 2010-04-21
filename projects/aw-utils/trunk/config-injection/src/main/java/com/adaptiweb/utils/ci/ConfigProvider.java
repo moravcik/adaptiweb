@@ -7,16 +7,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 
+import com.adaptiweb.utils.ci.PropertyConverter.DefaultPopertyConverter;
 import com.adaptiweb.utils.commons.VariableResolver;
 
-public class ConfigProvider {
+public class ConfigProvider implements BeanPostProcessor {
 	
 	private VariableResolver variables;
 	
@@ -40,7 +44,7 @@ public class ConfigProvider {
 		return variables;
 	}
 
-	@Autowired
+	@Autowired(required=false)
 	public void setConverters(Collection<PropertyConverter<?>> converters) {
 		this.converters.clear();
 		initBasicConverters();
@@ -58,26 +62,33 @@ public class ConfigProvider {
 		registerConverter(new DefaultStringPropertyConverter());
 		registerConverter(new DefaultFilePropertyConverter());
 	}
-
-	@Autowired
-	public void setTargets(Collection<AutoConfigurable> configurableBeans) {
-		targets.clear();
+	
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		List<ValueInjector> recentlyAdded = new LinkedList<ValueInjector>();
 		
-		for (AutoConfigurable bean : configurableBeans) {
-			for (Field field : bean.getClass().getDeclaredFields()) {
-				if (field.isAnnotationPresent(AutoConfig.class)) {
-					targets.add(new FieldReflectionInjector(field, bean));
-				}
-			}
-			for (Method method : bean.getClass().getDeclaredMethods()) {
-				if (method.isAnnotationPresent(AutoConfig.class)) {
-					targets.add(new MethodReflectionInjector(method, bean));
-				}
+		for (Field field : bean.getClass().getDeclaredFields()) {
+			if (field.isAnnotationPresent(AutoConfig.class)) {
+				ValueInjector injector = new FieldReflectionInjector(field, bean);
+				recentlyAdded.add(injector);
+				targets.add(injector);
 			}
 		}
+		for (Method method : bean.getClass().getDeclaredMethods()) {
+			if (method.isAnnotationPresent(AutoConfig.class)) {
+				ValueInjector injector = new MethodReflectionInjector(method, bean);
+				recentlyAdded.add(injector);
+				targets.add(injector);
+			}
+		}
+		Collections.sort(recentlyAdded, PRIORITYCOMPARATOR);
+		for (ValueInjector injector: recentlyAdded) performInjection(injector);
 		Collections.sort(targets, PRIORITYCOMPARATOR);
+		return bean;
 	}
 	
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException { return bean; };
+
 	public <T> T getTypedProperty(String expr, Class<T> type) {
 		return getTypedProperty(expr, type, null);
 	}
@@ -89,13 +100,26 @@ public class ConfigProvider {
 	
 	@PostConstruct
 	public void applyConfigInjection() {
-		for (ValueInjector injector : targets) {
-			Class<? extends PropertyConverter<?>> converterType = injector.preferedPropertyConverter();
-			
-			PropertyConverter<?> converter = converters.get(
-					converters.containsKey(converterType) ? converterType : injector.getType());
-			
-			injector.inject(converter.convert(variables, injector.getExpression(), injector.configValue()));
+		if (converters.size() == 0) initBasicConverters();
+		for (ValueInjector injector : targets) performInjection(injector);
+	}
+
+	private void performInjection(ValueInjector injector) {
+		Class<?> converterType = injector.preferedPropertyConverter();
+		if (converterType == DefaultPopertyConverter.class) converterType = injector.getType();
+		PropertyConverter<?> converter = converters.get(converterType);
+		
+		if (converter == null) {
+			if (PropertyConverter.class.isAssignableFrom(converterType)) {
+				try {
+					converter = PropertyConverter.class.cast(converterType.newInstance());
+				} catch (Exception e) {
+					throw new IllegalStateException("Can't resolve property converter " + converterType.getName(), e);
+				}
+			}
+			else throw new IllegalStateException("Not found PropertyConverter for type " + converterType.getName());
 		}
+
+		injector.inject(converter.convert(variables, injector.getExpression(), injector.configValue()));
 	}
 }

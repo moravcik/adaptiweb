@@ -5,7 +5,7 @@ import com.adaptiweb.utils.commons.VariableResolver;
 
 public interface PropertyConverter<T> {
 	
-	static interface DefaultPopertyConverter extends PropertyConverter<Void> {}
+	interface DefaultPopertyConverter extends PropertyConverter<Void> {}
 	
 	Class<T> getType();
 	
