@@ -41,7 +41,7 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 				matchesModules.add(module.getKey());
 
 		if (!matchesModules.isEmpty()) {
-			logger.info("Uri '{}' does match GWT modules: {}", requestUri, matchesModules);
+			logger.debug("Uri '{}' does match GWT modules: {}", requestUri, matchesModules);
 			
 			GwtModuleBean gwtModule = getGwtModuleBean();
 			gwtModule.setContextPath(request.getContextPath());
