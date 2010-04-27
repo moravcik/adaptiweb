@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.adaptiweb.utils.ci.LiveFile.FileLoader;
 import com.adaptiweb.utils.commons.InicializableVariableSource;
 import com.adaptiweb.utils.commons.Properties;
@@ -13,9 +16,11 @@ import com.adaptiweb.utils.commons.VariableResolver;
 
 public class PropertyFileVariableSource implements InicializableVariableSource, FileLoader {
 	
+	private static final Logger logger = LoggerFactory.getLogger(PropertyFileVariableSource.class);
+	
 	private final AtomicReference<Properties> properties = new AtomicReference<Properties>();
 	private final LiveFileHandler fileHandler = new LiveFileHandler();
-	
+
 	public void setPropertyFileName(String fileName) {
 		fileHandler.setPropertyFile(fileName);
 	}
@@ -23,7 +28,7 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 	public void setSystemResourceAsTemplate(String template) {
 		fileHandler.setTemplateResource(template);
 	}
-	
+
 	@Override
 	public String getRawValue(String variableName) throws NullPointerException {
 		fileHandler.checkChanges(this);
@@ -32,7 +37,7 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 	
 	@Override
 	public void loadFile(File file) throws IOException {
-		System.out.println("Loading configuration from " + file);
+		logger.info("Loading configuration from {}", file);
 		properties.set(new Properties(file));
 	}
 

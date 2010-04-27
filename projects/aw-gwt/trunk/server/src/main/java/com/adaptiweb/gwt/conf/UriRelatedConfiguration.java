@@ -1,4 +1,4 @@
-package com.adaptiweb.gwt;
+package com.adaptiweb.gwt.conf;
 
 import java.util.LinkedList;
 import java.util.StringTokenizer;
@@ -6,14 +6,22 @@ import java.util.StringTokenizer;
 import org.springframework.util.AntPathMatcher;
 
 import com.adaptiweb.utils.commons.ArrayUtils;
+import com.adaptiweb.utils.commons.VariableResolver;
 
-public class GwtModulePreferences {
-	
+class UriRelatedConfiguration {
+
 	private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
 	String[] includes;
 	String[] excludes;
 	
+	public UriRelatedConfiguration() {}
+	
+	public UriRelatedConfiguration(VariableResolver variables, String variableBaseName) {
+		setIncludes(variables.resolveValue(variableBaseName + ".includes", ""));
+		setExcludes(variables.resolveValue(variableBaseName + ".excludes", ""));
+	}
+
 	public void setIncludeList(String[] includes) {
 		validatePathPatterns(includes);
 		this.includes = this.includes == null ? includes : ArrayUtils.merge(this.includes, includes);
@@ -35,7 +43,10 @@ public class GwtModulePreferences {
 	private String[] toArray(String includes) {
 		LinkedList<String> collect = new LinkedList<String>();
 		StringTokenizer tokenizer = new StringTokenizer(includes);
-		while (tokenizer.hasMoreTokens()) collect.add(tokenizer.nextToken());
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken();
+			if (token.length() > 0) collect.add(token);
+		}
 		String[] array = collect.toArray(new String[collect.size()]);
 		return array;
 	}
@@ -52,9 +63,9 @@ public class GwtModulePreferences {
 	}
 
 	private boolean includes(String requestUri) {
-		if (includes != null)
-			for (String include : includes)
-				if (pathMatcher.match(include, requestUri)) return true;
+		if (includes == null) return true;
+		for (String include : includes)
+			if (pathMatcher.match(include, requestUri)) return true;
 		return false;
 	}
 	
