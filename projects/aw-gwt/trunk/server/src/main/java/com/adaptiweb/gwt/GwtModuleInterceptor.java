@@ -1,6 +1,9 @@
 package com.adaptiweb.gwt;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -15,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.adaptiweb.gwt.conf.GwtModuleJsApi;
+import com.adaptiweb.gwt.conf.GwtModulePreferences;
+import com.adaptiweb.utils.commons.VariableResolver;
+
 public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GwtModuleInterceptor.class);
@@ -23,9 +30,16 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 
 	private GwtModuleBean gwtModuleBean;
 	
+	private VariableResolver variables;
+	
 	@Autowired
 	public void setModules(Map<String, GwtModulePreferences> modules) {
 		this.modules = modules;
+	}
+	
+	@Autowired
+	public void setVariables(VariableResolver variables) {
+		this.variables = variables;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -47,10 +61,29 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 			gwtModule.setContextPath(request.getContextPath());
 			gwtModule.setName(matchesModules.iterator().next());
 			
+			gwtModule.setJsApis(prepareJsApis(requestUri, gwtModule.getName()));
+			
 			modelAndView.getModel().put("gwtModule", gwtModule);
 		}
 	}
 	
+	private List<String> prepareJsApis(String requestUri, String gwtModuleName) {
+		Collection<GwtModuleJsApi> jsApis = modules.get(gwtModuleName).getJsApis();
+		if (jsApis == null) return null;
+		
+		List<String> result = new ArrayList<String>(jsApis.size());
+		for (GwtModuleJsApi jsApi : jsApis) {
+			if (jsApi.matchesUri(requestUri)) {
+				result.add(substVariables(jsApi.getUrl()));
+			}
+		}
+		return result;
+	}
+	
+	private String substVariables(String str) {
+		return variables == null ? str : variables.replaceVariables(str);
+	}
+
 	@Autowired(required=false)
 	protected void setGwtModuleBean(GwtModuleBean gwtModuleBean) {
 		this.gwtModuleBean = gwtModuleBean;

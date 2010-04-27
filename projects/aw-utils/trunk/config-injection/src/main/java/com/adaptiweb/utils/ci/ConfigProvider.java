@@ -11,16 +11,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import com.adaptiweb.utils.ci.PropertyConverter.DefaultPopertyConverter;
 import com.adaptiweb.utils.commons.VariableResolver;
 
-public class ConfigProvider implements BeanPostProcessor {
+public class ConfigProvider implements BeanPostProcessor, InitializingBean {
 	
 	private VariableResolver variables;
 	
@@ -35,7 +34,7 @@ public class ConfigProvider implements BeanPostProcessor {
 		}
 	};
 	
-	@Autowired
+	@Required
 	public void setVariableResolver(VariableResolver variables) {
 		this.variables = variables;
 	}
@@ -44,7 +43,6 @@ public class ConfigProvider implements BeanPostProcessor {
 		return variables;
 	}
 
-	@Autowired(required=false)
 	public void setConverters(Collection<PropertyConverter<?>> converters) {
 		this.converters.clear();
 		initBasicConverters();
@@ -98,8 +96,7 @@ public class ConfigProvider implements BeanPostProcessor {
 		return type.cast(converters.get(type).convert(variables, expr, null));
 	}
 	
-	@PostConstruct
-	public void applyConfigInjection() {
+	public void afterPropertiesSet() throws Exception {
 		if (converters.size() == 0) initBasicConverters();
 		for (ValueInjector injector : targets) performInjection(injector);
 	}
