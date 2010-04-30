@@ -13,6 +13,7 @@ import com.adaptiweb.utils.ci.LiveFile.FileLoader;
 import com.adaptiweb.utils.commons.InicializableVariableSource;
 import com.adaptiweb.utils.commons.Properties;
 import com.adaptiweb.utils.commons.VariableResolver;
+import com.adaptiweb.utils.commons.event.EventBus;
 
 public class PropertyFileVariableSource implements InicializableVariableSource, FileLoader {
 	
@@ -21,12 +22,20 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 	private final AtomicReference<Properties> properties = new AtomicReference<Properties>();
 	private final LiveFileHandler fileHandler = new LiveFileHandler();
 
+	private VariableResolver variables;
+	
+	private EventBus eventBus;
+
 	public void setPropertyFileName(String fileName) {
 		fileHandler.setPropertyFile(fileName);
 	}
 	
 	public void setSystemResourceAsTemplate(String template) {
 		fileHandler.setTemplateResource(template);
+	}
+	
+	public void setEventBus(EventBus eventBus) {
+		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -35,14 +44,20 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 		return properties.get().getProperty(variableName);
 	}
 	
+	public void setCheckPeriodInSeconds(int seconds) {
+		fileHandler.setChangesCheckPeriod(seconds);
+	}
+	
 	@Override
 	public void loadFile(File file) throws IOException {
 		logger.info("Loading configuration from {}", file);
 		properties.set(new Properties(file));
+		if (eventBus != null) eventBus.fireEvent(new PropertyFileChangedEvent(this, variables));
 	}
 
 	@Override
 	public void initSource(VariableResolver variables) throws IOException {
+		this.variables = variables;
 		fileHandler.setVariables(variables);
 		fileHandler.checkChanges(this);
 	}
