@@ -1,4 +1,4 @@
-package sk.dvsk.mojo;
+package com.adaptiweb.mojo;
 
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
