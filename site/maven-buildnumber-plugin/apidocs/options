@@ -1,0 +1,36 @@
+-classpath
+'/home/milan/workspace/adaptiweb/svn/projects/maven-buildnumber-plugin/tags/1.6/target/classes:/home/milan/.m2/repository/org/tmatesoft/svnkit/svnkit/1.3.2-1/svnkit-1.3.2-1.jar:/home/milan/.m2/repository/org/antlr/stringtemplate/3.2/stringtemplate-3.2.jar:/home/milan/.m2/repository/org/apache/maven/maven-plugin-api/2.2.1/maven-plugin-api-2.2.1.jar:/home/milan/.m2/repository/org/codehaus/plexus/plexus-utils/1.5.15/plexus-utils-1.5.15.jar:/home/milan/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar:/home/milan/.m2/repository/org/tmatesoft/sqljet/sqljet/1.0.1/sqljet-1.0.1.jar:/home/milan/.m2/repository/org/tmatesoft/svnkit/trilead-ssh2/build213-svnkit-1.3-patch/trilead-ssh2-build213-svnkit-1.3-patch.jar:/home/milan/.m2/repository/org/antlr/antlr-runtime/3.1.3/antlr-runtime-3.1.3.jar:/home/milan/.m2/repository/net/java/dev/jna/jna/3.2.2/jna-3.2.2.jar'
+-encoding
+'UTF-8'
+-protected
+-quiet
+-sourcepath
+'/home/milan/workspace/adaptiweb/svn/projects/maven-buildnumber-plugin/tags/1.6/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2010 <a href="http://code.google.com/p/adaptiweb/">Adaptiweb</a>. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/home/milan/workspace/adaptiweb/svn/projects/maven-buildnumber-plugin/tags/1.6/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'BuildNumber Maven Plugin 1.6 API'
+-link
+'http://java.sun.com/j2se/1.5.0/docs/api'
+-link
+'http://maven.apache.org/ref/current/maven-plugin-api/apidocs'
+-link
+'http://plexus.codehaus.org/plexus-utils/apidocs'
+-link
+'http://svnkit.com/javadoc'
+-link
+'http://java.sun.com/javase/6/docs/api'
+-linksource
+-stylesheetfile
+'/home/milan/workspace/adaptiweb/svn/projects/maven-buildnumber-plugin/tags/1.6/target/site/apidocs/stylesheet.css'
+-use
+-version
+-windowtitle
+'BuildNumber Maven Plugin 1.6 API'
