@@ -11,7 +11,7 @@
 	<groupId>com.adaptiweb.mojo</groupId>
 	<artifactId>maven-buildnumber-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.6</version>
+	<version>1.7-SNAPSHOT</version>
 
 	<name>BuildNumber Maven Plugin</name>
 	<url>http://adaptiweb.googlecode.com/svn/site/maven-buildnumber-plugin</url>
@@ -49,9 +49,9 @@
 	</dependencies>
 
 	<scm>
-		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/tags/1.6</connection>
-		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/tags/1.6</developerConnection>
-		<url>http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/tags/1.6</url>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</developerConnection>
+		<url>http://adaptiweb.googlecode.com/svn/projects/maven-buildnumber-plugin/trunk</url>
 	</scm>
 
 	<build>
