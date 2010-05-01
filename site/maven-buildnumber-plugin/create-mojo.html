@@ -42,7 +42,7 @@
   
     
             <div class="xleft">
-        Last Published: 2009-03-20
+        Last Published: 2010-05-01
                       </div>
             <div class="xright">      
   
@@ -136,82 +136,69 @@
     </div>
     <div id="bodyColumn">
       <div id="contentBox">
-        <div class="section"><h2><a name="buildnumber:create"></a>
-buildnumber:create</h2>
+        <div class="section"><h2><a name="buildnumber:create"></a>buildnumber:create</h2>
 <p><strong>Full name</strong>:</p>
-<p>com.adaptiweb.mojo:maven-buildnumber-plugin:0.1-SNAPSHOT:create</p>
+<p>com.adaptiweb.mojo:maven-buildnumber-plugin:1.6:create</p>
 <p><strong>Description</strong>:</p>
 <div>Goal which provide some dynamic information in build time thru
 project properties. <br />
 
 Right now are supported these four properties:
 
-<ol type="1"><li><b><code>buildNumberProperty</code></b>
-</li>
-<li><b><code>timestampProperty</code></b>
-</li>
-<li><b><code>revisionNumberProperty</code></b>
-</li>
-<li><b><code>lastCommittedRevisionProperty</code></b>
-</li>
+<ol type="1"><li><b><code>buildNumberProperty</code></b></li>
+<li><b><code>timestampProperty</code></b></li>
+<li><b><code>revisionNumberProperty</code></b></li>
+<li><b><code>lastCommittedRevisionProperty</code></b></li>
 </ol>
 </div><p><strong>Attributes</strong>:</p>
 <ul><li>Requires a Maven 2.0 project to be executed.</li>
 <li>Binds by default to the lifecycle phase: <code>validate</code>.</li>
 </ul>
-<div class="section"><h3><a name="Optional_Parameters"></a>
-Optional Parameters</h3>
+<div class="section"><h3><a name="Optional_Parameters"></a>Optional Parameters</h3>
 <table class="bodyTable"><tr class="a"><th>Name</th>
 <th>Type</th>
 <th>Since</th>
 <th>Description</th>
 </tr>
-<tr class="b"><td><strong><a href="#basedir">basedir</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#basedir">basedir</a></strong></td>
 <td><code>File</code></td>
 <td><code>-</code></td>
 <td>Working copy of project resources managed by Subverion. Default
 ${basedir}.<br />
 </td>
 </tr>
-<tr class="a"><td><strong><a href="#buildNumberProperty">buildNumberProperty</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#buildNumberProperty">buildNumberProperty</a></strong></td>
 <td><code>String</code></td>
 <td><code>-</code></td>
 <td>Name of property for build number. Default 'buildNumber'.<br />
 </td>
 </tr>
-<tr class="b"><td><strong><a href="#doCheck">doCheck</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#doCheck">doCheck</a></strong></td>
 <td><code>boolean</code></td>
 <td><code>-</code></td>
 <td>Check if files in working copy are up to date and commited.<br />
 <strong>Default value is</strong>: <code>true</code>.</td>
 </tr>
-<tr class="a"><td><strong><a href="#excludes">excludes</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#excludes">excludes</a></strong></td>
 <td><code>String[]</code></td>
 <td><code>-</code></td>
 <td>List of patterns to match resources excludes from SVN checking.<br />
 </td>
 </tr>
-<tr class="b"><td><strong><a href="#ignoreUnversioned">ignoreUnversioned</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#ignoreUnversioned">ignoreUnversioned</a></strong></td>
 <td><code>boolean</code></td>
 <td><code>-</code></td>
 <td>If <code>true</code> (default) unversioned resources are ignored
 while checking SVN status.<br />
 <strong>Default value is</strong>: <code>true</code>.</td>
 </tr>
-<tr class="a"><td><strong><a href="#includes">includes</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#includes">includes</a></strong></td>
 <td><code>String[]</code></td>
 <td><code>-</code></td>
 <td>List of patterns to match resources includes for SVN checking.<br />
 </td>
 </tr>
-<tr class="b"><td><strong><a href="#lastCommittedRevisionProperty">lastCommittedRevisionProperty</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#lastCommittedRevisionProperty">lastCommittedRevisionProperty</a></strong></td>
 <td><code>String</code></td>
 <td><code>-</code></td>
 <td>Name of property for last commited revision number. No property
@@ -219,23 +206,20 @@ name is set by default. This parameter is ignored if project isn't
 under subversion control.<br />
 </td>
 </tr>
-<tr class="a"><td><strong><a href="#neverFail">neverFail</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#neverFail">neverFail</a></strong></td>
 <td><code>boolean</code></td>
 <td><code>-</code></td>
 <td>Project build never fails, even if SVN check find some problems.<br />
 <strong>Default value is</strong>: <code>true</code>.</td>
 </tr>
-<tr class="b"><td><strong><a href="#overwriteProperties">overwriteProperties</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#overwriteProperties">overwriteProperties</a></strong></td>
 <td><code>boolean</code></td>
 <td><code>-</code></td>
 <td>Properties are sets even they already exists. Default
 <code>false</code>.<br />
 <strong>Default value is</strong>: <code>false</code>.</td>
 </tr>
-<tr class="a"><td><strong><a href="#revisionNumberProperty">revisionNumberProperty</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#revisionNumberProperty">revisionNumberProperty</a></strong></td>
 <td><code>String</code></td>
 <td><code>-</code></td>
 <td>Name of property for revision number. No property name is set by
@@ -243,15 +227,13 @@ default. This parameter is ignored if project isn't under
 subversion control.<br />
 </td>
 </tr>
-<tr class="b"><td><strong><a href="#timestampFormat">timestampFormat</a>
-</strong></td>
+<tr class="b"><td><strong><a href="#timestampFormat">timestampFormat</a></strong></td>
 <td><code>String</code></td>
 <td><code>-</code></td>
 <td>Format for timestamp property. Default 'Y-m-d H:M:S'.<br />
 <strong>Default value is</strong>: <code>Y-m-d H:M:S</code>.</td>
 </tr>
-<tr class="a"><td><strong><a href="#timestampProperty">timestampProperty</a>
-</strong></td>
+<tr class="a"><td><strong><a href="#timestampProperty">timestampProperty</a></strong></td>
 <td><code>String</code></td>
 <td><code>-</code></td>
 <td>Name of property for timestamp. No property name is set by default.
@@ -261,91 +243,78 @@ parameter.<br />
 </tr>
 </table>
 </div>
-<div class="section"><h3><a name="Parameter_Details"></a>
-Parameter Details</h3>
-<p><strong><a name="basedir">basedir</a>
-:</strong></p>
+<div class="section"><h3><a name="Parameter_Details"></a>Parameter Details</h3>
+<p><strong><a name="basedir">basedir</a>:</strong></p>
 <div>Working copy of project resources managed by Subverion. Default
 ${basedir}.</div><ul><li><strong>Type</strong>: <code>java.io.File</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Expression</strong>: <code>${basedir}</code></li>
 </ul>
 <hr />
-<p><strong><a name="buildNumberProperty">buildNumberProperty</a>
-:</strong></p>
+<p><strong><a name="buildNumberProperty">buildNumberProperty</a>:</strong></p>
 <div>Name of property for build number. Default 'buildNumber'.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 </ul>
 <hr />
-<p><strong><a name="doCheck">doCheck</a>
-:</strong></p>
+<p><strong><a name="doCheck">doCheck</a>:</strong></p>
 <div>Check if files in working copy are up to date and commited.</div><ul><li><strong>Type</strong>: <code>boolean</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Expression</strong>: <code>${maven.buildNumber.doCheck}</code></li>
 <li><strong>Default</strong>: <code>true</code></li>
 </ul>
 <hr />
-<p><strong><a name="excludes">excludes</a>
-:</strong></p>
+<p><strong><a name="excludes">excludes</a>:</strong></p>
 <div>List of patterns to match resources excludes from SVN checking.</div><ul><li><strong>Type</strong>: <code>java.lang.String[]</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 </ul>
 <hr />
-<p><strong><a name="ignoreUnversioned">ignoreUnversioned</a>
-:</strong></p>
+<p><strong><a name="ignoreUnversioned">ignoreUnversioned</a>:</strong></p>
 <div>If <code>true</code> (default) unversioned resources are ignored
 while checking SVN status.</div><ul><li><strong>Type</strong>: <code>boolean</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Default</strong>: <code>true</code></li>
 </ul>
 <hr />
-<p><strong><a name="includes">includes</a>
-:</strong></p>
+<p><strong><a name="includes">includes</a>:</strong></p>
 <div>List of patterns to match resources includes for SVN checking.</div><ul><li><strong>Type</strong>: <code>java.lang.String[]</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 </ul>
 <hr />
-<p><strong><a name="lastCommittedRevisionProperty">lastCommittedRevisionProperty</a>
-:</strong></p>
+<p><strong><a name="lastCommittedRevisionProperty">lastCommittedRevisionProperty</a>:</strong></p>
 <div>Name of property for last commited revision number. No property
 name is set by default. This parameter is ignored if project isn't
 under subversion control.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 </ul>
 <hr />
-<p><strong><a name="neverFail">neverFail</a>
-:</strong></p>
+<p><strong><a name="neverFail">neverFail</a>:</strong></p>
 <div>Project build never fails, even if SVN check find some problems.</div><ul><li><strong>Type</strong>: <code>boolean</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Expression</strong>: <code>${neverFail}</code></li>
 <li><strong>Default</strong>: <code>true</code></li>
 </ul>
 <hr />
-<p><strong><a name="overwriteProperties">overwriteProperties</a>
-:</strong></p>
+<p><strong><a name="overwriteProperties">overwriteProperties</a>:</strong></p>
 <div>Properties are sets even they already exists. Default
 <code>false</code>.</div><ul><li><strong>Type</strong>: <code>boolean</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Default</strong>: <code>false</code></li>
 </ul>
 <hr />
-<p><strong><a name="revisionNumberProperty">revisionNumberProperty</a>
-:</strong></p>
+<p><strong><a name="revisionNumberProperty">revisionNumberProperty</a>:</strong></p>
 <div>Name of property for revision number. No property name is set by
 default. This parameter is ignored if project isn't under
 subversion control.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 </ul>
 <hr />
-<p><strong><a name="timestampFormat">timestampFormat</a>
-:</strong></p>
+<p><strong><a name="timestampFormat">timestampFormat</a>:</strong></p>
 <div>Format for timestamp property. Default 'Y-m-d H:M:S'.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li>
 <li><strong>Required</strong>: <code>No</code></li>
 <li><strong>Default</strong>: <code>Y-m-d H:M:S</code></li>
 </ul>
 <hr />
-<p><strong><a name="timestampProperty">timestampProperty</a>
-:</strong></p>
+<p><strong><a name="timestampProperty">timestampProperty</a>:</strong></p>
 <div>Name of property for timestamp. No property name is set by default.
 Value of property is formated by <code>timestampFormat</code>
 parameter.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li>
@@ -361,8 +330,9 @@ parameter.</div><ul><li><strong>Type</strong>: <code>java.lang.String</code></li
     </div>
     <div id="footer">
       <div class="xright">&#169;  
-          2009
+          2010
     
+          Adaptiweb
           
   
 
