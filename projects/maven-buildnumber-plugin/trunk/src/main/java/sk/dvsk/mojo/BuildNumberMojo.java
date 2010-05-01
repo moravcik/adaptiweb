@@ -173,30 +173,35 @@ public class BuildNumberMojo extends AbstractMojo {
 	 */
 	private SVNInfo svnInfo;
 
-	private long rootRevision = -1L;
-
 	/**
 	 * @see org.apache.maven.plugin.Mojo#execute()
 	 */
 	public void execute() throws MojoExecutionException {
 		now = System.currentTimeMillis();
 		
-		if(canBeExported(buildNumberProperty))
-			doExport(buildNumberProperty, getVersion());
-		if(canBeExported(timestampProperty))
-			doExport(timestampProperty, getTimeStamp(timestampFormat));
+		if(isPropertyWanted(buildNumberProperty))
+			doExportProperty(buildNumberProperty, getVersion());
+		if(isPropertyWanted(timestampProperty))
+			doExportProperty(timestampProperty, getTimeStamp(timestampFormat));
 		if(isWorkingCopy()) {
 			if(doCheck && !doCheck() && !neverFail)
 				throw new MojoExecutionException("Checking working copy fails!");
-			if(canBeExported(revisionNumberProperty))
-				doExport(revisionNumberProperty, String.valueOf(getSVNInfo().getRevision()));
-			if(canBeExported(lastCommittedRevisionProperty))
-				doExport(lastCommittedRevisionProperty, String.valueOf(getSVNInfo().getCommittedRevision()));
+			if(isPropertyWanted(revisionNumberProperty))
+				doExportProperty(revisionNumberProperty, String.valueOf(getSVNInfo().getRevision()));
+			if(isPropertyWanted(lastCommittedRevisionProperty))
+				doExportProperty(lastCommittedRevisionProperty, String.valueOf(getSVNInfo().getCommittedRevision()));
 		}
 				
 		getLog().info("Exported properties: " + exportedProperties);
 	}
 
+	private boolean doCheck() throws MojoExecutionException {
+		correctPathPatterns(DEFAULT_EXCLUDES);
+		if(includes != null) correctPathPatterns(includes);
+		if(excludes != null) correctPathPatterns(excludes);
+		return checkFile(basedir, "");
+	}
+	
 	private void correctPathPatterns(String[] patterns) {
 		for(int i = 0; i < patterns.length; i++) {
 			patterns[i] = patterns[i]
@@ -207,52 +212,29 @@ public class BuildNumberMojo extends AbstractMojo {
 		}
 	}
 
-	private boolean doCheck() throws MojoExecutionException {
-		correctPathPatterns(DEFAULT_EXCLUDES);
-		if(includes != null) correctPathPatterns(includes);
-		if(excludes != null) correctPathPatterns(excludes);
-		return checkFile(basedir, "");
-	}
-	
 	private boolean checkFile(File file, String matchPrefix) throws MojoExecutionException {
 		SVNStatus status = getSVNStatus(file);
 		SVNStatusType statusType = status.getContentsStatus();
-		long revision = status.getRevision().getNumber();
 
 		boolean checked = true;
 		
-		if(!checkStatus(statusType)) {
+		if(!isStatusOk(statusType)) {
 			reportStatus(statusType, toProjectBasePath(file));
 			checked = false;
 		}
 
-		if(!checkOutOfDate(revision)) {
-			reportOutOfDate(revision, toProjectBasePath(file));
-			checked = false;
-		}
-
-		if(file.isDirectory() && sinkDeeper(statusType))
+		if(file.isDirectory() && shouldSinkDeeper(statusType))
 			for(String f : file.list())
-				if(!isIgnored(matchPrefix + f))
+				if(isIncluded(matchPrefix + f))
 					checked &= checkFile(new File(file, f), matchPrefix + f + "/");
 
 		return checked;
 	}
 
-	private boolean checkOutOfDate(long revision) {
-		if(revision != -1L) {
-			if(rootRevision == -1L)
-				rootRevision = revision;
-			else if(rootRevision < revision)
-				return false;
-		}
-		return true;
-	}
-
-	private boolean isIgnored(String path) {
+	private boolean isIncluded(String path) {
 		for(String exclude : DEFAULT_EXCLUDES)
 			if(SelectorUtils.match(exclude, path))
-				return true;
+				return false;
 		
 		if(includes != null) {
 			boolean included = false;
@@ -262,36 +244,31 @@ public class BuildNumberMojo extends AbstractMojo {
 					break;
 				}
 			}
-			if(!included) return true;
+			if(!included) return false;
 		}
 		
 		if(excludes != null)
 			for(String exclude : excludes)
 				if(SelectorUtils.match(exclude, path))
-					return true;
+					return false;
 		
-		return false;
+		return true;
 	}
 
 	private void reportStatus(SVNStatusType status, String path) {
 		getLog().warn(String.format("%12s: %s", status, path));
 	}
 
-	private void reportOutOfDate(long revision, String path) {
-		getLog().warn("Working copy is out of date! (plese do svn update)\n" +
-			"       (" + rootRevision + ") " + path + " (" + revision + ") ");
-	}
-	
 	private String toProjectBasePath(File file) {
 		return file.getAbsolutePath().substring(basedir.getAbsolutePath().length());
 	}
 
-	private boolean sinkDeeper(SVNStatusType status) {
+	private boolean shouldSinkDeeper(SVNStatusType status) {
 		return status != SVNStatusType.STATUS_IGNORED
 			&& status != SVNStatusType.STATUS_UNVERSIONED;
 	}
 
-	private boolean checkStatus(SVNStatusType status) {
+	private boolean isStatusOk(SVNStatusType status) {
 		return status == SVNStatusType.STATUS_NONE
 			|| status == SVNStatusType.STATUS_NORMAL
 			|| status == SVNStatusType.STATUS_IGNORED
@@ -322,7 +299,7 @@ public class BuildNumberMojo extends AbstractMojo {
 		return svnManager;
 	}
 
-	private boolean canBeExported(String propertyName) {
+	private boolean isPropertyWanted(String propertyName) {
 		return propertyName != null
 			&& propertyName.length() > 0
 			&& (overwriteProperties || !existProperty(propertyName));
@@ -332,7 +309,7 @@ public class BuildNumberMojo extends AbstractMojo {
 		return projectProperties.containsKey(propertyName) || System.getProperty(propertyName) != null;
 	}
 	
-	private void doExport(String propertyName, String propertyValue) {
+	private void doExportProperty(String propertyName, String propertyValue) {
 		if(propertyValue != null) {
 			projectProperties.put(propertyName, propertyValue);
 			exportedProperties.put(propertyName, propertyValue);
