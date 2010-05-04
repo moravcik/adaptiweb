@@ -32,8 +32,7 @@ public class PrecisionValidation extends AbstractValidationModel {
 	}
 	
 	private boolean eval(double value) {
-		value = value * Math.pow(10, maxDeciamlPlaces);
-		return Math.round(value) == value;
+		return Double.toString(value).matches("[^\\.]*(\\.\\d{0," + maxDeciamlPlaces + "})?$");
 	}
 
 	public void discard() {
