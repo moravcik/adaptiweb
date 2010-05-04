@@ -2,6 +2,8 @@ package com.adaptiweb.gwt;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
@@ -14,11 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Proxy for GWT resources. 
  */
 public class GwtResourceFilter implements Filter {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GwtResourceFilter.class);
 	
 	private FilterConfig config;
 	private Pattern includePattern;
@@ -34,10 +40,27 @@ public class GwtResourceFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		String path = getRequestPath(request);
 
-		assert log("gwt-resource: " + path);
+		logger.debug("gwt-resource: {}", path);
 		HttpServletResponse resp = (HttpServletResponse) response;
 		resp.setHeader("Content-Type", getMimeType(path));
-		resp.setHeader("Cache-Control", path.contains(".cache.") ? "public, max-age=31536000" : "no-cache");
+		
+		if (path.contains(".cache.")) {
+		    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
+			Calendar cal = Calendar.getInstance();
+			int tzMillis = cal.get(Calendar.ZONE_OFFSET) + cal.get(Calendar.DST_OFFSET);
+			cal.add(Calendar.MILLISECOND, -tzMillis);
+			resp.setHeader("Date", formatter.format(cal.getTime()) + " GMT");
+			// RFC2616 says to never give a cache time of more than a year
+	        // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.21
+			cal.add(Calendar.YEAR, 1);
+			resp.setHeader("Expires", formatter.format(cal.getTime()) + " GMT");
+			resp.setHeader("Cache-Control", "public, max-age=" + (365*24*60*60 /* one year in seconds */));
+		}
+		else if (path.contains(".nocache.")) {
+			resp.setHeader("Cache-Control", "max-age=0, no-store, no-cache, must-revalidate");
+			resp.setHeader("Pragma", "no-cache");
+			resp.setHeader("Expires", "Fri, 02 Jan 1970 00:00:00 GMT");
+		}
 		
 		InputStream input = openResourceDirectly(path);
 		if(input == null) chain.doFilter(request, response);
@@ -53,11 +76,6 @@ public class GwtResourceFilter implements Filter {
 		if (includePattern == null || !includePattern.matcher(path).matches()) return null;
 		if (excludePattern != null && excludePattern.matcher(path).matches()) return null;
 		return config.getServletContext().getResourceAsStream(pathPrefix + path); 
-	}
-
-	private boolean log(String msg) {
-		System.out.println(msg);
-		return true;
 	}
 
 	@Override
