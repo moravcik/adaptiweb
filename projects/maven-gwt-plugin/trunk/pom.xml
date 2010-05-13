@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
@@ -11,7 +10,7 @@
 	<groupId>com.adaptiweb.mojo</groupId>
 	<artifactId>maven-gwt-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<name>Maven plugin for GWT</name>
 	
@@ -81,8 +80,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</connection>
-		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</developerConnection>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/tags/maven-gwt-plugin-1.0</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/tags/maven-gwt-plugin-1.0</developerConnection>
 	</scm>
 
 
