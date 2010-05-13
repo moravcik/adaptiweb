@@ -10,7 +10,7 @@
 	<groupId>com.adaptiweb.mojo</groupId>
 	<artifactId>maven-gwt-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 
 	<name>Maven plugin for GWT</name>
 	
@@ -80,8 +80,8 @@
 	</build>
 
 	<scm>
-		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/tags/maven-gwt-plugin-1.0</connection>
-		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/tags/maven-gwt-plugin-1.0</developerConnection>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</developerConnection>
 	</scm>
 
 
