@@ -1,0 +1,10 @@
+#this file is used in CsvReaderTest.java, append new lines to the end of file
+#action;subject;customer;channel;source;parameters
+ADD;CREDIT;55555555555;DIRECT;backend processing;valid=1;quantity=10
+REMOVE;SERVICE;66666666666;DIRECT;backend processing;param1=value1;param2=value2;param3=value3
+ADD;RADIO;55555555555;DIRECT;"backend processing; ""test"""
+SELLSELLSELL;MATERIAL1;55555555555;DIRECT;backend processing
+SELL;MATERIAL1;11111111111;DIRECT;backend processing;a;b;c;d;
+SELL;MATERIAL1;55555555555;OTHER;backend processing
+EXCHANGE;MATERIAL2;55555555555;DIRECT;backend processing;valid=0
+123
