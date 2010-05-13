@@ -71,8 +71,20 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<tagBase>https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/tags</tagBase>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<scm>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/maven-gwt-plugin/trunk</developerConnection>
+	</scm>
+
 
 	<profiles>
 		<profile>
