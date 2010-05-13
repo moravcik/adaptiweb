@@ -4,7 +4,7 @@
 
 	<groupId>com.adaptiweb.aw-gwt</groupId>
 	<artifactId>aw-gwt</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<name>GWT Framework by Adaptiweb</name>
@@ -174,9 +174,9 @@
 	</reporting>
 
 	<scm>
-		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/aw-gwt/trunk</connection>
-		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/aw-gwt/trunk</developerConnection>
-		<url>http://adaptiweb.googlecode.com/svn/projects/aw-gwt/trunk</url>
+		<connection>scm:svn:http://adaptiweb.googlecode.com/svn/projects/aw-gwt/tags/aw-gwt-1.0</connection>
+		<developerConnection>scm:svn:https://adaptiweb.googlecode.com/svn/projects/aw-gwt/tags/aw-gwt-1.0</developerConnection>
+		<url>http://adaptiweb.googlecode.com/svn/projects/aw-gwt/tags/aw-gwt-1.0</url>
 	</scm>
 
 </project>
