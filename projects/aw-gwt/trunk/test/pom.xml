@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>aw-gwt</artifactId>
 		<groupId>com.adaptiweb.aw-gwt</groupId>
-		<version>1.0</version>
+		<version>1.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>aw-gwt-test</artifactId>
