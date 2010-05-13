@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?><metadata>
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
   <plugins>
     <plugin>
       <name>BuildNumber Maven Plugin</name>
       <prefix>buildnumber</prefix>
       <artifactId>maven-buildnumber-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven plugin for GWT</name>
+      <prefix>gwt</prefix>
+      <artifactId>maven-gwt-plugin</artifactId>
     </plugin>
   </plugins>
 </metadata>
