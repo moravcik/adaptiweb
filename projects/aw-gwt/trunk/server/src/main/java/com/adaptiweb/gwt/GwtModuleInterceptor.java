@@ -20,6 +20,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.adaptiweb.gwt.conf.GwtModuleJsApi;
 import com.adaptiweb.gwt.conf.GwtModulePreferences;
+import com.adaptiweb.gwt.preload.GwtPreloadManager;
 import com.adaptiweb.utils.commons.VariableResolver;
 
 public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
@@ -32,6 +33,8 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 	
 	private VariableResolver variables;
 	
+	protected GwtPreloadManager preloadManager;
+	
 	@Autowired
 	public void setModules(Map<String, GwtModulePreferences> modules) {
 		this.modules = modules;
@@ -40,6 +43,11 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 	@Autowired
 	public void setVariables(VariableResolver variables) {
 		this.variables = variables;
+	}
+	
+	@Autowired(required=false)
+	public void setPreloadManager(GwtPreloadManager preloadManager) {
+		this.preloadManager = preloadManager;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -57,13 +65,22 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 		if (!matchesModules.isEmpty()) {
 			logger.debug("Uri '{}' does match GWT modules: {}", requestUri, matchesModules);
 			
-			GwtModuleBean gwtModule = getGwtModuleBean();
-			gwtModule.setContextPath(request.getContextPath());
-			gwtModule.setName(matchesModules.iterator().next());
-			
-			gwtModule.setJsApis(prepareJsApis(requestUri, gwtModule.getName()));
-			
-			modelAndView.getModel().put("gwtModule", gwtModule);
+			for (String moduleName : matchesModules) {
+				GwtModuleBean gwtModule = getGwtModuleBean();
+				gwtModule.setContextPath(request.getContextPath());
+				gwtModule.setName(moduleName);
+				
+				gwtModule.setJsApis(prepareJsApis(requestUri, gwtModule.getName()));
+				
+				if (preloadManager != null) {
+					Map<String, String> serializedObjects = preloadManager.getPreloadValues(moduleName, request);
+					logger.info("Serialized objects: {}", serializedObjects.keySet());
+					gwtModule.setSerializedObjects(serializedObjects);
+				}
+				
+				modelAndView.getModel().put("gwtModule", gwtModule);
+				break;
+			}
 		}
 	}
 	
