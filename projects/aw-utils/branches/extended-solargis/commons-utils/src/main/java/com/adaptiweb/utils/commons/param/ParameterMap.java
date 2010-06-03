@@ -3,34 +3,23 @@ package com.adaptiweb.utils.commons.param;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ParameterMap extends LinkedHashMap<Parameter, String> {
-
-	private static final long serialVersionUID = 1L;
-
-	public interface Provider {
-		ParameterMap toParameterMap();
-	}
-	
-	public interface Binder extends Provider, Parameter.Source {
-		void bindParameterMap(ParameterMap parameters);
-	}
+@SuppressWarnings("serial")
+public class ParameterMap extends LinkedHashMap<String, String> {
 	
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		for (Map.Entry<Parameter, String> entry : entrySet())
-			result.append('&').append(entry.getKey()).append('=').append(entry.getValue());
+		for (Map.Entry<String, String> entry : entrySet())
+			result.append('&').append(entry.getKey())
+				.append('=').append(entry.getValue());
 		return result.length() > 0 ? result.substring(1) : "";
 	}
 	
-	public void bindParameters(ParameterMap.Binder... binders) {
-		for (ParameterMap.Binder mapBinder : binders) mapBinder.bindParameterMap(this);
-	}
-	
-	public <T> void bindParameters(T target, ParameterBinder<T>... binders) {
-		for (ParameterBinder<T> binder : binders) {
-			binder.bindValue(target, 
-					containsKey(binder.getParameter()) ? get(binder.getParameter()) : null);
+	@SuppressWarnings("unchecked")
+	public void bindParameters(Object target, Parameter<?>... parameters) {
+		for (Parameter param : parameters) {
+			param.bindValue(target, containsKey(param.getParameterName()) 
+					? get(param.getParameterName()) : null);
 		}
 	}
 
@@ -43,11 +32,11 @@ public class ParameterMap extends LinkedHashMap<Parameter, String> {
 	}
 
 	public static class Factory {
-		public static <T> ParameterMap toParameterMap(T input, ParameterExtractor<T>... extractors) {
+		public static <T> ParameterMap toParameterMap(T input, Parameter<T>... parameters) {
 			ParameterMap parameterMap = new ParameterMap();
-			for (ParameterExtractor<T> extractor : extractors) {
-				Object extractedValue = extractor.extractValue(input);
-				parameterMap.put(extractor.getParameter(), formatValue(extractedValue));
+			for (Parameter<T> parameter : parameters) {
+				Object extractedValue = parameter.extractValue(input);
+				parameterMap.put(parameter.getParameterName(), formatValue(extractedValue));
 			}
 			return parameterMap;
 		}
