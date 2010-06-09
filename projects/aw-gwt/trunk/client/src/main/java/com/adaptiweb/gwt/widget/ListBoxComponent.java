@@ -18,44 +18,48 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class ListBoxComponent extends FormComponent implements StringModel  {
-	
+
 	protected final ListBox listBox = new ListBox();
 	protected final StringModel model = new DefaultStringModel();
 	private final HashMap<String, Integer> indexes = new HashMap<String, Integer>();
 	private final LinkedList<ListBoxItem> values = new LinkedList<ListBoxItem>();
 	private DefaultNumberModel<Integer> sizeModel;
 	private DummyValidation validation;
-	
+
 	private boolean unknownValue = false;
 	private boolean enabledNull = false;
 	private boolean isNull = false;
-	
+
 	public interface ListBoxItemFactory<I> {
 		ListBoxItem asListBoxItem(I item);
 	}
-	
+
 	public void clear() {
-		if (unknownValue) {
-			listBox.removeItem(0);
-			unknownValue = false;
-		}
 		setText(null);
+		autoRemoveUnknownItem();
 		indexes.clear();
 		values.clear();
 		while(listBox.getItemCount() > 1) listBox.removeItem(1);
 		updateModels();
 	}
 
+	private void autoRemoveUnknownItem() {
+		if (unknownValue && !listBox.getValue(0).equals(model.getValue())) {
+			listBox.removeItem(0);
+			unknownValue = false;
+		}
+	}
+
 	private void updateModels() {
 		if (sizeModel != null) sizeModel.setValue(values.size());
 		if (validation != null) validation.setValid(!hasUnknownValue() && getText() != null || values.isEmpty());
 	}
-	
+
 	public <I> void addItems(ListBoxItemFactory<I> factory, I...items) {
 		for (I item : items) add(factory.asListBoxItem(item));
 		updateModels();
 	}
-	
+
 	public void addItems(String...items) {
 		final String[] holder = new String[1];
 		ListBoxItem accessor = new ListBoxItem() {
@@ -73,7 +77,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		for (ListBoxItem item : items) add(item);
 		updateModels();
 	}
-	
+
 	private void add(ListBoxItem item) {
 		String value = item.value();
 		assert value != null : "Null item isn't allowed. Use method setNullLabel()";
@@ -81,7 +85,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		indexes.put(value, values.size());
 		values.add(item);
 		listBox.insertItem(item.label(), value, listBox.getItemCount());
-		
+
 		String unknown = null;
 		if (unknownValue && indexes.containsKey(unknown = listBox.getValue(0))) {
 			int index = indexes.get(unknown);
@@ -100,6 +104,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 			@Override
 			public void onChange(ChangeEvent event) {
 				setText(getWidgetValue());
+				autoRemoveUnknownItem();
 			}
 		}));
 		registrations.add(model.addValueChangeHandler(new ValueChangeHandler<String>() {
@@ -112,23 +117,24 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		}));
 		setWidgetValue(model.getText());
 	}
-	
+
 	public void setNullLabel(String label) {
 		if (enabledNull || isNull) listBox.setItemText(unknownValue ? 1 : 0, label);
 		else listBox.insertItem(label, "", unknownValue ? 1 : 0);
 		enabledNull = true;
 	}
-	
+
 	private String getWidgetValue() {
 		int index = listBox.getSelectedIndex();
 		String value = listBox.getValue(index);
 		return value.length() == 0 && index == (unknownValue ? 1 : 0) ? null : value;
 	}
-	
+
 	private void setWidgetValue(String value) {
 		if (value == null) {
 			if (!enabledNull && !isNull) listBox.insertItem("", unknownValue ? 1 : 0);
 			listBox.setSelectedIndex(unknownValue ? 1 : 0);
+			autoRemoveUnknownItem();
 		}
 		else if (indexes.containsKey(value)) {
 			if (!enabledNull && isNull) listBox.removeItem(unknownValue ? 1 : 0);
@@ -136,6 +142,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 			if (unknownValue) index++;
 			if (enabledNull) index++;
 			listBox.setSelectedIndex(index);
+			autoRemoveUnknownItem();
 		}
 		else {
 			if(unknownValue) {
@@ -150,12 +157,12 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		}
 		isNull = value == null;
 	}
-	
+
 	@Override
 	public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
 		return model.addValueChangeHandler(handler);
 	}
-	
+
 	public HandlerRegistration addSizeChangeHandlerAndInit(ValueChangeHandler<Integer> handler) {
 		if (sizeModel == null) {
 			sizeModel = new DefaultNumberModel<Integer>();
@@ -173,7 +180,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	public void setText(String text) {
 		model.setText(text);
 	}
-	
+
 	public boolean hasUnknownValue() {
 		return unknownValue;
 	}
@@ -204,11 +211,18 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	}
 
 	public LogicModel createStandardValidation() {
-		if (validation == null) { 
+		if (validation == null) {
 			validation = new DummyValidation();
 			updateModels();
 		}
 		return validation;
 	}
 
+	public void setEnabled(boolean enabled) {
+		listBox.setEnabled(enabled);
+	}
+
+	public boolean isEnabled() {
+		return listBox.isEnabled();
+	}
 }
