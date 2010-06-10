@@ -12,6 +12,7 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.MappingStrategy;
 
+import com.adaptiweb.utils.commons.StringUtils.StringArraySource;
 import com.adaptiweb.utils.csvbind.annotation.CsvField;
 
 /**
@@ -24,7 +25,7 @@ import com.adaptiweb.utils.csvbind.annotation.CsvField;
  * @param <T> target bean class
  */
 public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
-    private CSVReader reader;
+    private StringArraySource source;
     private T nextRecord = null;
     private final T errorRecord;
     /**
@@ -46,6 +47,27 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
     	LEFT;    // align left to first not-empty cell
     }
     
+    private static class CSVArraySource implements StringArraySource {
+    	CSVReader reader;
+
+		private CSVArraySource(CSVReader reader) {
+			this.reader = reader;
+		}
+
+		@Override
+		public String[] getStringArray() {
+			try {
+				return reader.readNext();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		void close() throws IOException {
+			reader.close();
+		}
+    }
+    
     /**
      * Constructor initializes {@link CSVReader} and gsm strategy.
      * If beanClass is not annotated with {@link CsvField} annotations for gsm CSV lines,
@@ -59,18 +81,8 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
      *                  if quote character is present in value it is doubled.
      */
     public CsvReader(Reader reader, Class<T> beanClass, LineAlign align, char separator, char quotechar) {
-        this.reader = new CSVReader(reader, separator, quotechar);
-        try {
-			errorRecord = beanClass.newInstance(); // empty bean instance to determine line parsing error
-		} catch (InstantiationException e) {
-			throw new IllegalArgumentException("Error initializing CSV bean: "+ e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			throw new IllegalArgumentException("Error initializing CSV bean: "+ e.getMessage(), e);
-		}
-        alignType = align;
-        // define bean gsm
-        mapping = new CsvFieldMapping<T>();
-        mapping.setType(beanClass);
+    	this(beanClass, align);
+        this.source = new CSVArraySource(new CSVReader(reader, separator, quotechar));
     }
 
     /**
@@ -100,6 +112,48 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
     }
 
     /**
+     * Private constructor, assuming calling public constructor sets {@link #reader} field.
+     */
+    private CsvReader(Class<T> beanClass, LineAlign align) {
+        try {
+			errorRecord = beanClass.newInstance(); // empty bean instance to early determine line parsing error
+		} catch (InstantiationException e) {
+			throw new IllegalArgumentException("Error initializing CSV bean: "+ e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			throw new IllegalArgumentException("Error initializing CSV bean: "+ e.getMessage(), e);
+		}
+        alignType = align;
+        mapping = new CsvFieldMapping<T>();
+        mapping.setType(beanClass);
+    }
+    
+    /**
+     * Constructor initializes gsm strategy with use of custom {@link StringArraySource}.
+     * If beanClass is not annotated with {@link CsvField} annotations for gsm CSV lines,
+     * runtime exception IllegalArgumentException is thrown.
+     * 
+     * @param source custom implementation of {@link StringArraySource}
+     * @param beanClass target bean class annotated with {@link CsvField} annotations
+     * @param align type of aligning parsed line.
+     */
+    public CsvReader(StringArraySource source, Class<T> beanClass, LineAlign align) {
+    	this(beanClass, align);
+    	this.source = source;
+    }
+
+    /**
+     * Constructor initializes gsm strategy with use of custom {@link StringArraySource}.
+     * If beanClass is not annotated with {@link CsvField} annotations for gsm CSV lines,
+     * runtime exception IllegalArgumentException is thrown.
+     * 
+     * @param source custom implementation of {@link StringArraySource}
+     * @param beanClass target bean class annotated with {@link CsvField} annotations
+     */
+    public CsvReader(StringArraySource source, Class<T> beanClass) {
+    	this(source, beanClass, LineAlign.DEFAULT);
+    }
+    
+    /**
      * Read next line from CSV, perform bean gsm and store as nextRecord.
      * When end of CSV is reached null is stored as nextRecord.
      */
@@ -108,7 +162,7 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
     	
     	String[] line = null;
         try {
-            line = reader.readNext();
+            line = source.getStringArray();
             if (line != null) {                
                 nextLine = "";
                 for (int i = 0; i < line.length; i++) { // hack to get line of parsing (for callers of parsing process)
@@ -189,10 +243,10 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
 	/**
      * Close underlying resources.
      */
-    public void closeResources() {
-        if (reader != null) {
-            try {
-                reader.close();
+	public void closeResources() {
+        if (source != null && source instanceof CSVArraySource) {
+    		try {
+            	((CSVArraySource) source).close();
             } catch (IOException e) {
             	e.printStackTrace();
             }
