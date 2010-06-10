@@ -15,7 +15,7 @@ import org.apache.poi.ss.usermodel.Row;
 import com.adaptiweb.utils.commons.CollectionUtils;
 import com.adaptiweb.utils.commons.StringUtils.StringArraySource;
 
-public class HSSFArraySource implements StringArraySource {
+public class HSSFRowSource implements StringArraySource {
 	HSSFWorkbook workbook;
 	HSSFDataFormatter formatter;
 	HSSFFormulaEvaluator evaluator;
@@ -23,7 +23,7 @@ public class HSSFArraySource implements StringArraySource {
 	Iterator<Row> sheetRowIterator;
 	List<String> stringCacheList;
 	
-	private HSSFArraySource(HSSFWorkbook workbook) {
+	private HSSFRowSource(HSSFWorkbook workbook) {
 		this.workbook = workbook;
 		this.formatter = new HSSFDataFormatter();
 		this.evaluator = new HSSFFormulaEvaluator(workbook);
@@ -35,12 +35,12 @@ public class HSSFArraySource implements StringArraySource {
 	/**
 	 * Zero-based.
 	 */
-	public HSSFArraySource useSheet(int sheetIndex) {
+	public HSSFRowSource useSheet(int sheetIndex) {
 		initSheetIterator(workbook.getSheetAt(sheetIndex));
 		return this;
 	}
 
-	public HSSFArraySource useSheet(String sheetName) {
+	public HSSFRowSource useSheet(String sheetName) {
 		initSheetIterator(workbook.getSheet(sheetName));
 		return this;
 	}
@@ -64,16 +64,16 @@ public class HSSFArraySource implements StringArraySource {
 		return stringCacheList.toArray(new String[stringCacheList.size()]);
 	}
 	
-	public static HSSFArraySource fromResource(String resourcePath) {
-		return new HSSFArraySource(PoiUtils.loadWorkbookFromResource(resourcePath));
+	public static HSSFRowSource fromResource(String resourcePath) {
+		return new HSSFRowSource(PoiUtils.loadWorkbookFromResource(resourcePath));
 	}
 
-	public static HSSFArraySource fromFile(String filePath) {
-		return new HSSFArraySource(PoiUtils.loadWorkbookFromFile(filePath));
+	public static HSSFRowSource fromFile(String filePath) {
+		return new HSSFRowSource(PoiUtils.loadWorkbookFromFile(filePath));
 	}
 
-	public static HSSFArraySource fromStream(InputStream stream) {
-		return new HSSFArraySource(PoiUtils.loadWorkbookFromStream(stream));
+	public static HSSFRowSource fromStream(InputStream stream) {
+		return new HSSFRowSource(PoiUtils.loadWorkbookFromStream(stream));
 	}
 	
 }

@@ -31,14 +31,14 @@ import com.adaptiweb.utils.csvbind.bean.Record2;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldDateEditor;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldEnumEditor;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldStringEditor;
-import com.adaptiweb.utils.poi.HSSFArraySource;
+import com.adaptiweb.utils.poi.HSSFRowSource;
 
 public class CsvReaderTest {
     public static final String datePattern = "d.m.yyyy";
 	
     private Reader readerTest = null;
     private Reader readerImport = null;
-    private HSSFArraySource excelSource = null;
+    private HSSFRowSource excelSource = null;
 
     @Before
     public void setUp() throws Exception {
@@ -50,7 +50,7 @@ public class CsvReaderTest {
         assertNotNull(readerTest);
         readerImport = new InputStreamReader(cs);
         assertNotNull(readerImport);
-        excelSource = HSSFArraySource.fromResource("/testCsvReader.xls");
+        excelSource = HSSFRowSource.fromResource("/testCsvReader.xls");
         assertNotNull(excelSource);
     }
 

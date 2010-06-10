@@ -24,11 +24,11 @@ public class HSSFArraySourceTest {
 			new String[] {"10.0", "aaaaa"},
 			new String[] {"20.0", "bbbb"});
 	
-	HSSFArraySource source;
+	HSSFRowSource source;
 	
 	@Before
 	public void prepareReader() {
-		source = HSSFArraySource.fromResource(TEST_RESOURCE);
+		source = HSSFRowSource.fromResource(TEST_RESOURCE);
 		Assert.assertNotNull(source);
 	}
 	
