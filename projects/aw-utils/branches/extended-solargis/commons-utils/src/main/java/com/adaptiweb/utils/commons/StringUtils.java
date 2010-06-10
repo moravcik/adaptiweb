@@ -96,4 +96,12 @@ public final class StringUtils {
 		if (to < 0) to += length;
 		return str.substring(from, to);
 	}
+	
+	public interface StringArraySource {
+		/**
+		 * @return Returns array of strings if available, otherwise returns <code>null<code>.
+		 */
+		String[] getStringArray();
+	}
+	
 }
