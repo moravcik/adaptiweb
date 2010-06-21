@@ -53,7 +53,7 @@ public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		//		if (modelAndView == null) return;
+		if (modelAndView == null) return;
 
 		String contextPath = request.getContextPath();
 		String requestUri = request.getRequestURI().substring(contextPath.length());
