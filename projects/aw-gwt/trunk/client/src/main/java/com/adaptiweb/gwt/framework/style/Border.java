@@ -60,6 +60,17 @@ public class Border {
 			}
 		};
 	}
-	
+
+	public static final Style border(final String width, final BorderStyle style, final ColorType color) {
+		return new Style() {
+			@Override
+			public void apply(Element element) {
+				element.getStyle().setProperty("borderWidth", width);
+				element.getStyle().setBorderStyle(style);
+				element.getStyle().setBorderColor(color.colorValue());
+			}
+		};
+	}
+
 
 }
