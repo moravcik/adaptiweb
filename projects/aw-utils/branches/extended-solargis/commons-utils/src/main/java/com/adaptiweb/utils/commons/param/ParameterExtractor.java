@@ -1,7 +1,7 @@
 package com.adaptiweb.utils.commons.param;
 
 public interface ParameterExtractor<T> {
-	Parameter getParameter();
+	Parameter<T> getParameter();
 	Object extractValue(T source);
 
 	public static class Helper {

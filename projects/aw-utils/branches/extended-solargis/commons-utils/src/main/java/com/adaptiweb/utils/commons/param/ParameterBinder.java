@@ -56,8 +56,8 @@ public interface ParameterBinder<T> extends ParameterExtractor<T> {
 			return value != null && value.length() > 0;
 		}
 		
-		public static Parameter[] toParameters(ParameterBinder<?>[] binders) {
-			List<Parameter> parameters = new ArrayList<Parameter>();
+		public static Parameter<?>[] toParameters(ParameterBinder<?>[] binders) {
+			List<Parameter<?>> parameters = new ArrayList<Parameter<?>>();
 			for (ParameterBinder<?> binder : binders) parameters.add(binder.getParameter());
 			return parameters.toArray(new Parameter[parameters.size()]);
 		}
