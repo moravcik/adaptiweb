@@ -1,5 +1,6 @@
 package com.adaptiweb.gwt.util;
 
+import com.adaptiweb.gwt.framework.GwtGoodies;
 import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -32,10 +33,16 @@ public final class QuickTooltip {
 	private static Element targetElement;
 	private static String title;
 	private static HandlerRegistration registration;
+	private static String targetClassName;
 
 	private QuickTooltip() {}
 
 	public static void activate() {
+		activate(null);
+	}
+
+	public static void activate(String className) {
+		targetClassName = className;
 		if (isActive()) return;
 		attach();
 		registration = Window.addWindowClosingHandler(new ClosingHandler() {
@@ -68,7 +75,7 @@ public final class QuickTooltip {
 			else popup.hide();
 		}
 
-		if (targetElement == null) return;
+		if (targetElement == null || !matchClassName(targetElement)) return;
 		String title = targetElement.getAttribute("title");
 
 		ensurePopupIsCreated();
@@ -79,6 +86,10 @@ public final class QuickTooltip {
 		QuickTooltip.targetElement = targetElement;
 		popup.show();
 
+	}
+
+	private static boolean matchClassName(Element targetElement) {
+		return targetClassName == null || GwtGoodies.hasClassName(targetElement, targetClassName);
 	}
 
 	private static void updatePopupPosition(Event event) {
