@@ -23,9 +23,9 @@ public abstract class AbstractWizard extends Dialog implements ValueChangeHandle
 		LogicModel getValidationModel();
 	}
 
-	private Button prevButton;
-	private Button nextButton;
-	private Button sendButton;
+	protected Button prevButton;
+	protected Button nextButton;
+	protected Button finalButton;
 	private HandlerRegistration validation;
 	private int index;
 
@@ -59,7 +59,7 @@ public abstract class AbstractWizard extends Dialog implements ValueChangeHandle
 	private void updateButtonStatus(boolean isValid) {
 		prevButton.setEnabled(index > 0);
 		nextButton.setEnabled(isValid && index + 1 < steps().length);
-		sendButton.setEnabled(isValid && index + 1 == steps().length);
+		finalButton.setEnabled(isValid && index + 1 == steps().length);
 	}
 
 	@Override
@@ -100,6 +100,6 @@ public abstract class AbstractWizard extends Dialog implements ValueChangeHandle
 				status.setValue(status.getValue().intValue() + 1);
 			}
 		});
-		sendButton = addButton("Send", false);
+		finalButton = addButton("Send", false);
 	}
 }
