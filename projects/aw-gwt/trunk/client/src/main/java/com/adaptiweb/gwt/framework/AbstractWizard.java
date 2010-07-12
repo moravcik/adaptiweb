@@ -87,7 +87,7 @@ public abstract class AbstractWizard extends Dialog implements ValueChangeHandle
 
 	@Override
 	protected void initActionButton() {
-		addButton("Chancel", true);
+		addButton("Cancel", true);
 		(prevButton = addButton(" << Previous", false)).addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
