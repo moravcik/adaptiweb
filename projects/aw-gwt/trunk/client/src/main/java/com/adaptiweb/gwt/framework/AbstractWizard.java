@@ -78,10 +78,7 @@ public abstract class AbstractWizard extends Dialog implements ValueChangeHandle
 	@Override
 	protected void initContent(Panel panel) {
 		FlowPanel content = new FlowPanel();
-		for (Widget step : steps()) {
-			step.setSize("500px", "332px");
-			content.add(step);
-		}
+		for (Widget step : steps()) content.add(step);
 		panel.add(content);
 	}
 
