@@ -29,7 +29,6 @@ import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.bean.Record1;
 import com.adaptiweb.utils.csvbind.bean.Record2;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldDateEditor;
-import com.adaptiweb.utils.csvbind.editor.CsvFieldEnumEditor;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldStringEditor;
 import com.adaptiweb.utils.poi.HSSFRowSource;
 
@@ -402,15 +401,9 @@ public class CsvReaderTest {
     		BBB,
     		CCC,
     		DDD;
-    		
-    		public static class Editor extends CsvFieldEnumEditor<TestEnum> {
-    			public Editor() {
-    				super(TestEnum.class);
-    			}
-    		}
     	}
     	
-    	@CsvField(index = 4, editor=TestEnum.Editor.class)
+    	@CsvField(index = 4, enumType=TestEnum.class)
     	TestEnum field5;
     	
         @CsvField(index = 5, list = true, editor=CsvFieldStringEditor.class)
