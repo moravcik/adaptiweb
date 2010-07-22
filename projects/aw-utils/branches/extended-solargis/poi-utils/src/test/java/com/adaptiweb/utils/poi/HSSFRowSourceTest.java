@@ -10,14 +10,14 @@ import org.junit.Test;
 
 import com.adaptiweb.utils.commons.StringUtils;
 
-public class HSSFArraySourceTest {
+public class HSSFRowSourceTest {
 	
 	private static final String TEST_RESOURCE = "/dummy-excel.xls";
 	
 	private static final List<String[]> DATA_SHEET1 = Arrays.asList(
-			new String[] {"col1", "col2", "col3"},
-			new String[] {"123.0", "10/07/10", "aaaaa"},
-			new String[] {"456.0", "11/08/11", "bbbb"});
+			new String[] {"col1", "emptycol", "col2", "col3"},
+			new String[] {"123.0", "", "10/07/10", "aaaaa"},
+			new String[] {"456.0", "", "11/08/11", "bbbb"});
 
 	private static final List<String[]> DATA_SHEET2 = Arrays.asList(
 			new String[] {"colA", "colB"},

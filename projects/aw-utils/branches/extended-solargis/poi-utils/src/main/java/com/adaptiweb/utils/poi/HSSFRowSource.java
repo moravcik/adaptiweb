@@ -21,14 +21,13 @@ public class HSSFRowSource implements StringArraySource {
 	HSSFFormulaEvaluator evaluator;
 	
 	Iterator<Row> sheetRowIterator;
-	List<String> stringCacheList;
+	List<String> stringCache;
 	
 	private HSSFRowSource(HSSFWorkbook workbook) {
 		this.workbook = workbook;
 		this.formatter = new HSSFDataFormatter();
 		this.evaluator = new HSSFFormulaEvaluator(workbook);
-		this.stringCacheList = new ArrayList<String>();
-		
+		this.stringCache = new ArrayList<String>();
 		initSheetIterator(workbook.getSheetAt(0)); 
 	}
 	
@@ -47,7 +46,7 @@ public class HSSFRowSource implements StringArraySource {
 	
 	private void initSheetIterator(HSSFSheet sheet) {
 		sheetRowIterator = sheet != null ? sheet.iterator() : null;
-		stringCacheList.clear();
+		stringCache.clear();
 	}
 	
 	@Override
@@ -58,10 +57,12 @@ public class HSSFRowSource implements StringArraySource {
 	}
 
 	private String[] rowToStringArray(Row row) {
-		stringCacheList.clear();
-		for (Cell cell : CollectionUtils.asIterable(row.iterator()))
-			stringCacheList.add(formatter.formatCellValue(cell, evaluator));
-		return stringCacheList.toArray(new String[stringCacheList.size()]);
+		stringCache.clear();
+		for (Cell cell : CollectionUtils.asIterable(row.iterator())) {
+			while (stringCache.size() < cell.getColumnIndex()) stringCache.add(""); // handle empty cells
+			stringCache.add(formatter.formatCellValue(cell, evaluator));
+		}
+		return stringCache.toArray(new String[stringCache.size()]);
 	}
 	
 	public static HSSFRowSource fromResource(String resourcePath) {
