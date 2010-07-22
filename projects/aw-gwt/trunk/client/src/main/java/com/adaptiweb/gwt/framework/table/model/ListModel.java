@@ -2,9 +2,10 @@ package com.adaptiweb.gwt.framework.table.model;
 
 import java.util.List;
 
+import com.adaptiweb.gwt.mvc.Model;
 import com.google.gwt.event.shared.GwtEvent;
 
-public interface ListModel<T> extends HasListChangeHandlers<T>, HasListRefreshHandlers<T> {
+public interface ListModel<T> extends HasListChangeHandlers<T>, HasListRefreshHandlers<T>, Model {
 	
 	List<T> replace(int position, int count, List<T> iListModeltem);
 	
