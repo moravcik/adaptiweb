@@ -129,20 +129,21 @@ public class CsvWriter<T> {
     }
     
     /**
-     * Persist single bean into string
-     * @param <T>
-     * @param bean
-     * @throws IOException
+     * Persist array of T beans into CSV String 
+     * @param <T> array item type
+     * @param array to persist
+     * @return <code>null</code> if array is null or empty, otherwise returns persisted string. 
      */
     @SuppressWarnings("unchecked")
-	public static <T> String writeLine(T bean) {
-    	if (bean == null) return null;
+	public static <T> String writeToString(T... array) {
+    	if (array == null || array.length == 0) return null;
     	
     	CsvWriter<T> csvWriter = null;
     	StringWriter str = new StringWriter();
     	try {
-    		csvWriter = new CsvWriter<T>(str, (Class<T>) bean.getClass());
-	    	csvWriter.writeNext(bean);
+    		csvWriter = new CsvWriter<T>(str, (Class<T>) array[0].getClass());
+    		for (T bean : array) 
+    			csvWriter.writeNext(bean);
 	    	return str.toString();
     	} catch (IOException e) {
     		return ""; // quietly
@@ -150,4 +151,16 @@ public class CsvWriter<T> {
     		if (csvWriter != null) csvWriter.closeResources();
     	}
     }
+    
+    /**
+     * Persist collection of T beans into CSV String
+     * @param <T> collection item type
+     * @param collection to persist
+     * @return <code>null</code> if collection is null or empty, otherwise returns persisted string.
+     */
+    public static <T> String writeToString(Collection<T> collection) {
+    	if (collection == null || collection.isEmpty()) return null;
+    	else return writeToString(collection.toArray());
+    }
+
 }

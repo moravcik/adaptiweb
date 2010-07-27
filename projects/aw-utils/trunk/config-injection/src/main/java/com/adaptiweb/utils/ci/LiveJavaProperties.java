@@ -24,7 +24,7 @@ public class LiveJavaProperties extends java.util.Properties implements LiveFile
 	@Override
 	public String getProperty(String key) {
 		liveFile.checkChanges(this);
-		String result = super.getProperty(key);
+		String result = super.getProperty(key); // not supporting variables in key
 		return variables == null ? result : variables.replaceVariables(result);
 	}
 	
@@ -34,7 +34,7 @@ public class LiveJavaProperties extends java.util.Properties implements LiveFile
 	}
 	
 	private synchronized void replaceContent(Map<String,String> values) {
-		this.clear();
+		// this.clear(); DO NOT CLEAR - something could be added externally, see javax.mail.Session.setProvider
 		this.putAll(values);
 	}
 
