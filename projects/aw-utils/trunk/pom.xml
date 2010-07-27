@@ -23,6 +23,7 @@
 		<module>type-analyzer</module>
 		<module>test-utils</module>
 		<module>config-injection</module>
+		<module>poi-utils</module>
 	</modules>
 
 	<dependencies>

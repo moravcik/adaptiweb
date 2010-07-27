@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.adaptiweb.utils.csvbind.CsvFieldMapping.DummyEnum;
 import com.adaptiweb.utils.csvbind.CsvReader;
 
 /**
@@ -31,6 +32,12 @@ public @interface CsvField {
      * @return
      */
     Class<? extends PropertyEditor> editor() default PropertyEditor.class;
+    
+    /**
+     * enum class for column, resolution by enum name
+     * @return
+     */
+    Class<? extends Enum<?>> enumType() default DummyEnum.class;
     
     /**
      * patterns for parsing string values

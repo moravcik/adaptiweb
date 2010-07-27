@@ -29,14 +29,15 @@ import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.bean.Record1;
 import com.adaptiweb.utils.csvbind.bean.Record2;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldDateEditor;
-import com.adaptiweb.utils.csvbind.editor.CsvFieldEnumEditor;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldStringEditor;
+import com.adaptiweb.utils.poi.HSSFRowSource;
 
 public class CsvReaderTest {
     public static final String datePattern = "d.m.yyyy";
 	
     private Reader readerTest = null;
     private Reader readerImport = null;
+    private HSSFRowSource excelSource = null;
 
     @Before
     public void setUp() throws Exception {
@@ -48,6 +49,8 @@ public class CsvReaderTest {
         assertNotNull(readerTest);
         readerImport = new InputStreamReader(cs);
         assertNotNull(readerImport);
+        excelSource = HSSFRowSource.fromResource("/testCsvReader.xls");
+        assertNotNull(excelSource);
     }
 
     @After
@@ -56,13 +59,7 @@ public class CsvReaderTest {
         if (readerImport != null) readerImport.close();
     }
 
-    /**
-     * Test method for {@link com.adaptiweb.utils.csvbind.CsvReader#iterator()}.
-     */
-    @Test
-    public final void testIterator() {
-        // Record1 reader from file
-        CsvReader<Record1> r1 = new CsvReader<Record1>(readerTest, Record1.class);
+    private void testCsvReader(CsvReader<Record1> r1) {
         assertNotNull(r1);
         Iterator<Record1> it1 = r1.iterator();
         assertNotNull(it1);
@@ -109,12 +106,11 @@ public class CsvReaderTest {
                 assertEquals("DIRECT", rec.getChannel());
                 assertEquals("backend processing", rec.getSource());
                 assertNotNull(rec.getParameters());
-                assertEquals(5, rec.getParameters().size());
+                assertEquals(4, rec.getParameters().size());
                 assertEquals("a", rec.getParameters().get(0));
                 assertEquals("b", rec.getParameters().get(1));
                 assertEquals("c", rec.getParameters().get(2));
                 assertEquals("d", rec.getParameters().get(3));
-                assertEquals("", rec.getParameters().get(4));
             } else if (c1 == 7) {
                 //123
                 assertEquals("123", rec.getAction());
@@ -127,7 +123,19 @@ public class CsvReaderTest {
         }
         assertTrue(c1 >= 8);
         r1.closeResources(); 
+    }
+    
+    /**
+     * Test method for {@link com.adaptiweb.utils.csvbind.CsvReader#iterator()}.
+     */
+    @Test
+    public final void testIterator() {
+        // Record1 reader from CSV file
+    	testCsvReader(new CsvReader<Record1>(readerTest, Record1.class));
 
+    	// Record1 reader from XLS file
+    	testCsvReader(new CsvReader<Record1>(excelSource, Record1.class));
+    	
         // Record2 from file
         CsvReader<Record2> r2 = new CsvReader<Record2>(readerImport, Record2.class);
         assertNotNull(r2);
@@ -393,15 +401,9 @@ public class CsvReaderTest {
     		BBB,
     		CCC,
     		DDD;
-    		
-    		public static class Editor extends CsvFieldEnumEditor<TestEnum> {
-    			public Editor() {
-    				super(TestEnum.class);
-    			}
-    		}
     	}
     	
-    	@CsvField(index = 4, editor=TestEnum.Editor.class)
+    	@CsvField(index = 4, enumType=TestEnum.class)
     	TestEnum field5;
     	
         @CsvField(index = 5, list = true, editor=CsvFieldStringEditor.class)

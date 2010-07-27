@@ -56,7 +56,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 	/**
 	 * Set target class of bean, include loading input fields and setting editors.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked" ,"rawtypes"})
 	@Override
 	public void setType(Class beanClass) {
 		super.setType(beanClass);
@@ -105,17 +105,17 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
      * @throws InstantiationException 
      * @throws IntrospectionException 
      */
-    private PropertyEditor loadInputEditor(String fieldName, CsvField fieldAnnotation) throws InstantiationException, IllegalAccessException, IntrospectionException {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private PropertyEditor loadInputEditor(String fieldName, CsvField fieldAnnotation) throws InstantiationException, IllegalAccessException, IntrospectionException {
 		PropertyEditor editor = null;
-		if (fieldAnnotation.editor() != PropertyEditor.class) { // explicitly defined editor
+		if (fieldAnnotation.enumType() != DummyEnum.class) { // explicitly defined enum class
+			editor = new EnumEditor(fieldAnnotation.enumType());
+			
+		} else if (fieldAnnotation.editor() != PropertyEditor.class) { // explicitly defined editor
 			editor = (PropertyEditor) fieldAnnotation.editor().newInstance();
 			if (editor instanceof CsvFieldPatternEditor) 
 				((CsvFieldPatternEditor) editor).setPatterns(fieldAnnotation.patterns());
-			// wrap list editor
-			if (fieldAnnotation.list()) {
-				editor = listEditor = new CollectionPropertyEditor(editor);
-	            listIndex = fieldAnnotation.index();
-			}
+
 		} else { // load default editor
 			PropertyDescriptor descriptor = findDescriptor(fieldName);
 			editor = new CsvToBean<T>() {
@@ -126,6 +126,11 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 			}.getPropertyEditor(descriptor);
 		}
 		if (editor != null) {
+			// wrap list editor
+			if (fieldAnnotation.list()) {
+				editor = listEditor = new CollectionPropertyEditor(editor);
+				listIndex = fieldAnnotation.index();
+			}
 			fieldEditors.put(fieldName, editor);
 			return editor;
 		} else throw new IllegalArgumentException("No editor for: " + fieldName);
@@ -197,4 +202,31 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 		return csvDescriptors;
 	}
 
+	public enum DummyEnum {}
+
+	private static class EnumEditor<T extends Enum<T>> extends PropertyEditorSupport {
+		
+		private Class<T> enumType;
+		
+		protected EnumEditor(Class<T> enumType) {
+			this.enumType = enumType;
+		}
+		
+		@SuppressWarnings("unchecked")
+		@Override
+		public String getAsText() {
+			return getValue() != null ? ((T) getValue()).name() : null;
+		}
+		@Override
+		public void setAsText(String arg) throws IllegalArgumentException {
+			try {
+				setValue(Enum.valueOf(enumType, arg));
+			} catch (IllegalArgumentException e) {
+				setValue(null);
+			} catch (NullPointerException e) {
+				setValue(null);
+			}
+		}
+		
+	}
 }
