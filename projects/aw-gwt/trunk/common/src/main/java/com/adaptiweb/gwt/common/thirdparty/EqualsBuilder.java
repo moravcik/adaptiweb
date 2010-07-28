@@ -248,6 +248,10 @@ public class EqualsBuilder {
         if (isEquals == false) {
             return this;
         }
+        if (lhs == null || rhs == null) {
+            this.setEquals(false);
+            return this;
+        }
         return append(lhs.hashCode(), rhs.hashCode());
     }
 
@@ -260,6 +264,10 @@ public class EqualsBuilder {
      */
     public EqualsBuilder append(Float lhs, Float rhs) {
         if (isEquals == false) {
+            return this;
+        }
+        if (lhs == null || rhs == null) {
+            this.setEquals(false);
             return this;
         }
         return append(lhs.hashCode(), rhs.hashCode());
