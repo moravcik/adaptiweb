@@ -23,7 +23,7 @@ import com.adaptiweb.utils.csvbind.editor.CsvFieldPatternEditor;
 
 public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 
-	protected static class CsvFieldDescriptor {
+	public static class CsvFieldDescriptor {
 		private Field field;
 		private CsvField fieldAnnotation;
 		private PropertyEditor fieldEditor;
@@ -38,17 +38,21 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 		public PropertyEditor getFieldEditor() {
 			return fieldEditor;
 		}
+		public CsvField getFieldAnnotation() {
+			return fieldAnnotation;
+		}
 	}
 	
-	private Map<String, PropertyEditor> fieldEditors = new HashMap<String, PropertyEditor>(); // for efficiency
-	private Set<CsvFieldDescriptor> csvDescriptors = new TreeSet<CsvFieldDescriptor>(
+	private Map<String, CsvFieldDescriptor> csvDescriptors = new HashMap<String, CsvFieldDescriptor>();
+	private Set<CsvFieldDescriptor> csvSortedDescriptors = new TreeSet<CsvFieldDescriptor>(
 			new Comparator<CsvFieldDescriptor>() {
 		        public int compare(CsvFieldDescriptor d1, CsvFieldDescriptor d2) {
 		            int i1 = d1.fieldAnnotation.index();
 		            int i2 = d2.fieldAnnotation.index();
 		            return ((Integer) i1).compareTo(i2);
 		        }
-			});
+			}
+		);
 	
 	protected Integer listIndex = null; 
 	protected CollectionPropertyEditor listEditor = null;
@@ -61,7 +65,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 	public void setType(Class beanClass) {
 		super.setType(beanClass);
 		csvDescriptors.clear();
-		fieldEditors.clear();
+		csvSortedDescriptors.clear();
 		loadInputFields(beanClass);
 	}
 
@@ -81,7 +85,8 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
         		if (f.isAnnotationPresent(CsvField.class)) {
         			CsvFieldDescriptor desc = new CsvFieldDescriptor(f, f.getAnnotation(CsvField.class));
         			desc.fieldEditor = loadInputEditor(f.getName(), desc.fieldAnnotation);
-        			csvDescriptors.add(desc);
+        			csvDescriptors.put(f.getName(), desc);
+        			csvSortedDescriptors.add(desc);
         		}
         	}
         } catch (Exception e) {
@@ -91,7 +96,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
             throw new IllegalArgumentException("No CSV fields defined for class: " + beanClass.getName());
 
         List<String> fieldNames = new ArrayList<String>();
-        for (CsvFieldDescriptor desc : csvDescriptors) 
+        for (CsvFieldDescriptor desc : csvSortedDescriptors) 
         	fieldNames.add(desc.field.getName());
         
         setColumnMapping(fieldNames.toArray(new String[fieldNames.size()]));
@@ -131,7 +136,6 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 				editor = listEditor = new CollectionPropertyEditor(editor);
 				listIndex = fieldAnnotation.index();
 			}
-			fieldEditors.put(fieldName, editor);
 			return editor;
 		} else throw new IllegalArgumentException("No editor for: " + fieldName);
 	}
@@ -152,13 +156,8 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
     	return fields;
     }
 
-    /**
-     * Return PropertyEditor for given field.
-     * @param field
-     * @return
-     */
-    public PropertyEditor getEditor(String field) {
-		return fieldEditors.get(field);
+    public CsvFieldDescriptor getDescriptor(String field) {
+    	return csvDescriptors.get(field);
     }
 
     protected void initMapping() {
@@ -199,7 +198,7 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
     }
 
 	public Collection<CsvFieldDescriptor> getFieldDescriptors() {
-		return csvDescriptors;
+		return csvSortedDescriptors;
 	}
 
 	public enum DummyEnum {}
