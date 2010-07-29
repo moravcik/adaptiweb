@@ -28,6 +28,12 @@ public @interface CsvField {
     int index();
 
     /**
+     * handle empty CSV field as null
+     * @return
+     */
+    boolean emtyAsNull() default false;
+    
+    /**
      * property editor for column
      * @return
      */

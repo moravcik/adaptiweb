@@ -8,6 +8,8 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang.StringUtils;
+
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.MappingStrategy;
@@ -283,7 +285,13 @@ public class CsvReader<T> extends CsvToBean<T> implements Iterable<T> {
 
     @Override
     protected PropertyEditor getPropertyEditor(PropertyDescriptor propertydescriptor) throws InstantiationException, IllegalAccessException {
-    	return mapping.getEditor(propertydescriptor.getName());
+    	return mapping.getDescriptor(propertydescriptor.getName()).getFieldEditor();
+    }
+    
+    @Override
+    protected Object convertValue(String value, PropertyDescriptor prop) throws InstantiationException, IllegalAccessException {
+    	boolean emptyAsNull = mapping.getDescriptor(prop.getName()).getFieldAnnotation().emtyAsNull();
+    	return emptyAsNull && StringUtils.isEmpty(value) ? null : super.convertValue(value, prop);
     }
     
     /**
