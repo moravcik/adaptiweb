@@ -3,9 +3,11 @@ package com.adaptiweb.gwt.framework.style;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
 
-public enum Font implements Style {
+public enum Font implements DynamicStyle {
+	NORMAL("fontWeight"),
 	BOLD("fontWeight"),
 	ITALIC("fontStyle"),
+	LINE_THROUGH("textDecoration"), // we need mapping from "_" to "-" to apply style
 	UNDERLINE("textDecoration");
 	
 	private final String style;
@@ -15,9 +17,14 @@ public enum Font implements Style {
 	}
 	
 	public void apply(Element element) {
-		element.getStyle().setProperty(style, name().toLowerCase());
+		element.getStyle().setProperty(style, name().replaceAll("_", "-").toLowerCase());
 	}
-	
+
+	@Override
+	public void cancel(Element element) {
+		element.getStyle().setProperty(style, "");
+	}
+
 	public static Style size(final int size, final Unit unit) {
 		return new Style() {
 			@Override
@@ -26,4 +33,5 @@ public enum Font implements Style {
 			}
 		};
 	}
+
 }
