@@ -85,6 +85,11 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 		renderHeaders();
 	}
 
+	@Override
+	public void replace(R item) {
+		model.replace(item);
+	};
+	
 	private void renderHeaders() {
         widget.clear();
 //        formatHeaderRow(0, widget.getRowFormatter());
