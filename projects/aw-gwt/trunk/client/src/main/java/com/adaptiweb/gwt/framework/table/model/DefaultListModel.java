@@ -158,4 +158,10 @@ public class DefaultListModel<T> implements ListModel<T> {
 		replace(0, size(), items);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void replace(T item) {
+		int index = indexOf(item);
+		if (index >= 0) replace(index, 1, Arrays.asList(item));
+	};
 }
