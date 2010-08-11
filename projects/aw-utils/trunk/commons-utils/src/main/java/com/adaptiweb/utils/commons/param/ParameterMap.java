@@ -15,7 +15,7 @@ public class ParameterMap extends LinkedHashMap<String, String> {
 		return result.length() > 0 ? result.substring(1) : "";
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void bindParameters(Object target, Parameter<?>... parameters) {
 		for (Parameter param : parameters) {
 			param.bindValue(target, containsKey(param.getParameterName()) 
@@ -32,6 +32,16 @@ public class ParameterMap extends LinkedHashMap<String, String> {
 	}
 
 	public static class Factory {
+		public static ParameterMap toParameterMap(String... urlParts) {
+			ParameterMap parameterMap = new ParameterMap();
+			for (String part : urlParts) {
+				String[] split = part.split("=");
+				if (split.length < 2) continue;
+				parameterMap.put(split[0], split[1]);
+			}
+			return parameterMap;
+		}
+		
 		public static <T> ParameterMap toParameterMap(T input, Parameter<T>... parameters) {
 			ParameterMap parameterMap = new ParameterMap();
 			for (Parameter<T> parameter : parameters) {
