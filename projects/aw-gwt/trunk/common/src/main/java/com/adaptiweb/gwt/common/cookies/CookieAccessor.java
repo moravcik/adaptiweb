@@ -31,6 +31,10 @@ public class CookieAccessor implements CookieDefinition {
 		return Cookies.getCookie(name());
 	}
 	
+	public void clear() {
+		Cookies.removeCookie(name());
+	}
+	
 	public void extend() {
 		String value = getValue();
 		if(value != null) setValue(value);
