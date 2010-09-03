@@ -8,13 +8,19 @@ public class CookieAccessor implements CookieDefinition {
 	
 	private final long maxAge;
 	private final String name;
+	private final String path;
 	
 	public CookieAccessor(String name) {
-		this(name, FOR_SESSION);
+		this(name, null, FOR_SESSION);
 	}
 
 	public CookieAccessor(String name, long maxAgeInMillis) {
+		this(name, null, maxAgeInMillis);
+	}
+	
+	public CookieAccessor(String name, String path, long maxAgeInMillis) {
 		this.name = name;
+		this.path = path;
 		this.maxAge = maxAgeInMillis;
 	}
 	
@@ -23,8 +29,7 @@ public class CookieAccessor implements CookieDefinition {
 	}
 
 	public void setValue(String value) {
-		if (isSessionScope()) Cookies.setCookie(name(), value);
-		else Cookies.setCookie(name(), value, expires());
+		Cookies.setCookie(name(), value, isSessionScope() ? null : expires(), null, path, false);
 	}
 
 	public String getValue() {
