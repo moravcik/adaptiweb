@@ -22,7 +22,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	protected final ListBox listBox = new ListBox();
 	protected final StringModel model = new DefaultStringModel();
 	private final HashMap<String, Integer> indexes = new HashMap<String, Integer>();
-	private final LinkedList<ListBoxItem> values = new LinkedList<ListBoxItem>();
+	private final LinkedList<ListBoxItem> items = new LinkedList<ListBoxItem>();
 	private DefaultNumberModel<Integer> sizeModel;
 	private DummyValidation validation;
 
@@ -38,7 +38,7 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 		setText(null);
 		autoRemoveUnknownItem();
 		indexes.clear();
-		values.clear();
+		items.clear();
 		while(listBox.getItemCount() > 1) listBox.removeItem(1);
 		updateModels();
 	}
@@ -51,8 +51,8 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	}
 
 	private void updateModels() {
-		if (sizeModel != null) sizeModel.setValue(values.size());
-		if (validation != null) validation.setValid(!hasUnknownValue() && getText() != null || values.isEmpty());
+		if (sizeModel != null) sizeModel.setValue(items.size());
+		if (validation != null) validation.setValid(!hasUnknownValue() && getText() != null || items.isEmpty());
 	}
 
 	public <I> void addItems(ListBoxItemFactory<I> factory, I...items) {
@@ -81,9 +81,9 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	private void add(ListBoxItem item) {
 		String value = item.value();
 		assert value != null : "Null item isn't allowed. Use method setNullLabel()";
-		assert !indexes.containsKey(value) : "Duplicate item value " + value;
-		indexes.put(value, values.size());
-		values.add(item);
+		if (indexes.containsKey(value)) return;
+		indexes.put(value, items.size());
+		items.add(item);
 		listBox.insertItem(item.label(), value, listBox.getItemCount());
 
 		String unknown = null;
@@ -188,9 +188,13 @@ public class ListBoxComponent extends FormComponent implements StringModel  {
 	public ListBoxItem getItem() {
 		String value = getWidgetValue();
 		if (value == null || !indexes.containsKey(value)) return null;
-		return values.get(indexes.get(value));
+		return items.get(indexes.get(value));
 	}
 
+	public boolean hasItems() {
+		return !items.isEmpty();
+	}
+	
 	public void focus() {
 		listBox.setFocus(true);
 	}
