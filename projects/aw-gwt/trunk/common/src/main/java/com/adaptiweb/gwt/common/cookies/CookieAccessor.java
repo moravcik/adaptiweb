@@ -37,7 +37,8 @@ public class CookieAccessor implements CookieDefinition {
 	}
 	
 	public void clear() {
-		Cookies.removeCookie(name());
+		if (path != null) Cookies.removeCookie(name(), path);
+		else Cookies.removeCookie(name());
 	}
 	
 	public void extend() {
