@@ -1,0 +1,4 @@
+<module>
+	<inherits name='com.adaptiweb.gwt.MVC'/>
+	<source path="framework"/>
+</module> 

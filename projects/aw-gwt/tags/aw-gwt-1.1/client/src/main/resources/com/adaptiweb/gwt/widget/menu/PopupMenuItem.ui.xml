@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+	<g:FocusPanel>
+		<g:HTMLPanel>
+			<table width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td ui:field="iconCell"><g:Image ui:field="icon"/></td>
+					<td ui:field="labelCell"></td>
+				</tr>
+			</table>
+		</g:HTMLPanel>
+	</g:FocusPanel>
+</ui:UiBinder>
