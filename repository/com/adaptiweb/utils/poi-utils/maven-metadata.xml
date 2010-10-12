@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.adaptiweb.utils</groupId>
+  <artifactId>poi-utils</artifactId>
+  <version>1.3</version>
+  <versioning>
+    <versions>
+      <version>1.3</version>
+    </versions>
+    <lastUpdated>20101012092226</lastUpdated>
+  </versioning>
+</metadata>
