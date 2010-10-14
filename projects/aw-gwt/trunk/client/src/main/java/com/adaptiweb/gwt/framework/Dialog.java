@@ -27,6 +27,7 @@ public class Dialog {
 		public void run() {
 			dialogBox.center();
 			dialogBox.setVisible(true);
+			afterShow();
 		}
 	};
 	private boolean inicialized = false;
@@ -171,6 +172,9 @@ public class Dialog {
 		return dialogBox.isShowing();
 	}
 
+	protected void afterShow() {
+	}
+	
 	protected void afterHide(boolean autoHiden) {
 		if (isModal()) glass.hide();
 	}
