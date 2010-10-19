@@ -20,6 +20,8 @@ public interface CookieDefinition {
 	
 	public void extend();
 	
+	public void clear();
+	
 	public boolean exists();
 	
 	public boolean isSessionScope();
