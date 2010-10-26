@@ -35,4 +35,8 @@ public class MetaProperties extends HashMap<String, String> {
 	public boolean check(String propertyName, String expectedValue) {
 		return containsKey(propertyName) && expectedValue.equals(get(propertyName));
 	}
+
+	public String get(String key, String defaultValue) {
+		return containsKey(key) ? get(key) : defaultValue;
+	}
 }
