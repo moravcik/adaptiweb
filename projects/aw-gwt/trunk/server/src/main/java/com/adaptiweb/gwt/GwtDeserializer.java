@@ -19,8 +19,12 @@ public class GwtDeserializer {
 		else throw new SerializationException("Failed deserialization: " + typeClass.getName());
 	}
 	
-	public static <T> T decodeAndDeserialize(Class<T> typeClass, String serializedEncoded) throws SerializationException, UnsupportedEncodingException {
-		return deserialize(typeClass, URLDecoder.decode(serializedEncoded, "UTF-8"));
+	public static <T> T decodeAndDeserialize(Class<T> typeClass, String serializedEncoded) throws SerializationException {
+		try {
+			return deserialize(typeClass, URLDecoder.decode(serializedEncoded, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }
