@@ -6,6 +6,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
+import com.google.gwt.user.client.rpc.SerializationStreamWriter;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -141,6 +142,17 @@ public class GwtGoodies {
 		if (rpcString == null) return null;
 		try {
 			return ssf.createStreamReader(rpcString).readObject();
+		} catch (SerializationException e) {
+			GWT.log(e.getMessage(), e);
+			return null;
+		}
+	}
+	
+	public static String serializeObject(Object obj, SerializationStreamFactory ssf) {
+		try {
+			SerializationStreamWriter writer = ssf.createStreamWriter();
+			writer.writeObject(obj);
+			return writer.toString();
 		} catch (SerializationException e) {
 			GWT.log(e.getMessage(), e);
 			return null;
