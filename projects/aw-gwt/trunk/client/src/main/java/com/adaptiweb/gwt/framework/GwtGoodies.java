@@ -2,7 +2,6 @@ package com.adaptiweb.gwt.framework;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -160,11 +159,6 @@ public class GwtGoodies {
 		}
 	}
 
-	public static String serializeAndEncodeObject(Object obj, SerializationStreamFactory ssf) {
-		String serialized = serializeObject(obj, ssf);
-		return serialized != null ? URL.encodeComponent(serialized) : null;
-	}
-	
 	public static native String getSerializedRpcValue(String name) /*-{
 		return eval("$wnd."+name);
 	}-*/;
