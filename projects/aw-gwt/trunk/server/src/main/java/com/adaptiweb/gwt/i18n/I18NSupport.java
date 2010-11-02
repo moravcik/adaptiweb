@@ -18,7 +18,7 @@ import com.adaptiweb.utils.commons.Properties;
 import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 
-public final class I18NSupport {
+public final class I18NSupport { // TODO spring-based refactoring needed
 	
 	private final Map<String, Properties> labels = new HashMap<String, Properties>();
 	
@@ -51,10 +51,10 @@ public final class I18NSupport {
 	}
 
 	public String getActiveLocale() {
-		if(preferedLocales.get() != null) {
-			for(String locale : preferedLocales.get()) {
+		if (preferedLocales.get() != null) {
+			for (String locale : preferedLocales.get()) {
 				Properties result = getProperties(locale);
-				if(result != null) return locale;
+				if (result != null) return locale;
 			}
 		}
 		return null;
@@ -62,14 +62,14 @@ public final class I18NSupport {
 
 	public String get(String key, Object...params) {
 		String result = getProperties().getProperty(key);
-		if(result == null) result = getProperties(null).getProperty(key);
+		if (result == null) result = getProperties(null).getProperty(key);
 		return subst(result, params);
 	}
 	
 	private static Pattern PARAM_FORMAT = Pattern.compile("\\{(\\d+)\\}");
 	
 	public static String subst(String format, Object[] params) {
-		if(params.length == 0 || format == null) return format;
+		if (params.length == 0 || format == null) return format;
 		
 		Matcher m = PARAM_FORMAT.matcher(format);
 		StringBuffer result = new StringBuffer();
@@ -89,7 +89,7 @@ public final class I18NSupport {
 	}
 	
 	protected Properties getProperties(String locale) {
-		if(!labels.containsKey(locale)) {
+		if (!labels.containsKey(locale)) {
 			labels.put(locale, loadProperties(locale));
 		}
 		return labels.get(locale);
@@ -118,10 +118,6 @@ public final class I18NSupport {
 		return resourceBaseName;
 	}
 
-	public static <T> T createLabels(Class<? extends T> langDef, Class<?> langManager) {
-		return createLabels(langDef, langManager, "get");
-	}
-
 	public static <T> T createLabels(Class<? extends T> langDef, Class<?> langManager, String staticMethodName) {
 		try {
 			ClassPool pool = ClassPool.getDefault();
@@ -132,9 +128,9 @@ public final class I18NSupport {
 			CtClass ctLabels = pool.get(langDef.getName());
 			ctClass.addInterface(ctLabels);
 			
-			for(CtMethod m : ctLabels.getDeclaredMethods()) {
-				for(Object a : m.getAnnotations()) {
-					if(a instanceof Key) {
+			for (CtMethod m : ctLabels.getDeclaredMethods()) {
+				for (Object a : m.getAnnotations()) {
+					if (a instanceof Key) {
 						String key = ((Key) a).value();
 						
 						StringBuilder body = new StringBuilder();
