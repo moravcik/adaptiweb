@@ -90,6 +90,10 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 		model.replace(item);
 	};
 	
+	public void refresh(R item) {
+		model.refresh(item);
+	};
+	
 	private void renderHeaders() {
         widget.clear();
 //        formatHeaderRow(0, widget.getRowFormatter());

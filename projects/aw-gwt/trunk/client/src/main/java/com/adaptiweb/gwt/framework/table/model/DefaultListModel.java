@@ -80,7 +80,8 @@ public class DefaultListModel<T> implements ListModel<T> {
 
 	@Override
 	public void refresh(int position, int count) {
-		ListRefreshEvent.fire(this, postitionToIndex(position), count);
+		int index = postitionToIndex(position);
+		ListRefreshEvent.fire(this, index, records.subList(index, index + count));
 	}
 
 	private int postitionToIndex(int position) {
@@ -163,5 +164,13 @@ public class DefaultListModel<T> implements ListModel<T> {
 	public void replace(T item) {
 		int index = indexOf(item);
 		if (index >= 0) replace(index, 1, Arrays.asList(item));
+	};
+	
+	public void refresh(T item) {
+		int index = indexOf(item);
+		if (index >= 0) {
+			records.set(index, item);
+			refresh(index, 1);
+		}
 	};
 }
