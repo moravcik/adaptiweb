@@ -37,9 +37,8 @@ public class DefaultListModelTest {
 	class TestRefreshHandler implements ListRefreshHandler<TestRecord> {
 		@Override
 		public void onListRefresh(ListRefreshEvent<TestRecord> event) {
-			refreshCount = event.getCount();
 			refreshIndex = event.getIndex();
-			refreshModel = event.getModel();
+			refreshList = event.getRefreshed();
 		}
 	}
 
@@ -47,9 +46,8 @@ public class DefaultListModelTest {
 	private List<TestRecord> changeInsertedRecords;
 	private List<TestRecord> changeRemovedRecords;
 	
-	private Integer refreshCount;
 	private Integer refreshIndex;
-	private ListModel<TestRecord> refreshModel;
+	private List<TestRecord> refreshList;
 	
 	private ListModel<TestRecord> model;
 	
@@ -78,9 +76,8 @@ public class DefaultListModelTest {
 		changeIndex = null;
 		changeInsertedRecords = null;
 		changeRemovedRecords = null;
-		refreshCount = null;
 		refreshIndex = null;
-		refreshModel = null;
+		refreshList = null;
 	}
 	
 	@Test
@@ -116,7 +113,6 @@ public class DefaultListModelTest {
 		model.refresh(position, count);
 		
 		assertEquals(new Integer(position), refreshIndex);
-		assertEquals(new Integer(count), refreshCount);
-		assertSame(model, refreshModel);
+		assertEquals(count, refreshList.size());
 	}
 }

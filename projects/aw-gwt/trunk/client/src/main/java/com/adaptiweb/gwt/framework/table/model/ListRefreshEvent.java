@@ -1,34 +1,31 @@
 package com.adaptiweb.gwt.framework.table.model;
 
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 public class ListRefreshEvent<R> extends GwtEvent<ListRefreshHandler<R>> {
 
 	private static Type<ListRefreshHandler<?>> TYPE;
 	private final int index;
-	private final int count;
-	private final ListModel<R> model;
+	private final List<R> refreshed;
 
-	protected ListRefreshEvent(ListModel<R> model, int index, int count) {
-		this.model = model;
+	protected ListRefreshEvent(int index, List<R> refreshed) {
 		this.index = index;
-		this.count = count;
+		this.refreshed = refreshed;
 	}
 	
 	public int getIndex() {
 		return index;
 	}
 	
-	public int getCount() {
-		return count;
+	public List<R> getRefreshed() {
+		return refreshed;
 	}
 	
-	public ListModel<R> getModel() {
-		return model;
-	}
-	
-	public static <I> void fire(ListModel<I> model, int index, int count) {
-		if (TYPE != null) model.fireEvent(new ListRefreshEvent<I>(model, index, count));
+	public static <I> 
+	void fire(HasListRefreshHandlers<I> source, int index, List<I> refreshed) {
+		if (TYPE != null) source.fireEvent(new ListRefreshEvent<I>(index, refreshed));
 	}
 
 	@Override
@@ -36,7 +33,7 @@ public class ListRefreshEvent<R> extends GwtEvent<ListRefreshHandler<R>> {
 		handler.onListRefresh(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public Type<ListRefreshHandler<R>> getAssociatedType() {
 		return (Type) TYPE;
@@ -49,7 +46,7 @@ public class ListRefreshEvent<R> extends GwtEvent<ListRefreshHandler<R>> {
 
 	@Override
 	public String toDebugString() {
-		return super.toDebugString() + " refreshed " + count + " from inedx=" + index;
+		return super.toDebugString() + " refreshed " + refreshed.size() + " from index=" + index;
 	}
 
 }

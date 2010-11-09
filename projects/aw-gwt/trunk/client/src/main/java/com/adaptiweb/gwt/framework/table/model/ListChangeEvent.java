@@ -39,7 +39,7 @@ public class ListChangeEvent<T> extends GwtEvent<ListChangeHandler<T>> {
 		handler.onListChange(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	public Type<ListChangeHandler<T>> getAssociatedType() {
 		return (Type) TYPE;
