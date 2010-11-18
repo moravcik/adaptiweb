@@ -1,7 +1,4 @@
 <module>
 	<source path="common"/>
 	<inherits name="com.adaptiweb.utils.commons.Param"/>
-	<!-- suspended BigDecimal support, gwt-math 2.1 not mavenized yet 
-	<inherits name="com.googlecode.gwt.math.Math"/>
-	-->
 </module>
