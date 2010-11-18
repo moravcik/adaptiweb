@@ -16,7 +16,6 @@ package com.adaptiweb.gwt.common.thirdparty;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.math.BigDecimal;
 
 /**
  * NOTE: simplified and removed reflection support to enable GWT usage
@@ -123,12 +122,13 @@ public class EqualsBuilder {
         }
         Class<?> lhsClass = lhs.getClass();
         if (!lhsClass.isArray()) {
-            if (lhs instanceof java.math.BigDecimal) {
-                isEquals = (((java.math.BigDecimal)lhs).compareTo((BigDecimal) rhs) == 0);
-            } else {
+// XXX suspended BigDecimal support, gwt-math 2.1 not mavenized yet
+//            if (lhs instanceof java.math.BigDecimal) {
+//                isEquals = (((java.math.BigDecimal)lhs).compareTo((BigDecimal) rhs) == 0);
+//            } else {
                 // The simple case, not an array, just test the element
                 isEquals = lhs.equals(rhs);
-            }
+//            }
         } else if (lhs.getClass() != rhs.getClass()) {
             // Here when we compare different dimensions, for example: a boolean[][] to a boolean[] 
             this.setEquals(false);
