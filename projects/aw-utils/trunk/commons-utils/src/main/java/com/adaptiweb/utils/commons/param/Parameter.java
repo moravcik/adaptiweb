@@ -4,7 +4,7 @@ package com.adaptiweb.utils.commons.param;
 public interface Parameter<T> {
 	String getParameterName();
 	Object extractValue(T source);
-	void bindValue(T target, String value);
+	void bindValue(T target, String value, ParameterMap params);
 
 	interface Source<T> {
 		Parameter<T>[] getParameters();
