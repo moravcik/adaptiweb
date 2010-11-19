@@ -18,7 +18,7 @@ public class ParameterMap extends LinkedHashMap<String, String> {
 	public void bindParameters(Object target, Parameter<?>... parameters) {
 		for (Parameter param : parameters) {
 			param.bindValue(target, containsKey(param.getParameterName()) 
-					? get(param.getParameterName()) : null);
+					? get(param.getParameterName()) : null, this);
 		}
 	}
 
