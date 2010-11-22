@@ -5,38 +5,38 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class GwtModuleBean {
-	
+
 	/**
 	 * Final name of GWT module - name assigned after compilation.
 	 * Name after compilation can be different than before if root element &lt;module&gt;
-	 * has attribute raname-to (in *.gwt.xml file). 
+	 * has attribute raname-to (in *.gwt.xml file).
 	 */
 	private String name;
-	
+
 	private String contextPath;
-	
+
 	private String locale;
 
 	private boolean enabledHistorySupport = true;
-	
+
 	private Map<String, String> clientProperties;
-	
+
 	/**
 	 * List of JavaScript URLs which should be included on page.
 	 * <p>
 	 * <b>Note:</b> JavaScript can be included also by GWT (&lt;sccript&gt; element in *.gwt.xml file),
-	 * but this didn't allows dynamically include parameters into URL (like Google Maps API key).  
+	 * but this didn't allows dynamically include parameters into URL (like Google Maps API key).
 	 * </p>
 	 */
 	private List<String> jsApis;
-	
+
 	private Map<String, String> serializedObjects;
-	
+
 	@Override
 	public String toString() {
 		return getName();
 	}
-	
+
 	public String getHead() {
 		StringBuilder buff = new StringBuilder();
 		if (getLocale() != null) appendLocale(buff);
@@ -64,17 +64,17 @@ public class GwtModuleBean {
 			buff.append("<meta name=\"client:").append(p.getKey()).append("\" content=\"").append(p.getValue()).append("\" />");
 		}
 	}
-	
+
 	private void appendJsApis(StringBuilder buff) {
 		for (String url : getJsApis()) {
 			appendNewLine(buff);
 			buff.append("<script language=\"javascript\" src=\"").append(url).append("\"></script>");
 		}
 	}
-	
+
 	private void appendBootScript(StringBuilder buff) {
 		appendNewLine(buff);
-	    buff.append("<script language=\"javascript\" src=\"");
+		buff.append("<script language=\"javascript\" src=\"");
 		buff.append(getContextPath()).append('/').append(getName()).append('/').append(getName());
 		buff.append(".nocache.js\"></script>");
 	}
@@ -87,18 +87,19 @@ public class GwtModuleBean {
 
 			for (Entry<String,String> o : serializedObjects.entrySet()) {
 				appendNewLine(buff);
-				buff.append("var ").append(o.getKey()).append("='").append(o.getValue()).append("';");
+				String value = o.getValue().replace("'", "\\'").replace("</script>", "</' + 'script>");
+				buff.append("var ").append(o.getKey()).append("='").append(value).append("';");
 			}
-			
+
 			appendNewLine(buff);
 			buff.append("</script>");
 		}
 	}
-	
+
 	private void appendNewLine(StringBuilder buff) {
 		if (buff.length() > 0) buff.append("\n\t");
 	}
-	
+
 	private void appendHistoryFrame(StringBuilder buff) {
 		appendNewLine(buff);
 		buff.append("<iframe src=\"javascript:''\" id=\"__gwt_historyFrame\" style=\"position:absolute;width:0;height:0;border:0\"></iframe>");
