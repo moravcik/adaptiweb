@@ -48,9 +48,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager
-			</artifactId>
-			<version>3.3.2.GA</version>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>3.6.0.Final</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
