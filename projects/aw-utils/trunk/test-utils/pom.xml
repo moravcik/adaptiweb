@@ -28,7 +28,7 @@
 			<artifactId>dbcp</artifactId>
 			<version>6.0.18</version>
 		</dependency>
-		<dependency>
+  		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>1.7</version>
@@ -38,7 +38,6 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -47,15 +46,15 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>3.6.0.Final</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency> <!-- configured separately to remain hibernate-entitymanager dependency in test scope -->
+		    <groupId>org.hibernate.javax.persistence</groupId>
+		    <artifactId>hibernate-jpa-2.0-api</artifactId>
+		    <version>1.0.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
