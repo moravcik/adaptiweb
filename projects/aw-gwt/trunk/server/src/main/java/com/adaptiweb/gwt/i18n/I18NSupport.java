@@ -18,7 +18,7 @@ import com.adaptiweb.utils.commons.Properties;
 import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 
-public final class I18NSupport { // TODO spring-based refactoring needed
+public final class I18NSupport {
 	
 	private final Map<String, Properties> labels = new HashMap<String, Properties>();
 	
@@ -118,7 +118,7 @@ public final class I18NSupport { // TODO spring-based refactoring needed
 		return resourceBaseName;
 	}
 
-	public static <T> T createLabels(Class<? extends T> langDef, Class<?> langManager, String staticMethodName) {
+	public static <T> T createLabels(Class<? extends T> langDef, Class<?> langManager, String staticMethodName) { // FIXME use instance and method name instead of static method
 		try {
 			ClassPool pool = ClassPool.getDefault();
 			pool.insertClassPath(new ClassClassPath(langDef));
