@@ -25,7 +25,7 @@ public enum Font implements DynamicStyle {
 		element.getStyle().setProperty(style, "");
 	}
 
-	public static Style size(final int size, final Unit unit) {
+	public static Style size(final double size, final Unit unit) {
 		return new Style() {
 			@Override
 			public void apply(Element element) {

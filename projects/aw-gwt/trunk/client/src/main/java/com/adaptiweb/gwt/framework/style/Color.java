@@ -1221,7 +1221,7 @@ public enum Color implements ColorType, Style {
 		return styles.get(stylePropertyName);
 	}
 	
-	private static ColorType custom(final String color) {
+	public static ColorType custom(final String color) {
 		return new ColorType() {
 			public String colorValue() {
 				return color;
