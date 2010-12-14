@@ -14,7 +14,7 @@ public class LiveJavaProperties extends VariableProperties implements LiveFile.F
 	}
 	
 	@Override
-	public String getProperty(String key) {
+	public synchronized String getProperty(String key) {
 		liveFile.checkChanges(this);
 		return super.getProperty(key);
 	}
