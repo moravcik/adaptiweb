@@ -22,7 +22,7 @@ import com.adaptiweb.utils.csvbind.CsvReader;
 
 public @interface CsvField {
 	/**
-	 * column index in CSV
+	 * column index in CSV, 0-based
 	 * @return
 	 */
     int index();
