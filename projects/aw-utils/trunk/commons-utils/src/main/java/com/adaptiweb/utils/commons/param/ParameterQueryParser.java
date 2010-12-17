@@ -16,7 +16,9 @@ public class ParameterQueryParser {
 	
 	public static ParameterMap parseParameters(String queryString, UrlDecoderProvider decoder) {
 		ParameterMap parameterMap = new ParameterMap();
-		String parameterQuery = queryString.startsWith("?") || queryString.startsWith("#") ? queryString.substring(1) : queryString;
+		String parameterQuery = queryString;
+		if (queryString.startsWith("?") || queryString.startsWith("#")) parameterQuery = queryString.substring(1);
+		else if (queryString.startsWith("/#")) parameterQuery = queryString.substring(2);
 		for (String param : parameterQuery.split("&")) {
 			String[] nameAndValue = param.split("=");
 			if (nameAndValue.length == 2) 
