@@ -49,7 +49,7 @@ public class CsvReaderTest {
         assertNotNull(readerTest);
         readerImport = new InputStreamReader(cs);
         assertNotNull(readerImport);
-        excelSource = HSSFRowSource.fromResource("/testCsvReader.xls");
+        excelSource = HSSFRowSource.fromResource("/testCsvReader.xls", CsvReaderTest.class);
         assertNotNull(excelSource);
     }
 

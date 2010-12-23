@@ -18,8 +18,8 @@ public class PoiUtils {
 		}
 	}
 	
-	public static HSSFWorkbook loadWorkbookFromResource(String resourcePath) {
-		return loadWorkbookFromStream(InputStream.class.getResourceAsStream(resourcePath));
+	public static HSSFWorkbook loadWorkbookFromResource(String resourcePath, Class<?> neighbour) {
+		return loadWorkbookFromStream(neighbour.getResourceAsStream(resourcePath));
 	}
 
 	public static HSSFWorkbook loadWorkbookFromStream(InputStream stream) {

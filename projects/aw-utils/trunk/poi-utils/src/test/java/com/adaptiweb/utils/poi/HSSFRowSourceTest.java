@@ -28,7 +28,7 @@ public class HSSFRowSourceTest {
 	
 	@Before
 	public void prepareReader() {
-		source = HSSFRowSource.fromResource(TEST_RESOURCE);
+		source = HSSFRowSource.fromResource(TEST_RESOURCE, HSSFRowSourceTest.class);
 		Assert.assertNotNull(source);
 	}
 	

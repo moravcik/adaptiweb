@@ -65,8 +65,8 @@ public class HSSFRowSource implements StringArraySource {
 		return stringCache.toArray(new String[stringCache.size()]);
 	}
 	
-	public static HSSFRowSource fromResource(String resourcePath) {
-		return new HSSFRowSource(PoiUtils.loadWorkbookFromResource(resourcePath));
+	public static HSSFRowSource fromResource(String resourcePath, Class<?> neighbour) {
+		return new HSSFRowSource(PoiUtils.loadWorkbookFromResource(resourcePath, neighbour));
 	}
 
 	public static HSSFRowSource fromFile(String filePath) {
