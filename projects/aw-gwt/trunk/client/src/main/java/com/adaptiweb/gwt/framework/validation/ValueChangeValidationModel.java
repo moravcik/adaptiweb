@@ -9,7 +9,7 @@ public class ValueChangeValidationModel extends AbstractValidationModel {
 	private String errorMessage;
 	private final HandlerRegistration registration;
 
-	protected <T> ValueChangeValidationModel(HasValueChangeHandlers<T> vcm, final ValidationSource source) {
+	public <T> ValueChangeValidationModel(HasValueChangeHandlers<T> vcm, final ValidationSource source) {
 		registration = vcm.addValueChangeHandler(new ValueChangeHandler<T>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<T> event) {
