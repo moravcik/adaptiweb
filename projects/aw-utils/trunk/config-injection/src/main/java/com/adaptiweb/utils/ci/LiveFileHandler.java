@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
 
 import com.adaptiweb.utils.commons.VariableResolver;
@@ -42,6 +43,14 @@ public class LiveFileHandler implements LiveFile {
 	}
 
 	/**
+	 * Using standard Spring PropertyEditor to resolve Resource from string
+	 * with possible use of prefixes: classpath: file: etc.
+	 */
+	public void setResource(Resource resource) throws IOException {
+		setPropertyFile(resource.getFile().getPath());
+	}
+
+	/**
 	 * Enables substituting variables in values. Optional.
 	 */
 	public void setVariables(VariableResolver variables) {
@@ -63,6 +72,14 @@ public class LiveFileHandler implements LiveFile {
 		this.templateResource = templateResource;
 	}
 
+	/**
+	 * Using standard Spring PropertyEditor to resolve Resource from string
+	 * with possible use of prefixes: classpath: file: etc.
+	 */
+	public void setTemplate(Resource templateResource) throws IOException {
+		this.templateResource = templateResource.getFile().getPath();
+	}
+	
 	public void checkChanges(FileLoader loader) {
 		long currentTime = System.currentTimeMillis();
 		if (currentTime - lastChecked < changesCheckPeriod) return;

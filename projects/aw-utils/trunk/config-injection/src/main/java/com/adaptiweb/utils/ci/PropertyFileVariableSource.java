@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 
 import com.adaptiweb.utils.ci.LiveFile.FileLoader;
 import com.adaptiweb.utils.commons.InicializableVariableSource;
@@ -28,6 +29,10 @@ public class PropertyFileVariableSource implements InicializableVariableSource, 
 
 	public void setPropertyFileName(String fileName) {
 		fileHandler.setPropertyFile(fileName);
+	}
+	
+	public void setPropertyResource(Resource resource) throws IOException {
+		fileHandler.setResource(resource);
 	}
 	
 	public void setSystemResourceAsTemplate(String template) {
