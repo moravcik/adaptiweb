@@ -60,7 +60,7 @@ public class ParameterQueryBuilder {
 	
 	public String toUrlQueryString(UrlEncoderProvider encoder) {
 		String urlQuery = toUrlQueryString(params, encoder);
-		if (urlQuery == null || urlQuery.length() == 0) return baseUrl;
+		if (urlQuery == null || urlQuery.length() == 0) return baseUrl != null ? baseUrl : "";
 		else if (baseUrl != null) return baseUrl + (baseUrl.contains("?") ? "&" : "?") + urlQuery;
 		else return urlQuery;
 	}
