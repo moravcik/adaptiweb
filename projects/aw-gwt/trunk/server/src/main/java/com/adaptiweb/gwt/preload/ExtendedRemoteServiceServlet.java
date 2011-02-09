@@ -24,4 +24,11 @@ public class ExtendedRemoteServiceServlet extends RemoteServiceServlet {
 		perThreadRequest.remove();
 	}
 	
+	protected String getContextURL() {
+		HttpServletRequest req = getThreadLocalRequest();
+		StringBuffer url = req.getRequestURL();
+		int uriPathSize = req.getRequestURI().length() - req.getContextPath().length();
+		return url.substring(0, url.length() - uriPathSize);
+	}
+
 }
