@@ -1,17 +1,17 @@
 package com.adaptiweb.gwt.preload;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -74,22 +74,25 @@ public class GwtPreloadManager {
 	private final Map<String, List<Loader>> loaders = new HashMap<String, List<Loader>>();
 	
 	@Autowired
-	public void init(Collection<RemoteServiceServlet> gwtServices) {
-		for (RemoteServiceServlet service : gwtServices) {
-			Class<? extends RemoteServiceServlet> serviceType = service.getClass();
-			for (Class<?> iterfaceType : findRemoteSeviceInterfaces(serviceType)) {
+	public void setServlets(Collection<RemoteServiceServlet> gwtServlets) {
+		Field delegateField = ReflectionUtils.findField(RemoteServiceServlet.class, "delegate");
+		ReflectionUtils.makeAccessible(delegateField);
+		for (RemoteServiceServlet servlet : gwtServlets) {
+			Object delegate = ReflectionUtils.getField(delegateField, servlet);
+			Class<?> delegateType = delegate.getClass();
+			for (Class<?> iterfaceType : findRemoteSeviceInterfaces(delegateType)) {
 				for (Method method : iterfaceType.getMethods()) {
-					Preload annotation = getPreloadAnnotation(method, serviceType);
-					if (annotation != null) register(service, method, annotation);
+					Preload annotation = getPreloadAnnotation(method, delegateType);
+					if (annotation != null) register(servlet, delegate, method, annotation);
 				}
 			}
 		}
 	}
 	
-	private void register(RemoteServiceServlet service, Method method, Preload annotation) {
+	private void register(RemoteServiceServlet servlet, Object delegate, Method method, Preload annotation) {
 		String name = annotation.name();
 		if (name.length() == 0) name = getDefaultName(method);
-		Loader loader = new Loader(method, service, name);
+		Loader loader = new Loader(method, delegate, servlet, name);
 		
 		for (String module : annotation.modules()) putLoader(module, loader);
 		if (annotation.modules().length == 0) putLoader(null, loader);
@@ -108,16 +111,16 @@ public class GwtPreloadManager {
 		list.add(loader);
 	}
 
-	private Preload getPreloadAnnotation(Method method, Class<? extends RemoteServiceServlet> serviceType) {
+	private Preload getPreloadAnnotation(Method method, Class<?> serviceType) {
 		Method implMethod = ReflectionUtils.findMethod(serviceType, method.getName(), method.getParameterTypes());
 		return implMethod.isAnnotationPresent(Preload.class) ? implMethod.getAnnotation(Preload.class) :
 			method.isAnnotationPresent(Preload.class) ? method.getAnnotation(Preload.class) :
 			null;
 	}
 
-	private Iterable<Class<?>> findRemoteSeviceInterfaces(Class<? extends RemoteServiceServlet> gwtServiceType) {
+	private Iterable<Class<?>> findRemoteSeviceInterfaces(Class<?> gwtDelegateType) {
 		ArrayList<Class<?>> result = new ArrayList<Class<?>>();
-		for (Class<?> it :  collectAllInterfaces(gwtServiceType))
+		for (Class<?> it : ClassUtils.getAllInterfacesForClass(gwtDelegateType))
 			if (it != RemoteService.class && RemoteService.class.isAssignableFrom(it))
 				result.add(it);
 		return result;
@@ -150,20 +153,22 @@ public class GwtPreloadManager {
 
 	private static class Loader {
 		private final Method method;
-		private final RemoteServiceServlet service;
+		private final Object delegate;
+		private final RemoteServiceServlet servlet;
 		private final String variableName;
 		
-		public Loader(Method method, RemoteServiceServlet service, String variableName) {
+		public Loader(Method method, Object delegate, RemoteServiceServlet servlet, String variableName) {
 			this.method = method;
-			this.service = service;
+			this.delegate = delegate;
+			this.servlet = servlet;
 			this.variableName = variableName;
 		}
 
 		public String load(SerializationPolicyProvider policyProvider, HttpServletRequest request) {
-			ExtendedRemoteServiceServlet customizedService = service instanceof ExtendedRemoteServiceServlet ? ((ExtendedRemoteServiceServlet) service) : null; 
+			ExtendedRemoteServiceServlet customizedService = servlet instanceof ExtendedRemoteServiceServlet ? ((ExtendedRemoteServiceServlet) servlet) : null; 
 			if (customizedService != null) customizedService.setThreadLocalRequest(request); 
 			try {
-				Object result = method.invoke(service);
+				Object result = method.invoke(delegate);
 				if (result == null) return null;
 				SerializationPolicy policy = policyProvider.getPolicyFor(method.getDeclaringClass());
 				return RPC.encodeResponseForSuccess(method, result, policy);
@@ -179,24 +184,4 @@ public class GwtPreloadManager {
 		}
 	}
 	
-	//TODO mmove to some ReclectionUtils
-	private static Class<?>[] collectAllInterfaces(Class<?> type) {
-		HashSet<Class<?>> result = new HashSet<Class<?>>();
-		LinkedList<Class<?>> queue = new LinkedList<Class<?>>();
-		queue.add(type);
-		
-		while (!queue.isEmpty()) {
-			type = queue.remove();
-			
-			Class<?> superType = type.getSuperclass();
-			if (superType != null && !Object.class.equals(superType))
-				queue.add(superType);
-			
-			for (Class<?> it : type.getInterfaces()) {
-				result.add(it);
-				queue.add(it);
-			}
-		}
-		return result.toArray(new Class<?>[result.size()]);
-	}
 }
