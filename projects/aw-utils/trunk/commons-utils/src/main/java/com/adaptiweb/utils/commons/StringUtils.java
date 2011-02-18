@@ -74,7 +74,7 @@ public final class StringUtils {
 		return sb.toString();
 	}
 
-	public static String join(Iterable<String> values, String separator) {
+	public static String join(Iterable<Object> values, String separator) {
 		StringBuilder sb = null;
 		for (Object value : values) {
 			if (sb == null) sb = new StringBuilder();
