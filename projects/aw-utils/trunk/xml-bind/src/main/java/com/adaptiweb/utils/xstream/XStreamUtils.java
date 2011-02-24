@@ -25,17 +25,22 @@ public class XStreamUtils {
 	private static XStream xstream;
 	private static Set<Class<?>> processedClasses;
 	
-	public static synchronized XStream getXStream(Class<?> annotatedClass) {
+	public static synchronized XStream getXStream(Class<?> annotatedClass, Class<?>... otherClasses) {
 		if (xstream == null) {
 			xstream = new XStreamIgnoringUnknownFields();
 			xstream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 			processedClasses = new HashSet<Class<?>>();
 		}
+		processClass(annotatedClass);
+		if (otherClasses != null) 
+			for (Class<?> otherClass : otherClasses) processClass(otherClass);
+		return xstream;
+	}
+	
+	private static void processClass(Class<?> annotatedClass) {
 		if (!processedClasses.contains(annotatedClass)) {
 			xstream.processAnnotations(annotatedClass);
 			processedClasses.add(annotatedClass);
 		}
-		return xstream;
 	}
-	
 }
