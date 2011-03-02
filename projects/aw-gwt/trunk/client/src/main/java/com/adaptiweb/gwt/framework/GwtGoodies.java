@@ -148,6 +148,19 @@ public class GwtGoodies {
 		}
 	}
 	
+	/**
+	 * Serialize object to String on client side<br/>
+	 * <p>
+	 * Usage:<br/> 
+	 * SerializationStreamFactory sf = GWT.<SerializationStreamFactory>create(RpcService.class);<br/>
+	 * String serialized = GwtGoodies.serializeObject(inputObject, sf);
+	 * <p>
+	 * @param obj input object to serialize
+	 * @param ssf SerializatonStreamFactory for enclosing RPC service 
+	 * @return Returns serialized object in string
+	 * 
+	 * @see {@link GwtDeserializer} for deserializing on server side
+	 */
 	public static String serializeObject(Object obj, SerializationStreamFactory ssf) {
 		try {
 			SerializationStreamWriter writer = ssf.createStreamWriter();

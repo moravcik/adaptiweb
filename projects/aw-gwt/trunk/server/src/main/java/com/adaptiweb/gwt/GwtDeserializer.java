@@ -8,6 +8,9 @@ import org.springframework.util.ClassUtils;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.server.rpc.impl.ServerSerializationStreamReader;
 
+/**
+ * Usage: T deserialized = GwtDeserializer.decode(stringSerialized).deserialize(T.class);
+ */
 public class GwtDeserializer {
 	
 	@SuppressWarnings("unchecked")
