@@ -4,11 +4,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.util.ClassLoaderReference;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyReplacer;
+import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 public class XStreamUtils {
 
 	public static class XStreamIgnoringUnknownFields extends XStream {
+		private static final XmlFriendlyReplacer replacer = new XmlFriendlyReplacer("$", "_"); // transitive replacer
+		
+		public XStreamIgnoringUnknownFields() {
+			// copied from default XStream constructor and added replacer
+            super(null, new XppDriver(replacer), new ClassLoaderReference(new CompositeClassLoader()), (Mapper) null, new DefaultConverterLookup(), null); 
+		}
+		
 		@Override
 		protected MapperWrapper wrapMapper(MapperWrapper next) {
 			return new MapperWrapper(next) {
