@@ -27,8 +27,8 @@ public class ParameterQueryBuilder {
 		return this;
 	}
 	
-	public ParameterQueryBuilder addParameter(String name, String value) {
-		this.params.put(name, value);
+	public ParameterQueryBuilder addParameter(String name, Object value) {
+		this.params.put(name, value != null ? String.valueOf(value.toString()) : null);
 		return this;
 	}
 	
