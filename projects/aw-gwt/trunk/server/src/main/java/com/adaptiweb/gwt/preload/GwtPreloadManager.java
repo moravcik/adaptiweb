@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -79,7 +80,7 @@ public class GwtPreloadManager {
 		ReflectionUtils.makeAccessible(delegateField);
 		for (RemoteServiceServlet servlet : gwtServlets) {
 			Object delegate = ReflectionUtils.getField(delegateField, servlet);
-			Class<?> delegateType = delegate.getClass();
+			Class<?> delegateType = AopUtils.isAopProxy(delegate) ? AopUtils.getTargetClass(delegate) : delegate.getClass();
 			for (Class<?> iterfaceType : findRemoteSeviceInterfaces(delegateType)) {
 				for (Method method : iterfaceType.getMethods()) {
 					Preload annotation = getPreloadAnnotation(method, delegateType);
