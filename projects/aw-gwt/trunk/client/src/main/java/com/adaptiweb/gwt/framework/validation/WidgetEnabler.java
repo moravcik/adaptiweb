@@ -31,4 +31,8 @@ public class WidgetEnabler implements LogicValueChangeHandler {
 	public void onLogicValueChange(LogicValueChangeEvent event) {
 		enable(model.getLogicValue());
 	}
+	
+	public LogicModel getLogicModel() {
+		return model;
+	}
 }
