@@ -31,7 +31,7 @@
 	</modules>
 	
 	<properties>
-		<gwtVersion>2.1.0</gwtVersion>
+		<gwtVersion>2.2.0</gwtVersion>
 		<awUtilsVersion>1.4-SNAPSHOT</awUtilsVersion>
 	</properties>
 
