@@ -37,6 +37,10 @@ public class RadioGroup<T> extends Listeners<ChangeListener<T>> implements Value
 		rb.addValueChangeHandler(this);
 		return rb;
 	}
+	
+	public RadioButton getRadioButton(T value) {
+		return buttons.get(value);
+	}
 
 	public void onValueChange(ValueChangeEvent<Boolean> event) {
 		if (values.containsKey(event.getSource()) && event.getValue())
