@@ -1,4 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
 	<inherits name='com.adaptiweb.gwt.MVC'/>
+	<inherits name='com.adaptiweb.gwt.Properties'/>
+	<inherits name='com.adaptiweb.gwt.Tracker'/>
 	<source path="framework"/>
 </module> 
