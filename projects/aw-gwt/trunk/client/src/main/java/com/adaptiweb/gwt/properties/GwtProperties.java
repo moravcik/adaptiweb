@@ -1,4 +1,4 @@
-package com.adaptiweb.gwt.util;
+package com.adaptiweb.gwt.properties;
 
 import java.util.HashMap;
 
@@ -8,10 +8,11 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 
-public class MetaProperties extends HashMap<String, String> {
+@SuppressWarnings("serial")
+public class GwtProperties extends HashMap<String, String> {
 
-	private MetaProperties(String prefix) {
-		GWT.log("Creating MetaProperties with prefix=" + prefix , null);
+	private GwtProperties(String prefix) {
+		GWT.log("Creating GwtProperties with prefix=" + prefix , null);
 		NodeList<Element> nodes = Document.get().getElementsByTagName("META");
 		for (int i = 0; i < nodes.getLength(); i++) {
 			MetaElement metaElement = MetaElement.as(nodes.getItem(i));
@@ -20,10 +21,10 @@ public class MetaProperties extends HashMap<String, String> {
 		}
 	}
 
-	private static final HashMap<String,MetaProperties> instances = new HashMap<String, MetaProperties>();
+	private static final HashMap<String,GwtProperties> instances = new HashMap<String, GwtProperties>();
 
-	public static MetaProperties instance(String prefix) {
-		if (!instances.containsKey(prefix)) instances.put(prefix, new MetaProperties(prefix));
+	public static GwtProperties instance(String prefix) {
+		if (!instances.containsKey(prefix)) instances.put(prefix, new GwtProperties(prefix));
 		return instances.get(prefix);
 	}
 

@@ -28,6 +28,13 @@
 			<version>${gwtVersion}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- GIN dependencies -->
+		<dependency>
+		  <groupId>com.google.gwt.inject</groupId>
+		  <artifactId>gin</artifactId>
+		  <version>1.5.0</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
