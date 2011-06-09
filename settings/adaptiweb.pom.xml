@@ -5,7 +5,7 @@
 
 	<groupId>com.adaptiweb</groupId>
 	<artifactId>adaptiweb-pom</artifactId>
-	<version>1.3</version>
+	<version>1.4</version>
 	<packaging>pom</packaging>
 
 	<name>Parent POM for Adaptiweb projects</name>
@@ -28,6 +28,13 @@
 	</organization>
 	
 	<build>
+		<extensions> 
+			<extension> 
+				<groupId>org.apache.maven.wagon</groupId> 
+				<artifactId>wagon-webdav-jackrabbit</artifactId> 
+				<version>1.0-beta-7</version> 
+			</extension> 
+		</extensions> 
 		<plugins>
 			<plugin>
 				<groupId>com.adaptiweb.mojo</groupId>
