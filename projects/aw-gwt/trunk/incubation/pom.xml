@@ -40,7 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.adaptiweb.utils</groupId>
-			<artifactId>config-injection</artifactId>
+			<artifactId>utils-incubation</artifactId>
 			<version>${awUtilsVersion}</version>
 		</dependency>
 		<dependency>
