@@ -4,6 +4,8 @@ import java.util.Map;
 
 public interface SpelEvaluator {
 
+	boolean isExpression(String expressionString);
+	
 	SpelEvaluator setExpression(String expressionString);
 	
 	SpelEvaluator setVariable(String name, Object value);
