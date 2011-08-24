@@ -12,6 +12,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * (which works with {@link HttpServletRequest request}) from another bean.
  * <br>For example, when we want include RPC responses directly on page into JavaScript variables.
  */
+@SuppressWarnings("serial")
 public class ExtendedRemoteServiceServlet extends RemoteServiceServlet {
 	
 

@@ -1,4 +1,4 @@
-package com.adaptiweb.server.utils;
+package com.adaptiweb.gwt.conf;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -19,8 +19,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.adaptiweb.utils.commons.VariableResolver;
-import com.adaptiweb.utils.commons.VariableSource;
+import com.adaptiweb.utils.ci.VariableResolver;
+import com.adaptiweb.utils.ci.VariableSource;
 
 
 

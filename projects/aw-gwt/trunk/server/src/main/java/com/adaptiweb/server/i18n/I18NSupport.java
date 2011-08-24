@@ -1,7 +1,11 @@
-package com.adaptiweb.gwt.i18n;
+package com.adaptiweb.server.i18n;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +18,9 @@ import javassist.CtNewConstructor;
 import javassist.CtNewMethod;
 import javassist.NotFoundException;
 
-import com.adaptiweb.utils.commons.Properties;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.DefaultResourceLoader;
+
 import com.google.gwt.i18n.client.LocalizableResource.Key;
 
 
@@ -28,13 +34,13 @@ public final class I18NSupport {
 	
 	private final Class<?> neighbourClass;
 	
-	public I18NSupport(String resourceBaseName, Class<?> neighbourClass) {
-		this.resourceBaseName = resourceBaseName;
-		this.neighbourClass = neighbourClass;
-	}
+//	public I18NSupport(String resourceBaseName, Class<?> neighbourClass) {
+//		this.resourceBaseName = resourceBaseName;
+//		this.neighbourClass = neighbourClass;
+//	}
 
 	public I18NSupport(Class<?> i18nInterfaceClass) {
-		this.resourceBaseName = i18nInterfaceClass.getSimpleName();
+		this.resourceBaseName = "classpath:" + i18nInterfaceClass.getName().replaceAll("\\.", "/");
 		this.neighbourClass = i18nInterfaceClass;
 	}
 
@@ -96,13 +102,25 @@ public final class I18NSupport {
 	}
 
 	protected Properties loadProperties(String locale) {
-		String resourceName = getResourceName(locale);
-//		System.out.println("loading i18n resource: " + resourceName);
+		InputStream resourceStream = null;
+		InputStreamReader resourceStreamReader = null;
 		try {
-			return new Properties(resourceName, getNeighbourClass(), "UTF-8");
-		} catch (IllegalArgumentException e) {
-//			e.printStackTrace();
+			DefaultResourceLoader loader = new DefaultResourceLoader();
+			if (getNeighbourClass() != null) 
+				loader.setClassLoader(getNeighbourClass().getClassLoader());
+			String resourceName = getResourceName(locale);
+//			System.out.println("loading i18n resource: " + resourceName);
+			resourceStream = loader.getResource(resourceName).getInputStream();
+			resourceStreamReader = new InputStreamReader(resourceStream, "UTF-8");
+			Properties props = new Properties();
+			props.load(resourceStreamReader);
+			return props;
+		} catch (IOException e) {
+			// resource does not exist, using default
 			return null;
+		} finally {
+			IOUtils.closeQuietly(resourceStreamReader);
+			IOUtils.closeQuietly(resourceStream);
 		}
 	}
 
@@ -111,7 +129,7 @@ public final class I18NSupport {
 	}
 
 	protected String getResourceName(String locale) {
-		return locale != null ? getResourceBaseName() + "_" + locale : getResourceBaseName();
+		return (locale != null ? getResourceBaseName() + "_" + locale : getResourceBaseName()) + ".properties";
 	}
 
 	protected String getResourceBaseName() {

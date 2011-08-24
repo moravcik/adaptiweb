@@ -1,6 +1,6 @@
 package com.adaptiweb.gwt.conf;
 
-import com.adaptiweb.utils.commons.VariableResolver;
+import com.adaptiweb.utils.ci.VariableResolver;
 
 public class GwtModuleJsApi extends UriRelatedConfiguration {
 	

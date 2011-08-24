@@ -3,7 +3,7 @@ package com.adaptiweb.gwt.conf;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.adaptiweb.utils.commons.VariableResolver;
+import com.adaptiweb.utils.ci.VariableResolver;
 
 public class GwtModulePreferences extends UriRelatedConfiguration {
 	

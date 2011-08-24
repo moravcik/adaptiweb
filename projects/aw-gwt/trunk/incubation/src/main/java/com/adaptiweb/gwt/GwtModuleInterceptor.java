@@ -21,7 +21,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.adaptiweb.gwt.conf.GwtModuleJsApi;
 import com.adaptiweb.gwt.conf.GwtModulePreferences;
 import com.adaptiweb.gwt.preload.GwtPreloadManager;
-import com.adaptiweb.utils.commons.VariableResolver;
+import com.adaptiweb.utils.ci.VariableResolver;
 
 public class GwtModuleInterceptor extends HandlerInterceptorAdapter {
 
