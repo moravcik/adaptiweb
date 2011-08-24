@@ -9,11 +9,11 @@
 		<version>1.3-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>aw-gwt-server</artifactId>
-	<name>Adaptiweb GWT server</name>
+	<artifactId>gwt-incubation</artifactId>
+	<name>Adaptiweb GWT incubation</name>
 
 	<properties>
-		<springVersion>[2.5,3.0.5]</springVersion>
+		<springVersion>[2.5,3.0)</springVersion>
 		<slf4jVersion>[1.5.0,2.0.0)</slf4jVersion>
 	</properties>
 
@@ -21,6 +21,11 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>aw-gwt-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>aw-gwt-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -33,24 +38,26 @@
 			<artifactId>commons-utils</artifactId>
 			<version>${awUtilsVersion}</version>
 		</dependency>
-		
-		<!-- I18NSupport dependency -->
+		<dependency>
+			<groupId>com.adaptiweb.utils</groupId>
+			<artifactId>config-injection</artifactId>
+			<version>${awUtilsVersion}</version>
+		</dependency>
 		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<version>3.4.GA</version>
 			<optional>true</optional>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
+			<artifactId>spring-webmvc</artifactId>
 			<version>${springVersion}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
+			<artifactId>spring-aop</artifactId>
 			<version>${springVersion}</version>
 			<optional>true</optional>
 		</dependency>
@@ -66,11 +73,6 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-		    <groupId>commons-lang</groupId>
-		    <artifactId>commons-lang</artifactId>
-		    <version>2.4</version>
-		</dependency>		
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4jVersion}</version>
@@ -79,6 +81,12 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4jVersion}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.5</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

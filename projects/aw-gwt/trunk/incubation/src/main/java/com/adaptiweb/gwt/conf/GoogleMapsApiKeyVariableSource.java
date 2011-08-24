@@ -1,23 +1,23 @@
-package com.adaptiweb.server.utils;
+package com.adaptiweb.gwt.conf;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.adaptiweb.utils.commons.InicializableVariableSource;
-import com.adaptiweb.utils.commons.VariableResolver;
+import com.adaptiweb.utils.ci.InicializableVariableSource;
+import com.adaptiweb.utils.ci.VariableResolver;
 
 /**
  * Dynamic variable source for resolving Google Maps API Key according to server name (from request).
  * <p>You can configure this source to {@link VariableResolver}.
  * <pre>
- *   &lt;bean name="config" class="{@link com.adaptiweb.utils.commons.VariableResolver}" primary="true"&gt;
+ *   &lt;bean name="config" class="{@link com.adaptiweb.utils.ci.VariableResolver}" primary="true"&gt;
  *     &lt;constructor-arg&gt;
  *       &lt;list&gt;
  *         &lt;ref bean="configProperties"/&gt;
@@ -37,11 +37,11 @@ import com.adaptiweb.utils.commons.VariableResolver;
  *  ... that variable should be configured in other variable source (e.g. {@link com.adaptiweb.utils.ci.PropertyFileVariableSource})
  * </ul>
  * 
- * @see com.adaptiweb.utils.commons.VariableResolver
+ * @see com.adaptiweb.utils.ci.VariableResolver
  */
 public class GoogleMapsApiKeyVariableSource implements InicializableVariableSource {
 
-	private static final Logger logger = LoggerFactory.getLogger(GoogleMapsApiKeyVariableSource.class);
+	private static final Log log = LogFactory.getLog(GoogleMapsApiKeyVariableSource.class);
 
 	public String variableName = "googleMaps.apiKey";
 
@@ -58,7 +58,7 @@ public class GoogleMapsApiKeyVariableSource implements InicializableVariableSour
 			String serverName = normalizeDomainName(request.getServerName());
 			String property = variableName + "." + serverName;
 			String result = variables.resolveValue(property, "");
-			logger.info("Api key for server name '{}' is {}", serverName, result.length() == 0 ? "${" + property + "}" : result);
+			log.info(String.format("Api key for server name '%s' is %s", serverName, result.length() == 0 ? "${" + property + "}" : result));
 			return result;
 		} else
 			return null;

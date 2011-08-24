@@ -4,7 +4,7 @@
 
 	<groupId>com.adaptiweb.aw-gwt</groupId>
 	<artifactId>aw-gwt</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>GWT Framework by Adaptiweb</name>
@@ -27,12 +27,13 @@
 		<module>common</module>
 		<module>client</module>
 		<module>server</module>
-		<module>test</module>
+		<module>incubation</module>
+		<!-- module>test</module -->
 	</modules>
 	
 	<properties>
-		<gwtVersion>2.2.0</gwtVersion>
-		<awUtilsVersion>1.4-SNAPSHOT</awUtilsVersion>
+		<gwtVersion>2.2.0</gwtVersion> <!-- TODO 2.3.0 -->
+		<awUtilsVersion>1.5-SNAPSHOT</awUtilsVersion>
 	</properties>
 
 	<profiles>

@@ -1,4 +1,4 @@
-package com.adaptiweb.server.utils;
+package com.adaptiweb.server;
 
 import java.io.IOException;
 import java.util.Enumeration;

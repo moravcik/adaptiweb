@@ -4,8 +4,8 @@ import java.util.StringTokenizer;
 
 import org.springframework.util.AntPathMatcher;
 
+import com.adaptiweb.utils.ci.VariableResolver;
 import com.adaptiweb.utils.commons.ArrayUtils;
-import com.adaptiweb.utils.commons.VariableResolver;
 
 public class UriRelatedConfiguration {
 
