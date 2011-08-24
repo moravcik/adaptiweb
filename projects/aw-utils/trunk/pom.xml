@@ -11,19 +11,18 @@
 	<groupId>com.adaptiweb.utils</groupId>
 	<artifactId>aw-utils</artifactId>
 	<packaging>pom</packaging>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.5-SNAPSHOT</version>
 	<name>AdaptiWeb Utils</name>
 	
 	<url>http://adaptiweb.googlecode.com/svn/site/aw-utils/index.html</url>
 
 	<modules>
 		<module>commons-utils</module>
-		<module>xml-bind</module>
 		<module>csv-bind</module>
-		<module>type-analyzer</module>
-		<module>test-utils</module>
-		<module>config-injection</module>
+		<module>livefile</module>
 		<module>poi-utils</module>
+		<module>xstream-utils</module>
+		<module>incubation</module>
 	</modules>
 
 	<dependencies>
