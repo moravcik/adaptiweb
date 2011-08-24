@@ -158,6 +158,14 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 			}
 			
 			@Override
+			public boolean isExpression(String expressionString) {
+				if (expressionString == null) return false;
+				else if (!parserContext.isTemplate()) return true;
+				else return expressionString.contains(templatePrefix) 
+					&& expressionString.contains(templateSuffix);
+			}
+			
+			@Override
 			public SpelEvaluator setExpression(String expressionString) {
 				expression.set(parserContext != null 
 					? expressionParser.parseExpression(expressionString, parserContext)
