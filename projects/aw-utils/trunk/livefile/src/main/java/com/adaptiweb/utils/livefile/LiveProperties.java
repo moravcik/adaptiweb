@@ -44,11 +44,11 @@ public class LiveProperties extends Properties implements LiveFile, LiveFile.Fil
 	
 	private String evaluateResult(String originalResult) {
 		if (spelEvaluator != null && originalResult != null) {
-			String result = originalResult;
 			boolean initializeRootObject = spelRootContext;
+			String result = originalResult;
 			// nested expression loop
 			while (spelEvaluator.isExpression(result)) {
-				if (!initializeRootObject) {
+				if (initializeRootObject) {
 					spelEvaluator.setRootObject(this);
 					initializeRootObject = false;
 				}
