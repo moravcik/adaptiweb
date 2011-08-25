@@ -2,6 +2,8 @@ package com.adaptiweb.utils.spel;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -35,12 +37,26 @@ public class SpelEvaluatorFactoryBeanTest {
 	@Autowired @Qualifier("testSpel") SpelEvaluatorFactoryBean spelFactory;
 	
 	@Test
-	public void test() {
+	public void testProperties() {
 		assertEquals("V@Lu3", aaa);
 		assertEquals("V@Lu3", bbb);
 		assertEquals("V@Lu3", spelFactory.getObject().setExpression(ccc).evaluate());
 		assertEquals("V@Lu3/V@Lu3", spel.setExpression("${myProperties.aaa}/${testProperties.bbb}").evaluate());
 		assertEquals("V@Lu3/V@Lu3", spel.setRootObject(testProperties).setExpression(ddd).evaluate());
+	}
+	
+	@Test
+	public void testNestedMap() {
+		Map<String, String> testMap = new HashMap<String, String>();
+		testMap.put("d", "d${a + '|' + b + '|' + c}");
+		testMap.put("c", "c${b}");
+		testMap.put("a", "a");
+		testMap.put("b", "b${a}");
+		SpelEvaluator eval = spelFactory.getObject().setRootObject(testMap);
+		assertEquals("cba", eval.setExpression("${c}").evaluate());
+		assertEquals("a", eval.setExpression("${a}").evaluate());
+		assertEquals("ba", eval.setExpression("${b}").evaluate());
+		assertEquals("da|ba|cba", eval.setExpression("${d}").evaluate(String.class));
 	}
 
 }

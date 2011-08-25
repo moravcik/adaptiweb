@@ -157,8 +157,7 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 				return this;
 			}
 			
-			@Override
-			public boolean isExpression(String expressionString) {
+			private boolean isExpression(String expressionString) {
 				if (expressionString == null) return false;
 				else if (!parserContext.isTemplate()) return true;
 				else return expressionString.contains(templatePrefix) 
@@ -176,13 +175,31 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 			@Override
 			public <T> T evaluate(Class<T> desiredResultType) {
 				if (expression == null) throw new RuntimeException("setExpression() must be called prior to evaluate()");
-				return expression.get().getValue(evaluationContext.get(), desiredResultType);
+				T result = expression.get().getValue(evaluationContext.get(), desiredResultType);
+				return (T) doNestedEvaluation(result, desiredResultType);
 			}
 			
 			@Override
 			public Object evaluate() {
 				if (expression == null) throw new RuntimeException("setExpression() must be called prior to evaluate()");
-				return expression.get().getValue(evaluationContext.get());
+				Object result = expression.get().getValue(evaluationContext.get());
+				return doNestedEvaluation(result, Object.class);
+			}
+			
+			@SuppressWarnings("unchecked")
+			private <T> T doNestedEvaluation(T result, Class<T> desiredResultType) {
+				// if result is still an expression
+				if (result instanceof String && isExpression((String) result)) { 
+					String resultExpression = (String) result;
+					// if result is different from previous expression
+					if (!expression.get().getExpressionString().equals(resultExpression)) { 
+						setExpression(resultExpression);
+						return (T) (desiredResultType.equals(Object.class) 
+							? evaluate() 
+							: evaluate(desiredResultType));
+					}
+				}
+				return result;
 			}
 			
 			@Override

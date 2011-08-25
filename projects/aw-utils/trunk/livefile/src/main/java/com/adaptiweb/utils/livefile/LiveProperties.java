@@ -44,19 +44,8 @@ public class LiveProperties extends Properties implements LiveFile, LiveFile.Fil
 	
 	private String evaluateResult(String originalResult) {
 		if (spelEvaluator != null && originalResult != null) {
-			boolean initializeRootObject = spelRootContext;
-			String result = originalResult;
-			// nested expression loop
-			while (spelEvaluator.isExpression(result)) {
-				if (initializeRootObject) {
-					spelEvaluator.setRootObject(this);
-					initializeRootObject = false;
-				}
-				originalResult = result;
-				result = (String) spelEvaluator.setExpression(result).evaluate();
-				if (result.equals(originalResult)) break; // prevent forever loop
-			}
-			return result;
+			if (spelRootContext) spelEvaluator.setRootObject(this);
+			return spelEvaluator.setExpression(originalResult).evaluate(String.class);
 		} else return originalResult;
 	}
 	
