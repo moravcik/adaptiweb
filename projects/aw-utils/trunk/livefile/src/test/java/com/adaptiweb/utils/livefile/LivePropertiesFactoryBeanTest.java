@@ -12,17 +12,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration
 public class LivePropertiesFactoryBeanTest {
 
+	@Value("#{testProperties.d}")
+	String d;
+
+	@Value("#{testProperties.c}")
+	String c;
+
 	@Value("#{testProperties.a}")
 	String a;
 	
 	@Value("#{testProperties.b}")
 	String b;
-	
-	@Value("#{testProperties.c}")
-	String c;
-	
-	@Value("#{testProperties.d}")
-	String d;
 	
 	@Test
 	public void test() {
