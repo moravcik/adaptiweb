@@ -29,6 +29,21 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- validation API is needed for GWT build now -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.0.0.GA</version>
+			<classifier>sources</classifier>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- GIN dependencies -->
 		<dependency>
 		  <groupId>com.google.gwt.inject</groupId>
