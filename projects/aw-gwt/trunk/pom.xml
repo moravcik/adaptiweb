@@ -32,7 +32,7 @@
 	</modules>
 	
 	<properties>
-		<gwtVersion>2.3.0</gwtVersion>
+		<gwtVersion>2.4.0</gwtVersion>
 		<awUtilsVersion>1.5-SNAPSHOT</awUtilsVersion>
 	</properties>
 
