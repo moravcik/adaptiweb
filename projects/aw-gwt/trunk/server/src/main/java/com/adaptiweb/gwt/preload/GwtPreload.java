@@ -25,7 +25,7 @@ import com.google.gwt.user.server.rpc.AbstractRemoteServiceServlet;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Preload {
+public @interface GwtPreload {
 
 	/**
 	 * Determine names of GWT modules for which is this service applicable.
@@ -38,5 +38,11 @@ public @interface Preload {
 	 * <b>Default</b> is derived from full qualified response class name where '.' are replaced by '_'
 	 */
 	String name() default "";
+	
+	/**
+	 * Determing GWT RPC interface type, for RPC serialization support
+	 * @return
+	 */
+	Class<? extends RemoteService> serviceInterface() default RemoteService.class;
 	
 }
