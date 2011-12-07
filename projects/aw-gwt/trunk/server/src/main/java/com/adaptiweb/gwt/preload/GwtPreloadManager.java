@@ -1,19 +1,41 @@
 package com.adaptiweb.gwt.preload;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpInputMessage;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.support.BindingAwareModelMap;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.support.HandlerMethodInvoker;
+import org.springframework.web.bind.annotation.support.HandlerMethodResolver;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.util.UrlPathHelper;
+import org.springframework.web.util.WebUtils;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -65,10 +87,12 @@ import com.google.gwt.user.server.rpc.SerializationPolicy;
  *   GwtGoodies.getSerializedObject(<b>"userCredential"</b>, ssf);
  * </pre>
  */
-public class GwtPreloadManager {
+public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 	
 	private static final String ALL_MODULES = null;
-
+	
+	private static final UrlPathHelper URL_PATH_HELPER = new UrlPathHelper();
+	
 	@Autowired
 	protected SerializationPolicyProvider policyProvider;
 	
@@ -83,17 +107,22 @@ public class GwtPreloadManager {
 			Class<?> delegateType = AopUtils.isAopProxy(delegate) ? AopUtils.getTargetClass(delegate) : delegate.getClass();
 			for (Class<?> iterfaceType : findRemoteSeviceInterfaces(delegateType)) {
 				for (Method method : iterfaceType.getMethods()) {
-					Preload annotation = getPreloadAnnotation(method, delegateType);
-					if (annotation != null) register(servlet, delegate, method, annotation);
+					Method implMethod = getImplMethod(method, delegateType);
+					GwtPreload annotation = getPreloadAnnotation(method, implMethod);
+					if (annotation != null) {
+						register(delegate, method, annotation);
+					}
 				}
 			}
 		}
 	}
 	
-	private void register(RemoteServiceServlet servlet, Object delegate, Method method, Preload annotation) {
+	private void register(Object delegate, Method method, GwtPreload annotation) {
 		String name = annotation.name();
 		if (name.length() == 0) name = getDefaultName(method);
-		Loader loader = new Loader(method, delegate, servlet, name);
+		Class<?> serviceInterface = !annotation.serviceInterface().equals(RemoteService.class) 
+			? annotation.serviceInterface() : method.getDeclaringClass();
+		Loader loader = new Loader(method, delegate, name, serviceInterface);
 		
 		for (String module : annotation.modules()) putLoader(module, loader);
 		if (annotation.modules().length == 0) putLoader(null, loader);
@@ -112,13 +141,22 @@ public class GwtPreloadManager {
 		list.add(loader);
 	}
 
-	private Preload getPreloadAnnotation(Method method, Class<?> serviceType) {
-		Method implMethod = ReflectionUtils.findMethod(serviceType, method.getName(), method.getParameterTypes());
-		return implMethod.isAnnotationPresent(Preload.class) ? implMethod.getAnnotation(Preload.class) :
-			method.isAnnotationPresent(Preload.class) ? method.getAnnotation(Preload.class) :
-			null;
+	private Method getImplMethod(Method method, Class<?> serviceType) {
+		return ReflectionUtils.findMethod(serviceType, method.getName(), method.getParameterTypes());
+	}
+	
+	private GwtPreload getPreloadAnnotation(Method method, Method implMethod) {
+		return implMethod.isAnnotationPresent(GwtPreload.class) 
+			? implMethod.getAnnotation(GwtPreload.class) : method.isAnnotationPresent(GwtPreload.class) 
+				? method.getAnnotation(GwtPreload.class) : null;
 	}
 
+	/**
+	 * Preload methods must be defined in RPC interfaces, due to Spring AOP Proxy support
+	 * 
+	 * @param gwtDelegateType
+	 * @return
+	 */
 	private Iterable<Class<?>> findRemoteSeviceInterfaces(Class<?> gwtDelegateType) {
 		ArrayList<Class<?>> result = new ArrayList<Class<?>>();
 		for (Class<?> it : ClassUtils.getAllInterfacesForClass(gwtDelegateType))
@@ -139,7 +177,7 @@ public class GwtPreloadManager {
 	private void putValues(String moduleName, HttpServletRequest request, Map<String, String> result) {
 		if (loaders.containsKey(moduleName)) {
 			for (Loader loader : loaders.get(moduleName)) {
-				String value = loader.load(policyProvider, request);
+				String value = loader.doLoad(policyProvider, request);
 				if (value != null) result.put(loader.variableName, value);
 			}
 		}
@@ -155,23 +193,23 @@ public class GwtPreloadManager {
 	private static class Loader {
 		private final Method method;
 		private final Object delegate;
-		private final RemoteServiceServlet servlet;
 		private final String variableName;
+		private final Class<?> serviceInterface;
 		
-		public Loader(Method method, Object delegate, RemoteServiceServlet servlet, String variableName) {
+		private Loader(Method method, Object delegate, String variableName, Class<?> serviceInterface) {
 			this.method = method;
 			this.delegate = delegate;
-			this.servlet = servlet;
 			this.variableName = variableName;
+			this.serviceInterface = serviceInterface;
 		}
 
-		public String load(SerializationPolicyProvider policyProvider, HttpServletRequest request) {
-			ExtendedRemoteServiceServlet customizedService = servlet instanceof ExtendedRemoteServiceServlet ? ((ExtendedRemoteServiceServlet) servlet) : null; 
-			if (customizedService != null) customizedService.setThreadLocalRequest(request); 
+		private String doLoad(SerializationPolicyProvider policyProvider, HttpServletRequest request) {
 			try {
-				Object result = method.invoke(delegate);
+				HandlerMethodInvoker methodInvoker = new PreloadMehodInvoker();
+				ServletWebRequest webRequest = new ServletWebRequest(request, null /*response*/);
+				Object result = methodInvoker.invokeHandlerMethod(method, delegate, webRequest, new BindingAwareModelMap() /*just as argument*/);			
 				if (result == null) return null;
-				SerializationPolicy policy = policyProvider.getPolicyFor(method.getDeclaringClass());
+				SerializationPolicy policy = policyProvider.getPolicyFor(serviceInterface);
 				return RPC.encodeResponseForSuccess(method, result, policy);
 			} catch (SerializationException e) {
 				e.printStackTrace();
@@ -179,9 +217,95 @@ public class GwtPreloadManager {
 			} catch (Exception ex) {
 				ReflectionUtils.handleReflectionException(ex);
 				throw new IllegalStateException("Should never get here");
-			} finally {
-				if (customizedService != null) customizedService.removeThreadLocalRequest();
 			}
+		}		
+	}
+	
+	/**
+	 * Fragments from {@link AnnotationMethodHandlerAdapter.ServletHandlerMethodInvoker}   
+	 */
+	private static class PreloadMehodInvoker extends HandlerMethodInvoker {
+		
+		private PreloadMehodInvoker() {
+			super(new HandlerMethodResolver());
+		}
+
+		@Override
+		protected WebDataBinder createBinder(NativeWebRequest webRequest, Object target, String objectName) throws Exception {
+			return new ServletRequestDataBinder(target, objectName);
+		}
+		@Override
+		protected void doBind(WebDataBinder binder, NativeWebRequest webRequest) throws Exception {
+			ServletRequestDataBinder servletBinder = (ServletRequestDataBinder) binder;
+			servletBinder.bind(webRequest.getNativeRequest(ServletRequest.class));
+		}
+		@Override
+		protected HttpInputMessage createHttpInputMessage(NativeWebRequest webRequest) throws Exception {
+			HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+			return new ServletServerHttpRequest(servletRequest);
+		}
+		@Override
+		protected Object resolveCookieValue(String cookieName, @SuppressWarnings("rawtypes") Class paramType, NativeWebRequest webRequest)
+				throws Exception {
+
+			HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+			Cookie cookieValue = WebUtils.getCookie(servletRequest, cookieName);
+			if (Cookie.class.isAssignableFrom(paramType)) {
+				return cookieValue;
+			}
+			else if (cookieValue != null) {
+				return URL_PATH_HELPER.decodeRequestString(servletRequest, cookieValue.getValue());
+			}
+			else {
+				return null;
+			}
+		}
+
+		@Override
+		@SuppressWarnings({"unchecked"})
+		protected String resolvePathVariable(String pathVarName, @SuppressWarnings("rawtypes") Class paramType, NativeWebRequest webRequest)
+				throws Exception {
+
+			HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+			Map<String, String> uriTemplateVariables =
+					(Map<String, String>) servletRequest.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+			if (uriTemplateVariables == null || !uriTemplateVariables.containsKey(pathVarName)) {
+				throw new IllegalStateException(
+						"Could not find @PathVariable [" + pathVarName + "] in @RequestMapping");
+			}
+			return uriTemplateVariables.get(pathVarName);
+		}
+
+		@Override
+		protected Object resolveStandardArgument(Class<?> parameterType, NativeWebRequest webRequest) throws Exception {
+			HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+			//HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+
+			if (ServletRequest.class.isAssignableFrom(parameterType) ||
+					MultipartRequest.class.isAssignableFrom(parameterType)) {
+				Object nativeRequest = webRequest.getNativeRequest(parameterType);
+				if (nativeRequest == null) {
+					throw new IllegalStateException(
+							"Current request is not of type [" + parameterType.getName() + "]: " + request);
+				}
+				return nativeRequest;
+			}
+			else if (HttpSession.class.isAssignableFrom(parameterType)) {
+				return request.getSession();
+			}
+			else if (Principal.class.isAssignableFrom(parameterType)) {
+				return request.getUserPrincipal();
+			}
+			else if (Locale.class.equals(parameterType)) {
+				return RequestContextUtils.getLocale(request);
+			}
+			else if (InputStream.class.isAssignableFrom(parameterType)) {
+				return request.getInputStream();
+			}
+			else if (Reader.class.isAssignableFrom(parameterType)) {
+				return request.getReader();
+			}
+			return super.resolveStandardArgument(parameterType, webRequest);
 		}
 	}
 	
