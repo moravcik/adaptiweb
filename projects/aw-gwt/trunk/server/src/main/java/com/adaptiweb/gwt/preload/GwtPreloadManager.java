@@ -98,26 +98,40 @@ public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 	
 	private final Map<String, List<Loader>> loaders = new HashMap<String, List<Loader>>();
 	
+	/**
+	 * Preload methods must be defined in interfaces, due to Spring AOP Proxy support 
+	 * @param gwtServlets
+	 */
 	@Autowired
 	public void setServlets(Collection<RemoteServiceServlet> gwtServlets) {
 		Field delegateField = ReflectionUtils.findField(RemoteServiceServlet.class, "delegate");
 		ReflectionUtils.makeAccessible(delegateField);
 		for (RemoteServiceServlet servlet : gwtServlets) {
 			Object delegate = ReflectionUtils.getField(delegateField, servlet);
-			Class<?> delegateType = AopUtils.isAopProxy(delegate) ? AopUtils.getTargetClass(delegate) : delegate.getClass();
-			for (Class<?> iterfaceType : findRemoteSeviceInterfaces(delegateType)) {
-				for (Method method : iterfaceType.getMethods()) {
-					Method implMethod = getImplMethod(method, delegateType);
-					GwtPreload annotation = getPreloadAnnotation(method, implMethod);
-					if (annotation != null) {
-						register(delegate, method, annotation);
-					}
-				}
+			registerDelegate(delegate);
+		}
+	}
+	
+	private void registerDelegate(Object delegate) {
+		Class<?> delegateType = AopUtils.isAopProxy(delegate) 
+			? AopUtils.getTargetClass(delegate) 
+			: delegate.getClass();
+		for (Class<?> interfaceType : ClassUtils.getAllInterfacesForClass(delegateType)) {
+			registerDelegateInterface(interfaceType, delegateType, delegate);
+		}
+	}
+	
+	private void registerDelegateInterface(Class<?> interfaceType, Class<?> delegateType, Object delegate) {
+		for (Method method : interfaceType.getMethods()) {
+			Method implMethod = getImplMethod(method, delegateType);
+			GwtPreload annotation = getPreloadAnnotation(method, implMethod);
+			if (annotation != null) {
+				registerDelegateMethod(delegate, method, annotation);
 			}
 		}
 	}
 	
-	private void register(Object delegate, Method method, GwtPreload annotation) {
+	private void registerDelegateMethod(Object delegate, Method method, GwtPreload annotation) {
 		String name = annotation.name();
 		if (name.length() == 0) name = getDefaultName(method);
 		Class<?> serviceInterface = !annotation.serviceInterface().equals(RemoteService.class) 
@@ -149,20 +163,6 @@ public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 		return implMethod.isAnnotationPresent(GwtPreload.class) 
 			? implMethod.getAnnotation(GwtPreload.class) : method.isAnnotationPresent(GwtPreload.class) 
 				? method.getAnnotation(GwtPreload.class) : null;
-	}
-
-	/**
-	 * Preload methods must be defined in RPC interfaces, due to Spring AOP Proxy support
-	 * 
-	 * @param gwtDelegateType
-	 * @return
-	 */
-	private Iterable<Class<?>> findRemoteSeviceInterfaces(Class<?> gwtDelegateType) {
-		ArrayList<Class<?>> result = new ArrayList<Class<?>>();
-		for (Class<?> it : ClassUtils.getAllInterfacesForClass(gwtDelegateType))
-			if (it != RemoteService.class && RemoteService.class.isAssignableFrom(it))
-				result.add(it);
-		return result;
 	}
 
 	public Map<String, String> getPreloadValues(String gwtModul, HttpServletRequest request) {
