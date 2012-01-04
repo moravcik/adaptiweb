@@ -17,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpInputMessage;
@@ -210,7 +211,8 @@ public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 				Object result = methodInvoker.invokeHandlerMethod(method, delegate, webRequest, new BindingAwareModelMap() /*just as argument*/);			
 				if (result == null) return null;
 				SerializationPolicy policy = policyProvider.getPolicyFor(serviceInterface);
-				return RPC.encodeResponseForSuccess(method, result, policy);
+				String encoded = RPC.encodeResponseForSuccess(method, result, policy);
+				return StringEscapeUtils.escapeJavaScript(encoded);
 			} catch (SerializationException e) {
 				e.printStackTrace();
 				return null;
@@ -218,7 +220,7 @@ public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 				ReflectionUtils.handleReflectionException(ex);
 				throw new IllegalStateException("Should never get here");
 			}
-		}		
+		}
 	}
 	
 	/**
