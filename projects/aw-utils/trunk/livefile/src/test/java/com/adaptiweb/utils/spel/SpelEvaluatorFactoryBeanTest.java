@@ -1,7 +1,10 @@
 package com.adaptiweb.utils.spel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -58,5 +61,31 @@ public class SpelEvaluatorFactoryBeanTest {
 		assertEquals("ba", eval.setExpression("${b}").evaluate());
 		assertEquals("da|ba|cba", eval.setExpression("${d}").evaluate(String.class));
 	}
+	
+	@Test
+	public void testVariables() {
+		spel.setVariable("user", "Marissa");
+		assertEquals("Hello Marissa", spel.setExpression("Hello ${#user}").evaluate());
+		Map<String, String> months = new HashMap<String, String>();
+		months.put("first", "January");
+		months.put("second", "February");
+		months.put("third", "March");
+		assertEquals("Marissa signed in February", spel.setRootObject(months)
+				.setExpression("${#user} signed in ${second}")
+				.evaluate());
+	}
+	
+	private static final SimpleDateFormat testFormat = new SimpleDateFormat("yyyyMMdd");
+	
+	@Test
+	public void testFunctions() throws SecurityException, NoSuchMethodException {
+		spel.registerFunction("printDate", SpelEvaluatorFactoryBeanTest.class.getDeclaredMethod("testPrintDate", Date.class));
+		Date today = Calendar.getInstance().getTime();
+		assertEquals(testFormat.format(today), spel.setExpression("${#printDate(#root)}").setRootObject(today).evaluate());
+	}
 
+	public static String testPrintDate(Date date) {
+		return testFormat.format(date);
+	}
+	
 }

@@ -1,5 +1,6 @@
 package com.adaptiweb.utils.spel;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -145,6 +146,12 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 			@Override
 			public SpelEvaluator setVariable(String name, Object value) {
 				evaluationContext.get().setVariable(name, value);
+				return this;
+			}
+			
+			@Override
+			public SpelEvaluator registerFunction(String name, Method method) {
+				evaluationContext.get().registerFunction(name, method);
 				return this;
 			}
 			
