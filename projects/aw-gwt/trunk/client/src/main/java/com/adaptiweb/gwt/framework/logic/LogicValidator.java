@@ -93,6 +93,10 @@ public class LogicValidator {
 		return applyEnablerVisualizer(validations, widget.getElement());
 	}
 	
+	public LogicModel applyLogicShowHide(Widget widget) {
+		return applyLogicShowHide(validations, widget.getElement());
+	}
+	
 	public static LogicModel applyValidVisualizer(LogicModel logicModel, Element element) {
 		return SwapStylesLogicValueChangeHandler.create(element, VALID_STYLE, DUMMY_STYLE).register(logicModel);
 	}
