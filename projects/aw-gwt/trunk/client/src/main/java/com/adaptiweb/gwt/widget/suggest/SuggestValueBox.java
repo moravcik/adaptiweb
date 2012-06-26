@@ -4,6 +4,9 @@ import com.adaptiweb.gwt.framework.logic.LogicModel;
 import com.adaptiweb.gwt.framework.validation.NotNullValidationModel;
 import com.adaptiweb.gwt.mvc.model.DefaultValueChangeModel;
 import com.adaptiweb.gwt.mvc.model.ValueChangeModel;
+import com.google.gwt.editor.client.IsEditor;
+import com.google.gwt.editor.client.LeafValueEditor;
+import com.google.gwt.editor.client.adapters.TakesValueEditor;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
@@ -16,9 +19,10 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 
-public class SuggestValueBox<T> extends Composite implements HasValue<T>, HasValueChangeHandlers<T> {
+public class SuggestValueBox<T> extends Composite implements HasValue<T>, HasValueChangeHandlers<T>, IsEditor<LeafValueEditor<T>> {
 	
 	private final ValueChangeModel<T> model = new DefaultValueChangeModel<T>();
+	private LeafValueEditor<T> editor;
 	private final SuggestBox box;
 
 	public SuggestValueBox(SuggestValueOracle<T> oracle) {
@@ -30,7 +34,7 @@ public class SuggestValueBox<T> extends Composite implements HasValue<T>, HasVal
 			public void onValueChange(ValueChangeEvent<String> event) {
 				Suggestion s = getSuggestOracle().convertToSuggestion(model.getValue());
 				boolean isEqual = s != null && s.getReplacementString().equals(event.getValue());
-				if (!isEqual) box.setValue(s != null ? s.getReplacementString() : "");
+				if (!isEqual) model.setValue(null, true); // reset
 			}
 		});
 		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
@@ -73,4 +77,10 @@ public class SuggestValueBox<T> extends Composite implements HasValue<T>, HasVal
 		return NotNullValidationModel.create(model);
 	}
 	
+	@Override
+	public LeafValueEditor<T> asEditor() {
+		if (editor == null) editor = TakesValueEditor.of(this);
+	    return editor;
+	}
+		
 }

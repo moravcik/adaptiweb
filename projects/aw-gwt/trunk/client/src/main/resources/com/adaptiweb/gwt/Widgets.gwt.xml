@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
+	<inherits name="com.google.gwt.editor.Editor" />
 	<inherits name="com.adaptiweb.gwt.Utils"/>
 	<source path="widget"/>
 </module>
