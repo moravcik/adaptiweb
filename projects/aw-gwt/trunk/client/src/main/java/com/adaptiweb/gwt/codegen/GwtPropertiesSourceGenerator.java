@@ -12,6 +12,8 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
 
 
 public class GwtPropertiesSourceGenerator extends Generator { 
@@ -41,7 +43,7 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 
 		// import return types
 		for (JMethod method : sourceType.getOverridableMethods()) {
-			JClassType returnType = method.getReturnType().isClass();
+			JClassType returnType = method.getReturnType().isClassOrInterface();
 			if (returnType != null) addImport(returnType.getErasedType().getQualifiedSourceName());
 		}
 		addImport(GwtProperties.class.getName());
@@ -96,7 +98,7 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		// print getter method
 		print("\npublic ").print(GwtProperties.class).print(" ").print(getterMethod).println("() {");
 		println("if (meta == null) {");
-		print("meta = ").print(GwtProperties.class.getSimpleName()).print(".").print(instanceMethod).print("(ginPrefix + ").print(prefix).println(");");
+		print("meta = ").print(instanceMethod).print("(ginPrefix + ").print(prefix).println(");");
 		println("}");
 		println("return meta;");
 		println("}");
@@ -113,17 +115,17 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		if (primitiveType != null) {
 			String primitiveObjectType = primitiveToObjectType(primitiveType.getSimpleSourceName());
 			accessType = context.getTypeOracle().findType("java.lang", primitiveObjectType);
-		} else accessType = method.getReturnType().isClass();
+		} else accessType = method.getReturnType().isClassOrInterface();
 		
 		if (accessType == null) {
 			logger.log(Type.DEBUG, "Skipping method " + method.getName() + " - no target type found!");
 			return;
 		}
-		// find valueOf method
-		String valueOf = null;
+		// find factory method
+		String factoryMethod = null;
 		if (!accessType.getQualifiedSourceName().equals(String.class.getName())) { // if not String
-			valueOf = findStringFactoryMethodName(accessType);
-			if (valueOf == null) {
+			factoryMethod = findStringFactoryMethodName(accessType);
+			if (factoryMethod == null) {
 				logger.log(Type.DEBUG, "Skipping method " + method.getName() + " - no target String factory method!");
 				return;
 			}
@@ -131,21 +133,24 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		// print method
 		print("\npublic ").print(method.getReturnType()).print(" ").print(method.getName()).println("() {");
 		print("return ");
-		if (valueOf != null) print(accessType.getName()).print(".").print(valueOf).print("(");
+		if (factoryMethod != null) print(factoryMethod).print("(");
 		print(getterMethod).print("()").print(".get(").print("\"").print(metaKey).print("\"");
 		if (defaultValue != null) print(", ").print("\"").print(defaultValue.value()).print("\"");
-		if (valueOf != null) print(")");
+		if (factoryMethod != null) print(")");
 		println(");");
 		println("}");		
 	}
 	
 	private String findStringFactoryMethodName(JClassType type) {
+		if (type.getQualifiedSourceName().equals(SafeUri.class.getName())) {
+			return UriUtils.class.getName() + ".fromString";
+		}
 		for (JMethod method : type.getMethods()) {
 			if (!method.isStatic()) continue;
 			if (!method.getReturnType().equals(type)) continue;
 			if (method.getParameters().length != 1) continue;
 			if (method.getParameters()[0].getType().getQualifiedSourceName().equals(String.class.getName())) 
-				return method.getName();
+				return type.getName() + "." + method.getName();
 		}
 		return null;
 	}
