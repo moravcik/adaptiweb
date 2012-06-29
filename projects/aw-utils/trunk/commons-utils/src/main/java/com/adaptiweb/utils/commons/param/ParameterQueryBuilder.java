@@ -15,15 +15,36 @@ public class ParameterQueryBuilder {
 		}
 	};
 
+	public enum QueryDelimiter {
+		STANDARD("?"), HASH("#");
+		
+		String delimiter;
+		
+		private QueryDelimiter(String delimiter) {
+			this.delimiter = delimiter;
+		}
+	}
+	
 	ParameterMap params;
 	String baseUrl;
+	String baseUrlDelimiter;
 
 	public ParameterQueryBuilder() {
 		this.params = new ParameterMap();
 	}
 
 	public ParameterQueryBuilder setBaseUrl(String baseUrl) {
+		return setBaseUrl(baseUrl, QueryDelimiter.STANDARD);
+	}
+
+	public ParameterQueryBuilder setBaseUrl(String baseUrl, QueryDelimiter queryDelimiter) {
+		this.baseUrlDelimiter = queryDelimiter.delimiter;
 		this.baseUrl = baseUrl;
+		return this;
+	}
+	
+	public ParameterQueryBuilder setBaseUrlDelimiter(QueryDelimiter queryDelimiter) {
+		this.baseUrlDelimiter = queryDelimiter.delimiter;
 		return this;
 	}
 	
@@ -60,9 +81,12 @@ public class ParameterQueryBuilder {
 	
 	public String toUrlQueryString(UrlEncoderProvider encoder) {
 		String urlQuery = toUrlQueryString(params, encoder);
-		if (urlQuery == null || urlQuery.length() == 0) return baseUrl != null ? baseUrl : "";
-		else if (baseUrl != null) return baseUrl + (baseUrl.contains("?") ? "&" : "?") + urlQuery;
-		else return urlQuery;
+		if (urlQuery == null || urlQuery.length() == 0) {
+			return baseUrl != null ? baseUrl : "";
+		} else if (baseUrl != null) {
+			String delimiterPart = baseUrl.contains(baseUrlDelimiter) ? "&" : baseUrlDelimiter;
+			return baseUrl + delimiterPart + urlQuery;
+		} else return urlQuery;
 	}
 	
 	@Override
