@@ -34,7 +34,11 @@ public class ParameterQueryBuilder {
 	}
 
 	public ParameterQueryBuilder setBaseUrl(String baseUrl) {
-		return setBaseUrl(baseUrl, QueryDelimiter.STANDARD);
+		if (this.baseUrlDelimiter == null) { // default value if not present
+			this.baseUrlDelimiter = QueryDelimiter.STANDARD.delimiter;
+		}
+		this.baseUrl = baseUrl;
+		return this;
 	}
 
 	public ParameterQueryBuilder setBaseUrl(String baseUrl, QueryDelimiter queryDelimiter) {
