@@ -34,7 +34,8 @@ public class ParameterQueryBuilder {
 	}
 
 	public ParameterQueryBuilder setBaseUrl(String baseUrl) {
-		if (this.baseUrlDelimiter == null) { // default value if not present
+		// default value if not present
+		if (this.baseUrlDelimiter == null) { 
 			this.baseUrlDelimiter = QueryDelimiter.STANDARD.delimiter;
 		}
 		this.baseUrl = baseUrl;
