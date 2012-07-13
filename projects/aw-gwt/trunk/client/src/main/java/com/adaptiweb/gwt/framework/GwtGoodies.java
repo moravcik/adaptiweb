@@ -6,6 +6,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
 import com.google.gwt.user.client.rpc.SerializationStreamWriter;
@@ -215,6 +216,14 @@ public class GwtGoodies {
 				focusable.setFocus(true);
 			}
 		});
+	}
+	
+	public static String ensureUrlProtocol(String url) {
+		String protocol = Location.getProtocol(); // http: or https:
+		int index = url.indexOf("//");
+		return index > 0 
+				? protocol + url.substring(index) 
+				: protocol + "//" + url; 
 	}
 
 }
