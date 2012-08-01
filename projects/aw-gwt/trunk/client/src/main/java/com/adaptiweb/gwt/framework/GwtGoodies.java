@@ -30,6 +30,10 @@ public class GwtGoodies {
 		return elementById;
 	}
 
+	public static void setParentElementVisible(Element elm, boolean visible) {
+		elm.getParentElement().getStyle().setProperty("display", visible ? "" : "none");
+	}
+	
 	/**
 	 * IMPORTANT: does not work on JavaScriptObject instances
 	 */
