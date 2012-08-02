@@ -51,7 +51,7 @@ public class ListBoxEnumEditor<E extends Enum<E>> extends ListBox implements Lea
     @Override
     public void setValue(E value) {
         if (value == null) setSelectedIndex(0); // nullSelectLabel
-        else setSelectedIndex(enumValues.indexOf(value)); 
+        else setSelectedIndex(enumValues.indexOf(value) + 1); 
     }
 
     @Override
