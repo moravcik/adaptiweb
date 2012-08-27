@@ -18,6 +18,8 @@ import java.util.TreeSet;
 import au.com.bytecode.opencsv.bean.ColumnPositionMappingStrategy;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 
+import com.adaptiweb.utils.commons.EnumEditor;
+
 import com.adaptiweb.utils.csvbind.annotation.CsvField;
 import com.adaptiweb.utils.csvbind.editor.CsvFieldPatternEditor;
 
@@ -203,29 +205,4 @@ public class CsvFieldMapping<T> extends ColumnPositionMappingStrategy<T> {
 
 	public enum DummyEnum {}
 
-	private static class EnumEditor<T extends Enum<T>> extends PropertyEditorSupport {
-		
-		private Class<T> enumType;
-		
-		protected EnumEditor(Class<T> enumType) {
-			this.enumType = enumType;
-		}
-		
-		@SuppressWarnings("unchecked")
-		@Override
-		public String getAsText() {
-			return getValue() != null ? ((T) getValue()).name() : null;
-		}
-		@Override
-		public void setAsText(String arg) throws IllegalArgumentException {
-			try {
-				setValue(Enum.valueOf(enumType, arg));
-			} catch (IllegalArgumentException e) {
-				setValue(null);
-			} catch (NullPointerException e) {
-				setValue(null);
-			}
-		}
-		
-	}
 }

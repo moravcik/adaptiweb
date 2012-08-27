@@ -27,13 +27,15 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 	private boolean useBeanResolver = false;
 	private String templatePrefix = null;
 	private String templateSuffix = null;
+	private String defaultExpressionString = null;
 	private Object defaultRootObject = null;
 	
 	ExpressionParser expressionParser = new SpelExpressionParser();
+	Expression defaultExpression = null;
 	ParserContext parserContext = null;
 	
 	@PostConstruct
-	protected void initParserContext() {
+	protected void initParserContextAndDefaultExpression() {
 		if (templatePrefix != null && templateSuffix != null) {
 			parserContext = new ParserContext() {
 				@Override
@@ -50,6 +52,15 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 				}
 			};
 		}
+		if (defaultExpressionString != null) {
+			defaultExpression = parseExpression(defaultExpressionString);
+		}
+	}
+	
+	private Expression parseExpression(String expressionString) {
+		return parserContext != null 
+				? expressionParser.parseExpression(expressionString, parserContext)
+				: expressionParser.parseExpression(expressionString);
 	}
 	
 	@Override
@@ -102,6 +113,16 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 	 */
 	public void setTemplateSuffix(String templateSuffix) {
 		this.templateSuffix = templateSuffix;
+	}
+	
+	/**
+	 * Set default expression for this SpEL evaluator, 
+	 * which is used when {{@link SpelEvaluator#setExpression(String)} is not called before the evaluate
+	 * 
+	 * @param defaultExpression
+	 */
+	public void setDefaultExpression(String defaultExpression) {
+		this.defaultExpressionString = defaultExpression;
 	}
 	
 	public void setDefaultRootObject(Object rootObject) {
@@ -173,24 +194,29 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 			
 			@Override
 			public SpelEvaluator setExpression(String expressionString) {
-				expression.set(parserContext != null 
-					? expressionParser.parseExpression(expressionString, parserContext)
-					: expressionParser.parseExpression(expressionString));
+				expression.set(parseExpression(expressionString));
 				return this;
 			}
 			
 			@Override
 			public <T> T evaluate(Class<T> desiredResultType) {
-				if (expression == null) throw new RuntimeException("setExpression() must be called prior to evaluate()");
-				T result = expression.get().getValue(evaluationContext.get(), desiredResultType);
+				T result = getExpression().getValue(evaluationContext.get(), desiredResultType);
 				return (T) doNestedEvaluation(result, desiredResultType);
 			}
 			
 			@Override
 			public Object evaluate() {
-				if (expression == null) throw new RuntimeException("setExpression() must be called prior to evaluate()");
-				Object result = expression.get().getValue(evaluationContext.get());
+				Object result = getExpression().getValue(evaluationContext.get());
 				return doNestedEvaluation(result, Object.class);
+			}
+			
+			private Expression getExpression() {
+				Expression threadLocalExpression = expression.get();
+				if (defaultExpression == null && threadLocalExpression == null) {
+					throw new RuntimeException(
+							"setDefaultExpression() or setExpression() must be called prior to evaluate()");
+				}
+				return threadLocalExpression != null ? threadLocalExpression : defaultExpression;
 			}
 			
 			@SuppressWarnings("unchecked")
