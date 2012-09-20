@@ -16,10 +16,15 @@
 	
 	<url>http://adaptiweb.googlecode.com/svn/site/aw-utils/index.html</url>
 
+	<properties>
+		<spring.version>3.1.1.RELEASE</spring.version>
+	</properties>
+
 	<modules>
 		<module>commons-utils</module>
 		<module>csv-bind</module>
 		<module>livefile</module>
+		<module>spel-evaluator</module>
 		<module>poi-utils</module>
 		<module>xstream-utils</module>
 		<module>incubation</module>
@@ -33,6 +38,22 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
