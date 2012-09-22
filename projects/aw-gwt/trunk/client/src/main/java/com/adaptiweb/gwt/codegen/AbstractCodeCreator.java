@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.typeinfo.JClassType;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -35,6 +37,10 @@ public class AbstractCodeCreator {
 		this.context = context;
 	}
 
+	protected boolean equalsType(JType type, Class<?> clazz) {
+		return type.getErasedType().getQualifiedSourceName().equals(clazz.getName());
+	}
+	
 	protected String primitiveToObjectType(String primitiveType) {
 		return primitiveToObjectType.get(primitiveType);
 	}
@@ -55,7 +61,16 @@ public class AbstractCodeCreator {
 	}
 
 	public AbstractCodeCreator print(JType paramType) {
-		return print(printableType(paramType));
+		print(printableType(paramType));
+		JParameterizedType parameterized = paramType.isParameterized();
+		if (parameterized != null) {
+			print("<");
+			for (JType parameterType : parameterized.getTypeArgs()) {
+				print(parameterType);
+			}
+			print(">");
+		}
+		return this;
 	}
 	
 	public AbstractCodeCreator print(Class<?> paramType) {
@@ -76,6 +91,13 @@ public class AbstractCodeCreator {
 		return type;
 	}
 
+	protected void addImport(JType type) {
+		JClassType classType = type.isClassOrInterface();
+		if (classType != null) {
+			addImport(classType.getErasedType().getQualifiedSourceName());
+		}
+	}
+	
 	protected void addImport(String importType) {
 		int index = importType.lastIndexOf('.') + 1;
 		if (index == 0 || importType.startsWith("java.lang.")) return;

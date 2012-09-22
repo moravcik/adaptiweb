@@ -1,17 +1,27 @@
 package com.adaptiweb.gwt.codegen;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.adaptiweb.gwt.properties.GwtProperties;
 import com.adaptiweb.gwt.properties.GwtPropertiesDefaultValue;
 import com.adaptiweb.gwt.properties.GwtPropertiesKey;
 import com.adaptiweb.gwt.properties.GwtPropertiesPrefix;
-import com.adaptiweb.gwt.properties.GwtProperties;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 
@@ -41,11 +51,7 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		String packageName = sourceType.getPackage().getName();
 		String className = sourceType.getSimpleSourceName() + "_Impl";
 
-		// import return types
-		for (JMethod method : sourceType.getOverridableMethods()) {
-			JClassType returnType = method.getReturnType().isClassOrInterface();
-			if (returnType != null) addImport(returnType.getErasedType().getQualifiedSourceName());
-		}
+		importReturnTypes(sourceType);
 		addImport(GwtProperties.class.getName());
 		
 		if (openWriter(logger, packageName, className, null, sourceType.getErasedType().getQualifiedSourceName())) {
@@ -54,11 +60,67 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 			for (JMethod method : sourceType.getOverridableMethods()) {
 				if (method.getParameters().length > 0) continue; // supporting only no-parameter access methods
 				if (method.getName().equals(getterMethod)) continue;
-				printAccessMethod(logger, method, getterMethod);
+				printAccessFieldAndMethod(logger, method, getterMethod);
 			}
 			closeWriter(logger);
 		}
 		return packageName + "." + className;
+	}
+	
+	private void importReturnTypes(JClassType sourceType) {
+		for (JMethod method : sourceType.getOverridableMethods()) {
+			JType returnType = method.getReturnType();
+			if (!isArray(returnType)) addImport(returnType);
+			JType targetType = findTargetType(returnType);
+			if (targetType != null) {
+				addImport(targetType);
+				if (isCollectionOrListType(returnType)) addImport(ArrayList.class.getName());
+				else if (isEnumSetType(returnType)) addImport(EnumSet.class.getName());
+				else if (isSetType(returnType)) addImport(HashSet.class.getName());
+			}
+		}
+	}
+	
+	private boolean isCollectionOrListType(JType type) {
+		JParameterizedType parameterized = type.isParameterized();
+		if (parameterized != null) {
+			return equalsType(parameterized, Collection.class) || equalsType(parameterized, List.class);
+		}
+		return false;
+	}
+	
+	private boolean isEnumSetType(JType type) {
+		JParameterizedType parameterized = type.isParameterized();
+		if (parameterized != null) {
+			return equalsType(parameterized, Set.class) && parameterized.getTypeArgs()[0].isEnum() != null;
+		}
+		return false;		
+	}
+
+	private boolean isSetType(JType type) {
+		JParameterizedType parameterized = type.isParameterized();
+		if (parameterized != null) {
+			return equalsType(parameterized, Set.class);
+		}
+		return false;		
+	}
+
+	private boolean isArray(JType type) {
+		return type.isArray() != null;
+	}
+	
+	private boolean isArrayOrParameterizedType(JType type) {
+		return type.isArray() != null || type.isParameterized() != null;
+	}
+
+	private JType findTargetType(JType type) {
+		if (isArrayOrParameterizedType(type)) {
+			JArrayType arrayType = type.isArray();
+			if (arrayType != null) return arrayType.getComponentType();
+			JParameterizedType parameterizedType = type.isParameterized();
+			if (parameterizedType != null) return parameterizedType.getTypeArgs()[0];
+		}
+		return null;
 	}
 	
 	private void printSetPrefix() {
@@ -104,41 +166,120 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		println("}");
 	}
 	
-	private void printAccessMethod(TreeLogger logger, JMethod method, String getterMethod) {
+	private void printAccessFieldAndMethod(TreeLogger logger, JMethod method, String getterMethod) {
 		GwtPropertiesKey key = method.getAnnotation(GwtPropertiesKey.class);
-		String metaKey = key != null ? key.value() : method.getName();
+		String methodName = method.getName();
+		String metaKey = key != null ? key.value() : methodName;
 		GwtPropertiesDefaultValue defaultValue = method.getAnnotation(GwtPropertiesDefaultValue.class);
 		
-		JClassType accessType = null;
+		JType returnType = method.getReturnType();
+		JType accessType = convertToNonPrimitiveType(returnType);
 		
-		JPrimitiveType primitiveType = method.getReturnType().isPrimitive();
-		if (primitiveType != null) {
-			String primitiveObjectType = primitiveToObjectType(primitiveType.getSimpleSourceName());
-			accessType = context.getTypeOracle().findType("java.lang", primitiveObjectType);
-		} else accessType = method.getReturnType().isClassOrInterface();
+		JClassType accessTargetType = findAccessTargetType(returnType);
+		boolean isAccessField = accessTargetType != null;
 		
-		if (accessType == null) {
-			logger.log(Type.DEBUG, "Skipping method " + method.getName() + " - no target type found!");
+		String factoryMethod = null;
+		try {
+			JClassType targetType = accessTargetType != null ? accessTargetType : accessType.isClassOrInterface();
+			factoryMethod = findFactoryMethod(targetType, method);
+		} catch (Exception e) {
+			logger.log(Type.DEBUG, "Skipping method " + methodName + " - no target String factory method!");
 			return;
 		}
-		// find factory method
+		
+		// print field
+		if (isAccessField) {
+			print("\nprivate ").print(returnType).print(" ").print(methodName).println(";");
+		}
+		
+		// print method
+		print("\npublic ").print(returnType).print(" ").print(methodName).println("() {");
+		if (isAccessField) {
+			printFieldAccessMethodBody(factoryMethod, getterMethod, metaKey, accessTargetType, methodName, returnType, defaultValue);
+		} else printSimpleAccessMethodBody(factoryMethod, getterMethod, metaKey, defaultValue);
+		println("}");		
+	}
+	
+	private JClassType findAccessTargetType(JType returnType) {
+		JType targetType = findTargetType(returnType);
+		return targetType != null
+			?  convertToNonPrimitiveType(targetType).isClassOrInterface() : null;
+	}
+	
+	private void printFieldAccessMethodBody(String factoryMethod, String getterMethod, String metaKey, 
+			JClassType accessTargetType, String accessFieldName, JType returnType,
+			GwtPropertiesDefaultValue defaultValue) {
+		print("if (").print(accessFieldName).println(" == null) {");
+		print("String[] strArray = ");
+		printGetterMethod(getterMethod, metaKey, defaultValue);
+		println(".split(\",\");");
+		// instantiate field
+		print(accessFieldName).print(" = ");
+		if (isArray(returnType)) {
+			print("new ").print(accessTargetType).println("[strArray.length];");
+		} else if (isCollectionOrListType(returnType)) {
+			print("new ").print(ArrayList.class).print("<").print(accessTargetType).println(">();");
+		} else if (isEnumSetType(returnType)) {
+			print(EnumSet.class).print(".noneOf(").print(accessTargetType).println(".class);");
+		} else if (isSetType(returnType)) {
+			print("new ").print(HashSet.class).print("<").print(accessTargetType).println(">();");
+		}
+		// value loop
+		println("for (int i = 0; i < strArray.length; i++) {");
+		if (isArray(returnType)) {
+			print(accessFieldName).print("[i] = ");
+			printStrArray(factoryMethod);
+			println(";");
+		} else {
+			print(accessFieldName).print(".add(");
+			printStrArray(factoryMethod);
+			println(");");
+		}
+		println("}");
+		// end of loop
+		println("}");
+		print("return ").print(accessFieldName).println(";");
+	}
+	
+	private void printStrArray(String factoryMethod) {
+		if (factoryMethod != null) print(factoryMethod).print("(");
+		print("strArray[i]");
+		if (factoryMethod != null) print(")");
+	}
+	
+	private void printSimpleAccessMethodBody(String factoryMethod, String getterMethod, String metaKey,
+			GwtPropertiesDefaultValue defaultValue) {
+		print("return ");
+		if (factoryMethod != null) print(factoryMethod).print("(");
+		printGetterMethod(getterMethod, metaKey, defaultValue);
+		if (factoryMethod != null) print(")");
+		println(";");
+	}
+
+	private void printGetterMethod(String getterMethod, String metaKey, GwtPropertiesDefaultValue defaultValue) {
+		print(getterMethod).print("()").print(".get(").print("\"").print(metaKey).print("\"");
+		if (defaultValue != null) print(", ").print("\"").print(defaultValue.value()).print("\"");
+		print(")");
+	}
+	
+	private JType convertToNonPrimitiveType(JType type) {
+		JPrimitiveType primitiveType = type.isPrimitive();
+		if (primitiveType != null) {
+			String primitiveObjectType = primitiveToObjectType(primitiveType.getSimpleSourceName());
+			return context.getTypeOracle().findType("java.lang", primitiveObjectType);
+		}
+		return type;
+	}
+	
+	private String findFactoryMethod(JClassType accessType, JMethod method) {
 		String factoryMethod = null;
 		if (!accessType.getQualifiedSourceName().equals(String.class.getName())) { // if not String
 			factoryMethod = findStringFactoryMethodName(accessType);
 			if (factoryMethod == null) {
-				logger.log(Type.DEBUG, "Skipping method " + method.getName() + " - no target String factory method!");
-				return;
+				throw new RuntimeException("Skipping method " + method.getName() + " - no target String factory method!");
 			}
 		}
-		// print method
-		print("\npublic ").print(method.getReturnType()).print(" ").print(method.getName()).println("() {");
-		print("return ");
-		if (factoryMethod != null) print(factoryMethod).print("(");
-		print(getterMethod).print("()").print(".get(").print("\"").print(metaKey).print("\"");
-		if (defaultValue != null) print(", ").print("\"").print(defaultValue.value()).print("\"");
-		if (factoryMethod != null) print(")");
-		println(");");
-		println("}");		
+		return factoryMethod;
 	}
 	
 	private String findStringFactoryMethodName(JClassType type) {
