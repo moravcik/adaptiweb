@@ -11,6 +11,7 @@ import com.adaptiweb.gwt.properties.GwtProperties;
 import com.adaptiweb.gwt.properties.GwtPropertiesDefaultValue;
 import com.adaptiweb.gwt.properties.GwtPropertiesKey;
 import com.adaptiweb.gwt.properties.GwtPropertiesPrefix;
+import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -37,8 +38,15 @@ public class GwtPropertiesSourceGenerator extends Generator {
 
 class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 
+	private final String gwtPropertiesPrefix;
+	
 	public MetaPropertiesSourceCreator(GeneratorContext context) {
 		super(context);
+		try {
+			gwtPropertiesPrefix = context.getPropertyOracle().getConfigurationProperty("gwtPropertiesPrefix").getValues().get(0);
+		} catch (BadPropertyValueException e) {
+			throw new RuntimeException("Missing gwt configuration: <set-configuration-property name=\"gwtPropertiesPrefix\" value=\"...\"/>", e);
+		} 
 	}
 	
 	public String create(TreeLogger logger, String typeName) throws UnableToCompleteException {
@@ -55,8 +63,11 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		addImport(GwtProperties.class.getName());
 		
 		if (openWriter(logger, packageName, className, null, sourceType.getErasedType().getQualifiedSourceName())) {
-			printSetPrefix();
+			// print prefix field
+			print("\nprivate final String prefix = \"").print(gwtPropertiesPrefix).println("\";");
+			// print properties getter method
 			String getterMethod = printMetaProperties(logger, sourceType, metaType);
+			// print interface methods
 			for (JMethod method : sourceType.getOverridableMethods()) {
 				if (method.getParameters().length > 0) continue; // supporting only no-parameter access methods
 				if (method.getName().equals(getterMethod)) continue;
@@ -123,13 +134,6 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		return null;
 	}
 	
-	private void printSetPrefix() {
-		println("\nprivate String ginPrefix;");
-		println("\npublic void setPrefix(String prefix) {");
-		println("this.ginPrefix = prefix;");
-		println("}");
-	}
-	
 	private String printMetaProperties(TreeLogger logger, JClassType sourceType, JClassType metaType) throws UnableToCompleteException {
 		// find getter method
 		String getterMethod = null;
@@ -160,7 +164,7 @@ class MetaPropertiesSourceCreator extends AbstractCodeCreator {
 		// print getter method
 		print("\npublic ").print(GwtProperties.class).print(" ").print(getterMethod).println("() {");
 		println("if (meta == null) {");
-		print("meta = ").print(instanceMethod).print("(ginPrefix + ").print(prefix).println(");");
+		print("meta = ").print(instanceMethod).print("(prefix + ").print(prefix).println(");");
 		println("}");
 		println("return meta;");
 		println("}");
