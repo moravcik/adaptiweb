@@ -36,22 +36,20 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 	
 	@PostConstruct
 	protected void initParserContextAndDefaultExpression() {
-		if (templatePrefix != null && templateSuffix != null) {
-			parserContext = new ParserContext() {
-				@Override
-				public boolean isTemplate() {
-					return true;
-				}
-				@Override
-				public String getExpressionPrefix() {
-					return templatePrefix;
-				}
-				@Override
-				public String getExpressionSuffix() {
-					return templateSuffix;
-				}
-			};
-		}
+		parserContext = new ParserContext() {
+			@Override
+			public boolean isTemplate() {
+				return templatePrefix != null && templateSuffix != null;
+			}
+			@Override
+			public String getExpressionSuffix() {
+				return templateSuffix;
+			}
+			@Override
+			public String getExpressionPrefix() {
+				return templatePrefix;
+			}
+		};
 		if (defaultExpressionString != null) {
 			defaultExpression = parseExpression(defaultExpressionString);
 		}
