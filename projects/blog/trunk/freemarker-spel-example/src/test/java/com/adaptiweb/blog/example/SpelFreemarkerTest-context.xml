@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- FreeMarker configuration -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"
+        p:configuration-ref="freemarkerConfiguration"/>
+ 
+    <bean id="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean"
+            p:templateLoaderPath="/" p:preferFileSystemAccess="false">
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="spel" value-ref="spelDirective"/>
+            </map>
+        </property>
+    </bean>
+
+	<bean id="spelDirective" class="com.adaptiweb.blog.example.SpelFreemarkerTemplateDirective"
+		p:spelEvaluator-ref="spelEvaluator"/>
+
+	<bean id="spelEvaluator" class="com.adaptiweb.utils.spel.SpelEvaluatorFactoryBean"
+		p:useBeanResolver="true" p:useBeanAccessor="true" p:useMapAccessor="true"
+		p:templatePrefix="{" p:templateSuffix="}"/>
+
+	<bean id="greetingBean" class="com.adaptiweb.blog.example.SpelFreemarkerTest.GreetingBean"
+		p:greeting="Hello"/>
+
+</beans>
