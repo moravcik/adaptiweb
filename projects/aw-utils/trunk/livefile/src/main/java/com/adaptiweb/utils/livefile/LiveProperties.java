@@ -3,6 +3,7 @@ package com.adaptiweb.utils.livefile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.adaptiweb.utils.spel.SpelEvaluator;
@@ -49,10 +50,16 @@ public class LiveProperties extends SpelProperties implements LiveFile, LiveFile
 	}
 	
 	@Override
+	public Set<Entry<Object, Object>> entrySet() {
+		liveFile.refresh();
+		return super.entrySet();
+	}
+
+	@Override
 	public void loadFile(File file) throws IOException {
 		loadProperties(file);
 	}
-
+	
 	// livefile wrappers
 	
 	@Override
