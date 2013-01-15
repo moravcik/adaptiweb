@@ -32,7 +32,7 @@
 	</modules>
 	
 	<properties>
-		<gwtVersion>2.4.0</gwtVersion>
+		<gwt.version>[2.4.0,)</gwt.version>
 		<awUtilsVersion>1.5-SNAPSHOT</awUtilsVersion>
 	</properties>
 
@@ -114,15 +114,9 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>
-											com.adaptiweb.mojo
-										</groupId>
-										<artifactId>
-											maven-buildnumber-plugin
-										</artifactId>
-										<versionRange>
-											[1.5,)
-										</versionRange>
+										<groupId>com.adaptiweb.mojo</groupId>
+										<artifactId>maven-buildnumber-plugin</artifactId>
+										<versionRange>[1.5,)</versionRange>
 										<goals>
 											<goal>create</goal>
 										</goals>
