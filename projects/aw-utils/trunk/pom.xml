@@ -17,7 +17,7 @@
 	<url>http://adaptiweb.googlecode.com/svn/site/aw-utils/index.html</url>
 
 	<properties>
-		<spring.version>3.1.1.RELEASE</spring.version>
+		<spring.version>[3.1.1.RELEASE,)</spring.version>
 	</properties>
 
 	<modules>
