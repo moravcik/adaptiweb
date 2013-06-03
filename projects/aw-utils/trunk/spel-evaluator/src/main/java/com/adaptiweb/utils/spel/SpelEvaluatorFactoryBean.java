@@ -1,6 +1,9 @@
 package com.adaptiweb.utils.spel;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -29,13 +32,14 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 	private String templateSuffix = null;
 	private String defaultExpressionString = null;
 	private Object defaultRootObject = null;
+	private List<Method> functions = new ArrayList<Method>();
 	
 	ExpressionParser expressionParser = new SpelExpressionParser();
 	Expression defaultExpression = null;
 	ParserContext parserContext = null;
 	
 	@PostConstruct
-	protected void initParserContextAndDefaultExpression() {
+	public void initParserContextAndDefaultExpression() {
 		parserContext = new ParserContext() {
 			@Override
 			public boolean isTemplate() {
@@ -127,6 +131,19 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 		this.defaultRootObject = rootObject;
 	}
 	
+	/**
+	 * Register all static methods in declared funcType as custom SpEL functions.
+	 * Custom function is used in SpEL as follows:
+	 * <code>#functionName(parameters)</code>
+	 * 
+	 * @param funcType type of utility class with static functions for SpEL
+	 */
+	public void setFunctions(Class<?> funcType) {
+		for (Method fun : funcType.getDeclaredMethods()) {
+			if (Modifier.isStatic(fun.getModifiers())) functions.add(fun);
+		}
+	}
+	
 	@Override
 	public SpelEvaluator getObject() {
 		return new SpelEvaluator() {
@@ -148,6 +165,9 @@ public class SpelEvaluatorFactoryBean implements FactoryBean<SpelEvaluator>, App
 						ec.setRootObject(defaultRootObject);
 						if (!useMapAccessor && defaultRootObject instanceof Map)
 							ec.addPropertyAccessor(new MapAccessor());
+					}
+					for (Method fun : functions) {
+						ec.registerFunction(fun.getName(), fun);
 					}
 					return ec;
 				}
