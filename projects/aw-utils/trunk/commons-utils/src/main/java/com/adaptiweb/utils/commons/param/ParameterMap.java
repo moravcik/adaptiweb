@@ -6,6 +6,17 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class ParameterMap extends LinkedHashMap<String, String> {
 	
+	public ParameterMap() {}
+	
+	public ParameterMap addUrlParts(String... urlParts) {
+		for (String part : urlParts) {
+			String[] split = part.split("=");
+			if (split.length < 2) continue;
+			put(split[0], split[1]);
+		}
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder result = new StringBuilder();
