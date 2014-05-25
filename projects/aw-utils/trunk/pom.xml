@@ -27,7 +27,7 @@
 		<module>spel-evaluator</module>
 		<module>poi-utils</module>
 		<module>xstream-utils</module>
-		<module>incubation</module>
+		<!--<module>incubation</module>-->
 	</modules>
 
 	<dependencies>
