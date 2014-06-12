@@ -67,6 +67,10 @@ public class SuggestValueBox<T> extends Composite implements HasValue<T>, HasVal
 		model.setValue(value, fireEvents);
 		box.setValue(getSuggestOracle().convertToSuggestion(value).getReplacementString(), fireEvents);
 	}
+	
+	public void setReadOnly(boolean readOnly) {
+		box.setEnabled(!readOnly);
+	}
 
 	@SuppressWarnings("unchecked")
 	private SuggestValueOracle<T> getSuggestOracle() {
