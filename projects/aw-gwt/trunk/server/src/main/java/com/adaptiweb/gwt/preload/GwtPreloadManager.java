@@ -33,7 +33,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
@@ -88,7 +88,7 @@ import com.google.gwt.user.server.rpc.SerializationPolicy;
  *   GwtGoodies.getSerializedObject(<b>"userCredential"</b>, ssf);
  * </pre>
  */
-public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
+public class GwtPreloadManager extends RequestMappingHandlerAdapter /*AnnotationMethodHandlerAdapter*/ {
 	
 	private static final String ALL_MODULES = null;
 	
@@ -166,11 +166,11 @@ public class GwtPreloadManager extends AnnotationMethodHandlerAdapter {
 				? method.getAnnotation(GwtPreload.class) : null;
 	}
 
-	public Map<String, String> getPreloadValues(String gwtModul, HttpServletRequest request) {
-		Map<String, String> result = new HashMap<String, String>(determineResultSize(gwtModul));
+	public Map<String, String> getPreloadValues(String gwtModule, HttpServletRequest request) {
+		Map<String, String> result = new HashMap<String, String>(determineResultSize(gwtModule));
 
 		putValues(ALL_MODULES, request, result);
-		putValues(gwtModul, request, result);
+		putValues(gwtModule, request, result);
 		
 		return result;
 	}

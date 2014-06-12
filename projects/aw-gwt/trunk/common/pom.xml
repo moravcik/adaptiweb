@@ -24,6 +24,7 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-servlet</artifactId>
 			<version>${gwt.version}</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
