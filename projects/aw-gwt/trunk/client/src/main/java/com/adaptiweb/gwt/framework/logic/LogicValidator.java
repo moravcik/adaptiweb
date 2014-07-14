@@ -80,6 +80,10 @@ public class LogicValidator {
 	public void addValidation(LogicModel validation) {
 		validations.add(validation);
 	}
+	
+	public void removeValidation(LogicModel validation) {
+		validations.remove(validation);
+	}
 
 	public LogicModel applyInvalidVisualizer(Widget widget) {
 		return applyInvalidVisualizer(validations, widget.getElement());
