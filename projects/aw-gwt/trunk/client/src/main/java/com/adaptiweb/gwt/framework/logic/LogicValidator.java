@@ -1,5 +1,7 @@
 package com.adaptiweb.gwt.framework.logic;
 
+import static com.adaptiweb.gwt.framework.logic.LogicModelFactory.not;
+
 import com.adaptiweb.gwt.framework.style.Color;
 import com.adaptiweb.gwt.framework.style.Display;
 import com.adaptiweb.gwt.framework.style.DynamicStyle;
@@ -71,6 +73,14 @@ public class LogicValidator {
 	
 	public LogicModelSet getValidation() {
 		return validations;
+	}
+	
+	public LogicValidator getNegative() {
+		return new LogicValidator() {
+			{
+				addValidation(not(getValidation()));
+			}
+		};
 	}
 	
 	public boolean isValid() {
