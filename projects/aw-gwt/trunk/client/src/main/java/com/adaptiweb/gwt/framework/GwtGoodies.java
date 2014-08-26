@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
@@ -228,6 +230,13 @@ public class GwtGoodies {
 		return index > 0 
 				? protocol + url.substring(index) 
 				: protocol + "//" + url; 
+	}
+	
+	public static SafeHtml asSafeHtml(Widget w) {
+		SafeHtmlBuilder sb = new SafeHtmlBuilder();
+		String outerHtml = w.getElement().getString();
+		sb.appendHtmlConstant(outerHtml);
+		return sb.toSafeHtml();
 	}
 
 }
