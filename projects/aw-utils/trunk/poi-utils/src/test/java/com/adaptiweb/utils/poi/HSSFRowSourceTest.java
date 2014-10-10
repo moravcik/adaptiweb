@@ -15,13 +15,13 @@ public class HSSFRowSourceTest {
 	
 	private static final List<String[]> DATA_SHEET1 = Arrays.asList(
 			new String[] {"col1", "emptycol", "col2", "col3"},
-			new String[] {"123.0", "", "10/07/10", "aaaaa"},
-			new String[] {"456.0", "", "11/08/11", "bbbb"});
+			new String[] {"123", "", "10/07/10", "aaaaa"},
+			new String[] {"456", "", "11/08/11", "bbbb"});
 
 	private static final List<String[]> DATA_SHEET2 = Arrays.asList(
 			new String[] {"colA", "colB"},
-			new String[] {"10.0", "aaaaa"},
-			new String[] {"20.0", "bbbb"});
+			new String[] {"10", "aaaaa"},
+			new String[] {"20", "bbbb"});
 	
 	HSSFRowSource source;
 	
