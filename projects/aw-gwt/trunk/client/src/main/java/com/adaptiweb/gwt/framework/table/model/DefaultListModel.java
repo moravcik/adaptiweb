@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -57,8 +58,7 @@ public class DefaultListModel<T> implements ListModel<T> {
 		return records.isEmpty();
 	}
 	
-	@Override
-	public List<T> replace(int position, int count, List<T> item) {
+	private List<T> doReplace(int position, int count, List<T> item, boolean fireEvent) {
 		int index = postitionToIndex(position);
 		List<T> removed = removeRecords(index, count);
 		
@@ -67,6 +67,11 @@ public class DefaultListModel<T> implements ListModel<T> {
 
 		ListChangeEvent.fire(this, position, removed, item);
 		return removed;
+	}
+	
+	@Override
+	public List<T> replace(int position, int count, List<T> item) {
+		return doReplace(position, count, item, true);
 	}
 
 	private List<T> removeRecords(int index, int count) {
@@ -136,34 +141,56 @@ public class DefaultListModel<T> implements ListModel<T> {
 	}
 	
 	public void remove(T item) {
+		doRemove(item, true);
+	}
+	
+	private int doRemove(T item, boolean fireEvent) {
 		int itemIndex = indexOf(item);
-		if (itemIndex >= 0) replace(itemIndex, 1, new ArrayList<T>());
+		if (itemIndex >= 0) doReplace(itemIndex, 1, new ArrayList<T>(), fireEvent);
+		return itemIndex;
 	}
 	
 	public void removeAll() {
-		replace(0, size(), new ArrayList<T>());
+		doReplace(0, size(), new ArrayList<T>(), true);
+		
+	}
+	
+	public void removeAll(List<T> itemsToRemove) {
+		Integer firstRemovedIndex = null;
+		for (ListIterator<T> li = itemsToRemove.listIterator(); li.hasNext(); ) {
+			T item = li.next();
+			int removeIndex = doRemove(item, false);
+			if (removeIndex < 0) {
+				li.remove();
+				continue;
+			}
+			if (firstRemovedIndex == null) {
+				firstRemovedIndex = removeIndex;
+			}
+		}
+		ListChangeEvent.fire(this, firstRemovedIndex, itemsToRemove, null);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void add(T item) {
-		replace(Strategy.STACK == addStrategy ? 0 : -1, 0, Arrays.asList(item));
+		doReplace(Strategy.STACK == addStrategy ? 0 : -1, 0, Arrays.asList(item), true);
 	}
 
 	@Override
 	public void addAll(List<T> items) {
-		replace(Strategy.STACK == addStrategy ? 0 : -1, 0, items);
+		doReplace(Strategy.STACK == addStrategy ? 0 : -1, 0, items, true);
 	}
 
 	@Override
 	public void setAll(List<T> items) {
-		replace(0, size(), items);
+		doReplace(0, size(), items, true);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void replace(T item) {
 		int index = indexOf(item);
-		if (index >= 0) replace(index, 1, Arrays.asList(item));
+		if (index >= 0) doReplace(index, 1, Arrays.asList(item), true);
 	};
 	
 	public void refresh(T item) {

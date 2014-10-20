@@ -70,6 +70,10 @@ public class DataTable<R extends DataTableRecord> extends Composite implements L
 		model.removeAll();
 	}
 	
+	public void removeAll(List<R> items) {
+		model.removeAll(items);
+	}
+	
 	@Override
 	public void addAll(List<R> items) {
 		model.addAll(items);
