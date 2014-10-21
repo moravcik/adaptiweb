@@ -65,7 +65,9 @@ public class DefaultListModel<T> implements ListModel<T> {
 		if (position == -1) records.addAll(item);
 		else records.addAll(index, item);
 
-		ListChangeEvent.fire(this, position, removed, item);
+		if (fireEvent) {
+			ListChangeEvent.fire(this, position, removed, item);
+		}
 		return removed;
 	}
 	
@@ -156,19 +158,13 @@ public class DefaultListModel<T> implements ListModel<T> {
 	}
 	
 	public void removeAll(List<T> itemsToRemove) {
-		Integer firstRemovedIndex = null;
 		for (ListIterator<T> li = itemsToRemove.listIterator(); li.hasNext(); ) {
 			T item = li.next();
-			int removeIndex = doRemove(item, false);
-			if (removeIndex < 0) {
+			if (doRemove(item, false) < 0) {
 				li.remove();
-				continue;
-			}
-			if (firstRemovedIndex == null) {
-				firstRemovedIndex = removeIndex;
 			}
 		}
-		ListChangeEvent.fire(this, firstRemovedIndex, itemsToRemove, null);
+		ListChangeEvent.fire(this, -1, itemsToRemove, Collections.<T>emptyList());
 	}
 	
 	@SuppressWarnings("unchecked")
