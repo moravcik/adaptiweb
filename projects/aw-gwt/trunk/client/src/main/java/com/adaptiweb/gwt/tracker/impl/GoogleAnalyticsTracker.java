@@ -27,10 +27,18 @@ public class GoogleAnalyticsTracker extends LogTracker {
 	@Override
 	public void event(String category, String action, String optionalLabel, Integer optionalValue) {
 		super.event(category, action, optionalLabel, optionalValue);
-		trackEvent(category, action, optionalLabel, optionalValue);
+		if (optionalValue != null) {
+			trackEvent(category, action, optionalLabel, optionalValue);
+		} else {
+			trackEvent(category, action, optionalLabel);
+		}
 	}
-	
-	native void trackEvent(String category, String action, String optLabel, Integer optValue) /*-{
+
+	native void trackEvent(String category, String action, String optLabel) /*-{
+		$wnd._gaq.push(['_trackEvent', category, action, optLabel]);
+	}-*/;
+
+	native void trackEvent(String category, String action, String optLabel, int optValue) /*-{
 		$wnd._gaq.push(['_trackEvent', category, action, optLabel, optValue]);
 	}-*/;
 	
