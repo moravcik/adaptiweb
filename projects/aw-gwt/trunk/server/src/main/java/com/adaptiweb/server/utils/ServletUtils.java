@@ -38,4 +38,8 @@ public class ServletUtils {
 		return url.substring(0, url.length() - uriPathSize);
 	}
 	
+	public static String getIp() {
+		return IpUtils.getIp(getRequest());
+	}
+	
 }
